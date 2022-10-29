@@ -79,7 +79,11 @@ public class Compiler {
             });
         }
 
-        String whereClauseConditions = ((PlainSelect) stmt.getSelectBody()).getWhere().toString();
+        Expression whereCluase = ((PlainSelect) stmt.getSelectBody()).getWhere();
+        String whereClauseConditions = "";
+        if(whereCluase != null) {
+            whereClauseConditions = "[" + whereCluase.toString() + "]";
+        }
 //        if(((PlainSelect) stmt.getSelectBody()).getWhere() instanceof BinaryExpression) {
 //            parseBinaryExpression((BinaryExpression) ((PlainSelect) stmt.getSelectBody()).getWhere());
 //        }
@@ -127,23 +131,23 @@ public class Compiler {
                 "@App:name('TestSiddhiApp0')\n" +
                 "@source(" +
                         "\n\ttype='live', " +
-                        "\n\tsql.query='SELECT SUM(traffic) FROM network_traffic', " +
+                        "\n\tsql.query='%s', " +
                         "\n\thost.name='api-varden-4f0f3c4f.paas.macrometa.io', " +
                         "\n\tapi.key = 'madu140_gmail.com.AccessPortal.2PL8EeyIAMn2sx7YHKWMM58tmJLES4NyIWq6Cnsj0BTMjygJyF3b14zb2sidcauXccccb8', " +
                         "\n\t@map(" +
                             "\n\t\ttype='json', " +
                             "\n\t\tenclosing.element='$.properties',  " +
                             "\n\t\t@attributes(%s)" +
-                        ")" +
-                    ")" +
+                        "\n\t\t)" +
+                    "\n\t)" +
                 "\ndefine stream inputStream (%s);\n" +
                 "@sink(type = 'log')\n" +
                 "define stream OutputStream (%s);\n" +
                 "@info(name = 'query0')\n" +
-                "from inputStream[%s]\n" +
+                "from inputStream %s\n" +
                 "select %s\n" +
                 "insert into outputStream;"
-        ,attributesForJSONAttributeDefinition,attributesForStreamDefinition,attributesForStreamDefinition,whereClauseConditions,selectList);
+        ,stmt,attributesForJSONAttributeDefinition,attributesForStreamDefinition,attributesForStreamDefinition,whereClauseConditions,selectList);
 
         ((PlainSelect)stmt.getSelectBody()).getSelectItems();
 
