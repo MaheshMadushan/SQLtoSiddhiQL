@@ -124,19 +124,19 @@ public class Compiler {
         System.out.println("attribute list for JSON defn : " + attributesForJSONAttributeDefinition);
 
         String siddhiAppDefinition = String.format(
-                "@App:name('TestSiddhiApp0')" +
+                "@App:name('TestSiddhiApp0')\n" +
                 "@source(" +
-                        "type='live', " +
-                        "sql.query='SELECT SUM(traffic) FROM network_traffic', " +
-                        "host.name='api-varden-4f0f3c4f.paas.macrometa.io', " +
-                        "api.key = 'madu140_gmail.com.AccessPortal.2PL8EeyIAMn2sx7YHKWMM58tmJLES4NyIWq6Cnsj0BTMjygJyF3b14zb2sidcauXccccb8', " +
-                        "@map(" +
-                            "type='json', " +
-                            "enclosing.element='$.properties',  " +
-                            "@attributes(%s)" +
+                        "\n\ttype='live', " +
+                        "\n\tsql.query='SELECT SUM(traffic) FROM network_traffic', " +
+                        "\n\thost.name='api-varden-4f0f3c4f.paas.macrometa.io', " +
+                        "\n\tapi.key = 'madu140_gmail.com.AccessPortal.2PL8EeyIAMn2sx7YHKWMM58tmJLES4NyIWq6Cnsj0BTMjygJyF3b14zb2sidcauXccccb8', " +
+                        "\n\t@map(" +
+                            "\n\t\ttype='json', " +
+                            "\n\t\tenclosing.element='$.properties',  " +
+                            "\n\t\t@attributes(%s)" +
                         ")" +
                     ")" +
-                "define stream inputStream (%s);\n" +
+                "\ndefine stream inputStream (%s);\n" +
                 "@sink(type = 'log')\n" +
                 "define stream OutputStream (%s);\n" +
                 "@info(name = 'query0')\n" +
