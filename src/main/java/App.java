@@ -15,9 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Compiler {
+public class App {
     public static void parseBinaryExpression(BinaryExpression binaryExpression){
-        System.out.println(" in parseBinaryExpression");
         if(binaryExpression instanceof OrExpression){
             System.out.println(" in OrExpression ");
             System.out.println( "   " +binaryExpression.getLeftExpression());
@@ -57,7 +56,7 @@ public class Compiler {
                 @Override
                 public void visit(SelectExpressionItem item) {
                     if(item.getExpression() instanceof Column) {
-                        // does have AS
+                        // do have AS
                         if(item.getAlias() == null){
                             selectListItemListWithOutAliases.add(item.getExpression().toString());/* column names a,b,c */
                         }else /* no aliases (no AS) */ {
@@ -84,9 +83,9 @@ public class Compiler {
         if(whereCluase != null) {
             whereClauseConditions = "[" + whereCluase.toString() + "]";
         }
-//        if(((PlainSelect) stmt.getSelectBody()).getWhere() instanceof BinaryExpression) {
-//            parseBinaryExpression((BinaryExpression) ((PlainSelect) stmt.getSelectBody()).getWhere());
-//        }
+        if(((PlainSelect) stmt.getSelectBody()).getWhere() instanceof BinaryExpression) {
+            parseBinaryExpression((BinaryExpression) ((PlainSelect) stmt.getSelectBody()).getWhere());
+        }
 
         TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
         List<String> tableList = tablesNamesFinder.getTableList(stmt);
@@ -106,19 +105,19 @@ public class Compiler {
         StringBuilder attributesForStreamDefinition = new StringBuilder("");
         StringBuilder attributesForJSONAttributeDefinition = new StringBuilder("");
         for(Map.Entry<String, String> alias_colName : selectListItemMapWithAliases.entrySet()){
-            attributesForJSONAttributeDefinition.append(alias_colName.getValue() + " = '" + alias_colName.getValue() + "',  ");
-            attributesForStreamDefinition.append(alias_colName.getValue() + " String,  ");
+            attributesForJSONAttributeDefinition.append(alias_colName.getValue()).append(" = '").append(alias_colName.getValue()).append("',  ");
+            attributesForStreamDefinition.append(alias_colName.getValue()).append(" String,  ");
             selectList.append(alias_colName.getValue());
             selectList.append(" as ");
-            selectList.append(alias_colName.getKey() + ",  ");
+            selectList.append(alias_colName.getKey()).append(",  ");
 
         }
 
         for (String selectListItemWithoutAlias :
                 selectListItemListWithOutAliases) {
-            attributesForJSONAttributeDefinition.append(selectListItemWithoutAlias + " = '" + selectListItemWithoutAlias + "',  ");
-            attributesForStreamDefinition.append(selectListItemWithoutAlias + " String,  ");
-            selectList.append(" " + selectListItemWithoutAlias + ",  ");
+            attributesForJSONAttributeDefinition.append(selectListItemWithoutAlias).append(" = '").append(selectListItemWithoutAlias).append("',  ");
+            attributesForStreamDefinition.append(selectListItemWithoutAlias).append(" String,  ");
+            selectList.append(" ").append(selectListItemWithoutAlias).append(",  ");
         }
         selectList.deleteCharAt(selectList.length() - 3 );
         attributesForStreamDefinition.deleteCharAt(attributesForStreamDefinition.length() - 3);
@@ -155,8 +154,5 @@ public class Compiler {
 
         System.out.println(siddhiAppDefinition);
 
-
     }
-
-
 }
