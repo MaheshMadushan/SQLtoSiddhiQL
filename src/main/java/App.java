@@ -3,6 +3,7 @@ import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
+import net.sf.jsqlparser.expression.operators.relational.GreaterThan;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.parser.SimpleNode;
 import net.sf.jsqlparser.schema.Column;
@@ -36,11 +37,18 @@ public class App {
             parseBinaryExpression((BinaryExpression) binaryExpression.getRightExpression());
             parseBinaryExpression((BinaryExpression) binaryExpression.getLeftExpression());
         }
+        else if(binaryExpression instanceof GreaterThan){
+            System.out.println(" in GreaterThan ");
+            System.out.println( "   " +binaryExpression.getLeftExpression().getClass());
+            System.out.println( "   " + ((AnyComparisonExpression) binaryExpression.getRightExpression()).getSubSelect());
+            parseBinaryExpression((BinaryExpression) binaryExpression.getRightExpression());
+            parseBinaryExpression((BinaryExpression) binaryExpression.getLeftExpression());
+        }
     }
 
     public static void main(String[] args) throws JSQLParserException {
         Select stmt = (Select) CCJSqlParserUtil.parse("SELECT SUM(col1,clo3,a) AS a, COUNT(col2) AS b, col3 AS c , col4 as d, col5 , col99 " +
-                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30");
+                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30 AND col5 > ALL ( SELECT avg(col5) FROM table)");
         /**
          * selectListItemMapWithAliases {c=col3, d=col4}
          * selectListItemListWithOutAliases [col5, col99]

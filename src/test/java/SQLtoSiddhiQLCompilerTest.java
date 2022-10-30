@@ -3,30 +3,83 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 public class SQLtoSiddhiQLCompilerTest {
-    private String siddhiAppDefinition = "@App:name('TestSiddhiApp0')\n" +
-            "@source(\n" +
-                "\ttype='live', \n" +
-                "\tsql.query='SELECT SUM(col1, clo3, a) AS a, COUNT(col2) AS b, col3 AS c, col4 AS d, col5, col99 FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30', \n" +
-                "\thost.name='api-varden-4f0f3c4f.paas.macrometa.io', \n" +
-                "\tapi.key = 'madu140_gmail.com.AccessPortal.2PL8EeyIAMn2sx7YHKWMM58tmJLES4NyIWq6Cnsj0BTMjygJyF3b14zb2sidcauXccccb8', \n" +
-                "\t@map(\n" +
-                    "\t\ttype='json', \n" +
-                    "\t\tenclosing.element='$.properties',  \n" +
-                    "\t\t@attributes(col3 = 'col3',  col4 = 'col4',  col5 = 'col5',  col99 = 'col99'  )\n" +
-                    "\t\t)\n" +
-                "\t)\n" +
-            "define stream inputStream (col3 String,  col4 String,  col5 String,  col99 String  );\n" +
-            "@sink(type = 'log')\n" +
-            "define stream OutputStream (col3 String,  col4 String,  col5 String,  col99 String  );\n" +
-            "@info(name = 'query0')\n" +
-            "from inputStream [col1 = 10 AND col2 = 20 XOR col3 = 30]\n" +
-            "select col3 as c,  col4 as d,   col5,   col99  \n" +
-            "insert into outputStream;";
-    @Test
-    void generateSiddhiAppTest(){
 
-        String generalProjectionSQL = "SELECT SUM(col1,clo3,a) AS a, COUNT(col2) AS b, col3 AS c , col4 as d, col5 , col99 " +
-                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30";
+
+
+    String siddhiAppDefinition = "";
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementTest(){
+
+        String generalProjectionSQL = "SELECT col1 , col2 , col3 , col4 , col5 , col99 FROM table";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithWhereClauseTest(){
+
+        String generalProjectionSQL = "SELECT col1, col2, col3, col4, col5 , col99 " +
+                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30 AND col5 = 98;";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithAliasesTest(){
+
+        String generalProjectionSQL = "SELECT col1 AS A, col2 AS B, col3 AS C , col4 as D, col5  as E, col99 as F" +
+                "FROM table";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithAliasesAndWhereClauseTest(){
+
+        String generalProjectionSQL = "SELECT col1 AS A, col2 AS B, col3 AS C , col4 as D, col5 as E, col99 as F " +
+                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30 AND col5 = 98;";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithMultipleAggregateFunctionsTest(){
+
+        String generalProjectionSQL = "SELECT SUM(col1) , STDDEV(col2), MAX(col3) , MIN(col4) , COUNT(col5) , col99 " +
+                "FROM table";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithMultipleAggregateFunctionsWithAliasesTest(){
+
+        String generalProjectionSQL = "SELECT SUM(col1) as SUM, STDDEV(col2) as STDDEV, MAX(col3) as MAX, MIN(col4) as MIN, COUNT(col5) as COUNT, col99 " +
+                "FROM table";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsTest(){
+
+        String generalProjectionSQL = "SELECT * FROM table";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseTest(){
+
+        String generalProjectionSQL = "SELECT * FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980;";
 
         String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
