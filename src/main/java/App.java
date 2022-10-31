@@ -5,11 +5,11 @@ import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
 import net.sf.jsqlparser.expression.operators.relational.GreaterThan;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.parser.SimpleNode;
+import net.sf.jsqlparser.parser.Node;
 import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.util.TablesNamesFinder;
+import Compiler.AST;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,38 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 public class App {
-    public static void parseBinaryExpression(BinaryExpression binaryExpression){
-        if(binaryExpression instanceof OrExpression){
-            System.out.println(" in OrExpression ");
-            System.out.println( "   " +binaryExpression.getLeftExpression());
-            System.out.println( "   " +binaryExpression.getRightExpression());
-            parseBinaryExpression((BinaryExpression) binaryExpression.getRightExpression());
-            parseBinaryExpression((BinaryExpression) binaryExpression.getLeftExpression());
-        }else if(binaryExpression instanceof AndExpression){
-            System.out.println(" in AndExpression ");
-            System.out.println( "   " +binaryExpression.getLeftExpression());
-            System.out.println( "   " +binaryExpression.getRightExpression());
-            parseBinaryExpression((BinaryExpression) binaryExpression.getRightExpression());
-            parseBinaryExpression((BinaryExpression) binaryExpression.getLeftExpression());
-        }else if(binaryExpression instanceof XorExpression){
-            System.out.println(" in XorExpression ");
-            System.out.println( "   " +binaryExpression.getLeftExpression());
-            System.out.println( "   " +binaryExpression.getRightExpression());
-            parseBinaryExpression((BinaryExpression) binaryExpression.getRightExpression());
-            parseBinaryExpression((BinaryExpression) binaryExpression.getLeftExpression());
-        }
-        else if(binaryExpression instanceof GreaterThan){
-            System.out.println(" in GreaterThan ");
-            System.out.println( "   " +binaryExpression.getLeftExpression().getClass());
-            System.out.println( "   " + ((AnyComparisonExpression) binaryExpression.getRightExpression()).getSubSelect());
-            parseBinaryExpression((BinaryExpression) binaryExpression.getRightExpression());
-            parseBinaryExpression((BinaryExpression) binaryExpression.getLeftExpression());
-        }
-    }
 
     public static void main(String[] args) throws JSQLParserException {
-        Select stmt = (Select) CCJSqlParserUtil.parse("SELECT SUM(col1,clo3,a) AS a, COUNT(col2) AS b, col3 AS c , col4 as d, col5 , col99 " +
-                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30 AND col5 > ALL ( SELECT avg(col5) FROM table)");
+        Select stmt = (Select) CCJSqlParserUtil.parse("SELECT DISTINCT ON (colg) s, SUM(col1,clo3,a) AS a, COUNT(col2) AS b, col3 AS c , col4 as d, col5 , col99 FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30 AND col5 = 99");
+        AST.traverseAST(AST.parseAST("SELECT DISTINCT ON (colg) s, SUM(col1,clo3,a) AS a, COUNT(col2) AS b, col3 AS c , col4 as d, col5 , col99 FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30 AND col5 = 99"),0);
+
         /**
          * selectListItemMapWithAliases {c=col3, d=col4}
          * selectListItemListWithOutAliases [col5, col99]
@@ -59,7 +32,7 @@ public class App {
         List<String> selectListItemListWithOutAliases = new ArrayList<>(); // [ column_name, column_name,column_name, ...]
         Map<String, List<List<Expression>>> selectListItemWithFunctionsMap = new HashMap<>(); //{SUM=[[col1, clo3, a]], COUNT=[[col2]]}
 
-        for (SelectItem selectItem : ((PlainSelect)stmt.getSelectBody()).getSelectItems()) {
+        for (SelectItem selectItem : ((PlainSelect)stmt.getSelectBody()).getDistinct().getOnSelectItems()) {
             selectItem.accept(new SelectItemVisitorAdapter() {
                 @Override
                 public void visit(SelectExpressionItem item) {
@@ -91,9 +64,9 @@ public class App {
         if(whereCluase != null) {
             whereClauseConditions = "[" + whereCluase.toString() + "]";
         }
-        if(((PlainSelect) stmt.getSelectBody()).getWhere() instanceof BinaryExpression) {
-            parseBinaryExpression((BinaryExpression) ((PlainSelect) stmt.getSelectBody()).getWhere());
-        }
+//        if(((PlainSelect) stmt.getSelectBody()).getWhere() instanceof BinaryExpression) {
+//            parseBinaryExpression((BinaryExpression) ((PlainSelect) stmt.getSelectBody()).getWhere());
+//        }
 
         TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
         List<String> tableList = tablesNamesFinder.getTableList(stmt);
@@ -163,4 +136,5 @@ public class App {
         System.out.println(siddhiAppDefinition);
 
     }
+
 }
