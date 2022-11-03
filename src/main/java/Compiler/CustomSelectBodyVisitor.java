@@ -21,16 +21,24 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
         }
 
         Distinct distinct = plainSelect.getDistinct();
-        List<SelectItem> OnSelectItemList = distinct.getOnSelectItems();
-        for(SelectItem OnSelectItem : OnSelectItemList){
-            OnSelectItem.accept(new CustomSelectItemVisitorImpl());
+        if(distinct != null) {
+            List<SelectItem> OnSelectItemList = distinct.getOnSelectItems();
+            if (OnSelectItemList != null) {
+                for (SelectItem OnSelectItem : OnSelectItemList) {
+                    OnSelectItem.accept(new CustomSelectItemVisitorImpl());
+                }
+            }
         }
 
         Expression whereExpression = plainSelect.getWhere();
-        whereExpression.accept(new CustomExpressionVisitorAdaptor());
+        if(whereExpression != null) {
+            whereExpression.accept(new CustomExpressionVisitorAdaptor());
+        }
 
         FromItem fromItem = plainSelect.getFromItem();
-        fromItem.accept(new CustomFromItemVisitorImpl());
+        if(fromItem != null) {
+            fromItem.accept(new CustomFromItemVisitorImpl());
+        }
     }
 
     @Override
