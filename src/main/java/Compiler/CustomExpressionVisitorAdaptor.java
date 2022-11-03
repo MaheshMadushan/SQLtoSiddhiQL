@@ -35,12 +35,16 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     public void visit(BitwiseRightShift bitwiseRightShift) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(bitwiseRightShift.getStringExpression());
+
+        this.visitLeftAndRightExpressions(bitwiseRightShift);
     }
 
     @Override
     public void visit(BitwiseLeftShift bitwiseLeftShift) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(bitwiseLeftShift.getStringExpression());
+
+        this.visitLeftAndRightExpressions(bitwiseLeftShift);
     }
 
     @Override
@@ -88,18 +92,25 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     public void visit(SignedExpression signedExpression) {
         System.out.println("in SignedExpression:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(signedExpression.getExpression());
+
+        signedExpression.getSign();
+
+        Expression signExpression = signedExpression.getExpression();
+        if(signExpression != null) {
+            signExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(JdbcParameter jdbcParameter) {
         System.out.println("in JdbcParameter:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(jdbcParameter.toString());
+        System.out.println("not supported by SQLtoSiddhiQL");
     }
 
     @Override
     public void visit(JdbcNamedParameter jdbcNamedParameter) {
         System.out.println("in JdbcNamedParameter:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(jdbcNamedParameter.getName());
+        System.out.println("not supported by SQLtoSiddhiQL");
     }
 
     @Override
@@ -142,30 +153,41 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     public void visit(Parenthesis parenthesis) {
         System.out.println("in Parenthesis:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(parenthesis.getExpression());
+
+        Expression expression = parenthesis.getExpression();
+        if(expression != null) {
+            expression.accept(this);
+        }
     }
 
     @Override
     public void visit(StringValue stringValue) {
         System.out.println("in StringValue:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(stringValue.getPrefix());
+        System.out.println(stringValue.getValue());
     }
 
     @Override
     public void visit(Addition addition) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(addition.getStringExpression());
+
+        this.visitLeftAndRightExpressions(addition);
     }
 
     @Override
     public void visit(Division division) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(division.getStringExpression());
+
+        this.visitLeftAndRightExpressions(division);
     }
 
     @Override
     public void visit(IntegerDivision integerDivision) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(integerDivision.getStringExpression());
+
+        this.visitLeftAndRightExpressions(integerDivision);
     }
 
     @Override
@@ -208,7 +230,6 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     public void visit(Between between) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(between.toString());
-
     }
 
     @Override
@@ -221,7 +242,7 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(GreaterThan greaterThan) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in GreaterThan:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(greaterThan.getStringExpression());
     }
 

@@ -10,8 +10,8 @@ public class CustomGroupByElementVisitor implements GroupByVisitor {
         System.out.println("in " + CustomGroupByElementVisitor.class);
         System.out.println(groupByElement.toString());
 
-        ExpressionList expressionList = groupByElement.getGroupByExpressionList();
+        ExpressionList groupByExpressionList = groupByElement.getGroupByExpressionList();
 
-        expressionList.accept(new CustomItemListVisitor());
+        groupByExpressionList.accept(new CustomItemListVisitor());
     }
 }
