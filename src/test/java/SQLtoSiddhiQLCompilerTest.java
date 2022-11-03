@@ -1,6 +1,5 @@
 import Compiler.SiddhiAppGenerator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import Compiler.AST;
 import net.sf.jsqlparser.JSQLParserException;
 import org.junit.jupiter.api.Test;
 

@@ -1,48 +1,9 @@
 import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.expression.*;
-import net.sf.jsqlparser.expression.operators.arithmetic.*;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
-import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
-import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.parser.Node;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.*;
-import net.sf.jsqlparser.statement.alter.Alter;
-import net.sf.jsqlparser.statement.alter.AlterSession;
-import net.sf.jsqlparser.statement.alter.AlterSystemStatement;
-import net.sf.jsqlparser.statement.alter.RenameTableStatement;
-import net.sf.jsqlparser.statement.alter.sequence.AlterSequence;
-import net.sf.jsqlparser.statement.comment.Comment;
-import net.sf.jsqlparser.statement.create.index.CreateIndex;
-import net.sf.jsqlparser.statement.create.schema.CreateSchema;
-import net.sf.jsqlparser.statement.create.sequence.CreateSequence;
-import net.sf.jsqlparser.statement.create.synonym.CreateSynonym;
-import net.sf.jsqlparser.statement.create.table.CreateTable;
-import net.sf.jsqlparser.statement.create.view.AlterView;
-import net.sf.jsqlparser.statement.create.view.CreateView;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.drop.Drop;
-import net.sf.jsqlparser.statement.execute.Execute;
-import net.sf.jsqlparser.statement.grant.Grant;
-import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.merge.Merge;
-import net.sf.jsqlparser.statement.replace.Replace;
-import net.sf.jsqlparser.statement.select.*;
-import net.sf.jsqlparser.statement.show.ShowTablesStatement;
-import net.sf.jsqlparser.statement.truncate.Truncate;
-import net.sf.jsqlparser.statement.update.Update;
-import net.sf.jsqlparser.statement.upsert.Upsert;
-import net.sf.jsqlparser.statement.values.ValuesStatement;
-import net.sf.jsqlparser.util.TablesNamesFinder;
+
 import Compiler.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class App {
 
