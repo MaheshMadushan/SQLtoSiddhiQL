@@ -4,6 +4,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
 
+import java.util.Collection;
 import java.util.List;
 
 public class CustomSelectBodyVisitor implements SelectVisitor {
@@ -33,6 +34,24 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
         Expression whereExpression = plainSelect.getWhere();
         if(whereExpression != null) {
             whereExpression.accept(new CustomExpressionVisitorAdaptor());
+        }
+
+        List<Join> joins = plainSelect.getJoins();
+        if(joins != null){
+            for ( Join join : joins){
+                System.out.println(join.toString());
+                System.out.println("JoinWindow:" + join.getJoinWindow());
+                System.out.println("OnExpressions:" + join.getOnExpressions());
+                System.out.println("RightItem:" + join.getRightItem());
+                System.out.println("UsingColumns:" + join.getUsingColumns());
+
+                List<Expression> onExpressions = (List<Expression>) join.getOnExpressions();
+                if(onExpressions != null){
+                    for(Expression onExpression : onExpressions){
+                        onExpression.accept(new CustomExpressionVisitorAdaptor());
+                    }
+                }
+            }
         }
 
         FromItem fromItem = plainSelect.getFromItem();

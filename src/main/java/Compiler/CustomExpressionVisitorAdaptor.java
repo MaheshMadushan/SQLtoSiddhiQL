@@ -86,67 +86,67 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(SignedExpression signedExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in SignedExpression:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(signedExpression.getExpression());
     }
 
     @Override
     public void visit(JdbcParameter jdbcParameter) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in JdbcParameter:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(jdbcParameter.toString());
     }
 
     @Override
     public void visit(JdbcNamedParameter jdbcNamedParameter) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in JdbcNamedParameter:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(jdbcNamedParameter.getName());
     }
 
     @Override
     public void visit(DoubleValue doubleValue) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in DoubleValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(doubleValue.getValue());
     }
 
     @Override
     public void visit(LongValue longValue) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in LongValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(longValue.getValue());
     }
 
     @Override
     public void visit(HexValue hexValue) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in HexValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(hexValue.getValue());
     }
 
     @Override
     public void visit(DateValue dateValue) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in DateValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(dateValue.getValue());
     }
 
     @Override
     public void visit(TimeValue timeValue) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in TimeValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(timeValue.getValue());
     }
 
     @Override
     public void visit(TimestampValue timestampValue) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in TimestampValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(timestampValue.getValue());
     }
 
     @Override
     public void visit(Parenthesis parenthesis) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in Parenthesis:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(parenthesis.getExpression());
     }
 
     @Override
     public void visit(StringValue stringValue) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in StringValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(stringValue.getPrefix());
     }
 
@@ -216,7 +216,7 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         System.out.println("in EqualsTo:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(equalsTo.getStringExpression());
 
-
+        this.visitLeftAndRightExpressions(equalsTo);
     }
 
     @Override
@@ -282,11 +282,10 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     @Override
     public void visit(Column column) {
         System.out.println("in column:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(column.toString());
         System.out.println(column.getName(true));
+        System.out.println(column.getFullyQualifiedName());
         System.out.println(column.getColumnName());
         System.out.println(column.getTable());
-        System.out.println(column.getFullyQualifiedName());
     }
 
     @Override
