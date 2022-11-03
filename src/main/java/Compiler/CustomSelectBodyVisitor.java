@@ -28,6 +28,9 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
 
         Expression whereExpression = plainSelect.getWhere();
         whereExpression.accept(new CustomExpressionVisitorAdaptor());
+
+        FromItem fromItem = plainSelect.getFromItem();
+        fromItem.accept(new CustomFromItemVisitorImpl());
     }
 
     @Override

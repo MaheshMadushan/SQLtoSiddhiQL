@@ -15,6 +15,7 @@ import net.sf.jsqlparser.statement.select.SubSelect;
 import java.util.List;
 
 public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
+
     private void visitLeftAndRightExpressions(BinaryExpression expression){
         Expression rightExpression = expression.getRightExpression();
         Expression leftExpression = expression.getLeftExpression();
@@ -29,6 +30,7 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
             leftExpression.accept(this);
         }
     }
+
     @Override
     public void visit(BitwiseRightShift bitwiseRightShift) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
