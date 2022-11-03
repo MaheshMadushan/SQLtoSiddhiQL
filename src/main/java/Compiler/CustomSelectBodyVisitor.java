@@ -13,6 +13,7 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
 
     @Override
     public void visit(PlainSelect plainSelect) {
+
         System.out.println("in PlainSelect :" + CustomSelectBodyVisitor.class);
         System.out.println(plainSelect.toString());
 
@@ -36,17 +37,15 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
             whereExpression.accept(new CustomExpressionVisitorAdaptor());
         }
 
-        Expression havingExpression = plainSelect.getHaving();
-        if(havingExpression != null) {
-            havingExpression.accept(new CustomExpressionVisitorAdaptor());
-        }
 
         List<Join> joins = plainSelect.getJoins();
         if(joins != null){
             for ( Join join : joins){
+
                 System.out.println(join.toString());
 
                 List<Expression> onExpressions = (List<Expression>) join.getOnExpressions();
+
                 if(onExpressions != null){
                     for(Expression onExpression : onExpressions){
                         onExpression.accept(new CustomExpressionVisitorAdaptor());
@@ -70,6 +69,11 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
             for(OrderByElement orderByElement: orderByElements) {
                 orderByElement.accept(new CustomOrderByElementVisitor());
             }
+        }
+
+        Expression havingExpression = plainSelect.getHaving();
+        if(havingExpression != null) {
+            havingExpression.accept(new CustomExpressionVisitorAdaptor());
         }
     }
 
