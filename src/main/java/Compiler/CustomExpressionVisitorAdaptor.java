@@ -71,7 +71,7 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         List<OrderByElement> orderByElementList = function.getOrderByElements();
         if(orderByElementList != null){
             for(OrderByElement orderByElement : orderByElementList){
-                orderByElement.accept(new CustomOrderByVisitor());
+                orderByElement.accept(new CustomOrderByElementVisitor());
             }
         }
 

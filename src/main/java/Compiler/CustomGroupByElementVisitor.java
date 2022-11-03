@@ -1,5 +1,6 @@
 package Compiler;
 
+import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.statement.select.GroupByElement;
 import net.sf.jsqlparser.statement.select.GroupByVisitor;
 
@@ -8,5 +9,9 @@ public class CustomGroupByElementVisitor implements GroupByVisitor {
     public void visit(GroupByElement groupByElement) {
         System.out.println("in " + CustomGroupByElementVisitor.class);
         System.out.println(groupByElement.toString());
+
+        ExpressionList expressionList = groupByElement.getGroupByExpressionList();
+
+        expressionList.accept(new CustomItemListVisitor());
     }
 }
