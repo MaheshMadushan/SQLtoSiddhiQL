@@ -85,6 +85,48 @@ public class SQLtoSiddhiQLCompilerTest {
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndOrderByClauseTest() throws JSQLParserException {
+
+        String generalProjectionSQL = "SELECT * FROM Customers\n" +
+                "ORDER BY Country, CustomerName;";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndOrderByClauseWithASCAndDescTest() throws JSQLParserException {
+
+        String generalProjectionSQL = "SELECT * FROM Customers " +
+                "ORDER BY Country ASC, CustomerName DESC;";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndOrderByClauseAndGroupByAndHavingClauseWithASCAndDescTest() throws JSQLParserException {
+
+        String generalProjectionSQL = "SELECT COUNT(CustomerID), Country\n" +
+                "FROM Customers\n" +
+                "GROUP BY Country\n" +
+                "HAVING COUNT(CustomerID) > 5\n" +
+                "ORDER BY COUNT(CustomerID) DESC;";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndGroupByClauseWithASCAndDescTest() throws JSQLParserException {
+
+        String generalProjectionSQL = "SELECT COUNT(CustomerID), Country FROM Customers GROUP BY Country ORDER BY COUNT(CustomerID) DESC ";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
 //    @Test
 //    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseTest() throws JSQLParserException {
 //
@@ -93,6 +135,4 @@ public class SQLtoSiddhiQLCompilerTest {
 //        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
 //        assertEquals(siddhiAppDefinition,siddhiApp);
 //    }
-
-
 }
