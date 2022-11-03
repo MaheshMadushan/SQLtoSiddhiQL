@@ -1,11 +1,15 @@
 package Compiler;
 
+import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
 
 import java.util.List;
 
 public class CustomSelectBodyVisitor implements SelectVisitor {
+
+
+
     @Override
     public void visit(PlainSelect plainSelect) {
         System.out.println("in PlainSelect :" + CustomSelectBodyVisitor.class);
@@ -21,6 +25,9 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
         for(SelectItem OnSelectItem : OnSelectItemList){
             OnSelectItem.accept(new CustomSelectItemVisitorImpl());
         }
+
+        Expression whereExpression = plainSelect.getWhere();
+        whereExpression.accept(new CustomExpressionVisitorAdaptor());
     }
 
     @Override

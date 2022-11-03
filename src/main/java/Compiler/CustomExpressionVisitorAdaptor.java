@@ -9,9 +9,26 @@ import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.AllTableColumns;
+import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.SubSelect;
 
+import java.util.List;
+
 public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
+    private void visitLeftAndRightExpressions(BinaryExpression expression){
+        Expression rightExpression = expression.getRightExpression();
+        Expression leftExpression = expression.getLeftExpression();
+
+        if(rightExpression != null){
+            System.out.println(rightExpression.toString());
+            rightExpression.accept(this);
+        }
+
+        if(leftExpression != null){
+            System.out.println(leftExpression.toString());
+            leftExpression.accept(this);
+        }
+    }
     @Override
     public void visit(BitwiseRightShift bitwiseRightShift) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
@@ -32,16 +49,37 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(Function function) {
+        ItemsListVisitor itemsListVisitor = new CustomItemListVisitor();
+
         System.out.println("in function:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(function.getNamedParameters());
-        System.out.println(function.getParameters());
-        System.out.println(function.isAllColumns());
-        System.out.println(function.getOrderByElements());
-        System.out.println(function.getName());
-        System.out.println(function.getAttribute());
-        System.out.println(function.getKeep());
-        System.out.println(function.getMultipartName());
-        System.out.println(function.isAllColumns());
+
+        String functionName = function.getName();
+        System.out.println(functionName);
+
+        NamedExpressionList namedExpressionList = function.getNamedParameters();
+        if(namedExpressionList != null){
+            namedExpressionList.accept(itemsListVisitor);
+        }
+
+        ExpressionList expressionList = function.getParameters();
+        if(expressionList != null){
+            expressionList.accept(itemsListVisitor);
+        }
+
+        List<OrderByElement> orderByElementList = function.getOrderByElements();
+        if(orderByElementList != null){
+            for(OrderByElement orderByElement : orderByElementList){
+                orderByElement.accept(new CustomOrderByVisitor());
+            }
+        }
+
+//        function.getKeep() - for Oracle KEEP keyword
+
+        Expression attribute = function.getAttribute();
+        if(attribute != null) {
+            attribute.accept(this);
+        }
+
     }
 
     @Override
@@ -142,32 +180,41 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(AndExpression andExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in AndExpression:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(andExpression.getStringExpression());
+
+        this.visitLeftAndRightExpressions(andExpression);
     }
 
     @Override
     public void visit(OrExpression orExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in OrExpression:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(orExpression.getStringExpression());
+
+        this.visitLeftAndRightExpressions(orExpression);
     }
 
     @Override
     public void visit(XorExpression xorExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in XorExpression:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(xorExpression.getStringExpression());
+
+        this.visitLeftAndRightExpressions(xorExpression);
     }
 
     @Override
     public void visit(Between between) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(between.toString());
+
     }
 
     @Override
     public void visit(EqualsTo equalsTo) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
+        System.out.println("in EqualsTo:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(equalsTo.getStringExpression());
+
+
     }
 
     @Override
