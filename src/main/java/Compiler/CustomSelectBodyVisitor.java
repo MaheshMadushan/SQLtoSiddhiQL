@@ -81,17 +81,20 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
     public void visit(SetOperationList setOperationList) {
         System.out.println("in SetOperationList :" + CustomSelectBodyVisitor.class);
         System.out.println(setOperationList.toString());
+        System.out.println("not supported by SQLtoSiddhiQL");
     }
 
     @Override
     public void visit(WithItem withItem) {
         System.out.println("in WithItem :" + CustomSelectBodyVisitor.class);
         System.out.println(withItem.toString());
+        System.out.println("not supported by SQLtoSiddhiQL");
     }
 
     @Override
     public void visit(ValuesStatement valuesStatement) {
         System.out.println("in ValuesStatement :" + CustomSelectBodyVisitor.class);
         System.out.println(valuesStatement.toString());
+        System.out.println("not supported by SQLtoSiddhiQL");
     }
 }
