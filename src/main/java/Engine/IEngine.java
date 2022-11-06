@@ -8,12 +8,9 @@ import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.select.FunctionItem;
 
 public abstract class IEngine {
     protected IExpressionHandleBehavior engineBehavior;
-
-    public IEngine(){}
 
     public void setExpressionHandlingBehavior(IExpressionHandleBehavior engineBehavior){
         this.engineBehavior = engineBehavior;

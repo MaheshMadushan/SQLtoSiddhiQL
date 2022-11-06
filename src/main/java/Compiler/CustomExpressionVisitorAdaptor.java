@@ -16,38 +16,24 @@ import net.sf.jsqlparser.statement.select.SubSelect;
 import java.util.List;
 
 public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
+
     private final IEngine middleEngine;
 
     public CustomExpressionVisitorAdaptor(IEngine middleEngine) {
+
         this.middleEngine = middleEngine;
-    }
 
-    private void visitLeftAndRightExpressions(BinaryExpression expression){
-        Expression rightExpression = expression.getRightExpression();
-        Expression leftExpression = expression.getLeftExpression();
-
-        if(rightExpression != null){
-            rightExpression.accept(this);
-        }
-
-        if(leftExpression != null){
-            leftExpression.accept(this);
-        }
     }
 
     // siddhi not supports this
     @Override
     public void visit(BitwiseRightShift bitwiseRightShift) {
 
-
-        this.visitLeftAndRightExpressions(bitwiseRightShift);
     }
 
     @Override
     public void visit(BitwiseLeftShift bitwiseLeftShift) {
 
-
-        this.visitLeftAndRightExpressions(bitwiseLeftShift);
     }
 
     @Override
@@ -159,60 +145,139 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(Addition addition) {
+        Expression rightExpression = addition.getRightExpression();
+        Expression leftExpression = addition.getLeftExpression();
 
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleAddition(addition);
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
 
-        this.visitLeftAndRightExpressions(addition);
     }
 
     @Override
     public void visit(Division division) {
+        Expression rightExpression = division.getRightExpression();
+        Expression leftExpression = division.getLeftExpression();
 
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleDivision(division);
 
-        this.visitLeftAndRightExpressions(division);
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(IntegerDivision integerDivision) {
+        Expression rightExpression = integerDivision.getRightExpression();
+        Expression leftExpression = integerDivision.getLeftExpression();
 
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleIntegerDivision(integerDivision);
 
-        this.visitLeftAndRightExpressions(integerDivision);
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(Multiplication multiplication) {
+        Expression rightExpression = multiplication.getRightExpression();
+        Expression leftExpression = multiplication.getLeftExpression();
 
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleMultiplication(multiplication);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(Subtraction subtraction) {
+        Expression rightExpression = subtraction.getRightExpression();
+        Expression leftExpression = subtraction.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
         middleEngine.handleSubtraction(subtraction);
-        this.visitLeftAndRightExpressions(subtraction);
+
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(AndExpression andExpression) {
+        Expression rightExpression = andExpression.getRightExpression();
+        Expression leftExpression = andExpression.getLeftExpression();
+
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
         middleEngine.handleAndExpression(andExpression);
-        this.visitLeftAndRightExpressions(andExpression);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(OrExpression orExpression) {
+        Expression rightExpression = orExpression.getRightExpression();
+        Expression leftExpression = orExpression.getLeftExpression();
+
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
         middleEngine.handleOrExpression(orExpression);
-        this.visitLeftAndRightExpressions(orExpression);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(XorExpression xorExpression) {
+        Expression rightExpression = xorExpression.getRightExpression();
+        Expression leftExpression = xorExpression.getLeftExpression();
+
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
         middleEngine.handleXorExpression(xorExpression);
-        this.visitLeftAndRightExpressions(xorExpression);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
@@ -222,23 +287,51 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(EqualsTo equalsTo) {
+        Expression rightExpression = equalsTo.getRightExpression();
+        Expression leftExpression = equalsTo.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleEqualsTo(equalsTo);
 
-        this.visitLeftAndRightExpressions(equalsTo);
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(GreaterThan greaterThan) {
+        Expression rightExpression = greaterThan.getRightExpression();
+        Expression leftExpression = greaterThan.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleGreaterThan(greaterThan);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(GreaterThanEquals greaterThanEquals) {
+        Expression rightExpression = greaterThanEquals.getRightExpression();
+        Expression leftExpression = greaterThanEquals.getLeftExpression();
 
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleGreaterThanEquals(greaterThanEquals);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
