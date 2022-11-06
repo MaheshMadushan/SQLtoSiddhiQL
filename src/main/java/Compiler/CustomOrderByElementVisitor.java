@@ -14,12 +14,9 @@ public class CustomOrderByElementVisitor implements OrderByVisitor {
 
     @Override
     public void visit(OrderByElement orderByElement) {
-        System.out.println("in " + CustomOrderByElementVisitor.class);
-        System.out.println(orderByElement.toString());
 
         boolean isASC = orderByElement.isAsc();
         boolean isASCDESCPresent = orderByElement.isAscDescPresent();
-        System.out.println(isASC + " " + isASCDESCPresent);
 
         Expression orderByExpression = orderByElement.getExpression();
 

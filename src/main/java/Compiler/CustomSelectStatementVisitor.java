@@ -156,8 +156,6 @@ public class CustomSelectStatementVisitor implements StatementVisitor {
 
     @Override
     public void visit(Select select) {
-        System.out.println("in " + CustomSelectStatementVisitor.class);
-        System.out.println(select.toString());
         SelectBody selectBody = select.getSelectBody();
         selectBody.accept(new CustomSelectBodyVisitor(middleEngine));
     }

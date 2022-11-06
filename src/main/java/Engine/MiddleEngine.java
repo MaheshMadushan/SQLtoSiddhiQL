@@ -25,63 +25,71 @@ public class MiddleEngine extends IEngine {
     }
 
     @Override
-    public void handleFunction(FunctionItem function) {
+    public void handleFunction(Function function) {
         engineBehavior.handleFunction(function);
     }
 
     @Override
     public void handleSignedExpression(SignedExpression signedExpression) {
-
+        engineBehavior.handleSignedExpression(signedExpression);
     }
 
     @Override
     public void handleDoubleValue(DoubleValue doubleValue) {
+        engineBehavior.handleDoubleValue(doubleValue);
 
     }
 
     @Override
     public void handleLongValue(LongValue longValue) {
+        engineBehavior.handleLongValue(longValue);
 
     }
 
     @Override
     public void handleParenthesis(Parenthesis parenthesis) {
+        engineBehavior.handleParenthesis(parenthesis);
 
     }
 
     @Override
     public void handleStringValue(StringValue stringValue) {
+        engineBehavior.handleStringValue(stringValue);
 
     }
 
     @Override
     public void handleAddition(Addition addition) {
+        engineBehavior.handleAddition(addition);
 
     }
 
     @Override
     public void handleDivision(Division division) {
+        engineBehavior.handleDivision(division);
 
     }
 
     @Override
     public void handleIntegerDivision(IntegerDivision integerDivision) {
+        engineBehavior.handleIntegerDivision(integerDivision);
 
     }
 
     @Override
     public void handleMultiplication(Multiplication multiplication) {
+        engineBehavior.handleMultiplication(multiplication);
 
     }
 
     @Override
     public void handleSubtraction(Subtraction subtraction) {
-
+        engineBehavior.handleSubtraction(subtraction);
     }
 
     @Override
     public void handleAndExpression(AndExpression andExpression) {
-
+        System.out.println("not yet handled");
     }
 
     @Override

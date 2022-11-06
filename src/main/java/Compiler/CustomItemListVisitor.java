@@ -20,27 +20,19 @@ public class CustomItemListVisitor implements ItemsListVisitor {
 
     @Override
     public void visit(SubSelect subSelect) {
-        System.out.println("in subSelect:" + this.getClass());
-        System.out.println(subSelect.toString());
     }
 
     @Override
     public void visit(ExpressionList expressionList) {
-        System.out.println("in ExpressionList:" + this.getClass());
-        System.out.println(expressionList.toString());
         List<Expression> expressions = expressionList.getExpressions();
         for (Expression expression : expressions) expression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
     }
 
     @Override
     public void visit(NamedExpressionList namedExpressionList) {
-        System.out.println("in NamedExpressionList:" + this.getClass());
-        System.out.println(namedExpressionList.toString());
     }
 
     @Override
     public void visit(MultiExpressionList multiExpressionList) {
-        System.out.println("in MultiExpressionList:" + this.getClass());
-        System.out.println(multiExpressionList.toString());
     }
 }

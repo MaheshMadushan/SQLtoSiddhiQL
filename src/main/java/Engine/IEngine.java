@@ -23,7 +23,7 @@ public abstract class IEngine {
 
     public abstract void handleColumn(Column columnName);
 
-    public abstract void handleFunction(FunctionItem function);
+    public abstract void handleFunction(Function function);
 
     public abstract void handleSignedExpression(SignedExpression signedExpression);
 
