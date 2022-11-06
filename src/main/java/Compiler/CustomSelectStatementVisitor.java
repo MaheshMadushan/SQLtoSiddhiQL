@@ -1,5 +1,6 @@
 package Compiler;
 
+import Engine.IEngine;
 import net.sf.jsqlparser.statement.*;
 import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.alter.AlterSession;
@@ -30,6 +31,14 @@ import net.sf.jsqlparser.statement.upsert.Upsert;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
 
 public class CustomSelectStatementVisitor implements StatementVisitor {
+    private IEngine middleEngine;
+
+    public CustomSelectStatementVisitor(IEngine middleEngine) {
+        this.middleEngine = middleEngine;
+    }
+
+
+
     @Override
     public void visit(SavepointStatement savepointStatement) {
 
@@ -147,10 +156,8 @@ public class CustomSelectStatementVisitor implements StatementVisitor {
 
     @Override
     public void visit(Select select) {
-        System.out.println("in " + CustomSelectStatementVisitor.class);
-        System.out.println(select.toString());
         SelectBody selectBody = select.getSelectBody();
-        selectBody.accept(new CustomSelectBodyVisitor());
+        selectBody.accept(new CustomSelectBodyVisitor(middleEngine));
     }
 
     @Override

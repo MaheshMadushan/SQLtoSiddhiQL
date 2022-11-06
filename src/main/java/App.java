@@ -1,3 +1,5 @@
+import Engine.IEngine;
+import Engine.MiddleEngine;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.*;
@@ -1333,8 +1335,9 @@ public class App {
 //
 //            }
 //        });
+        IEngine middleEngine  = new MiddleEngine();
 
-        statement.accept(new CustomSelectStatementVisitor());
+        statement.accept(new CustomSelectStatementVisitor(middleEngine));
 
     }
 

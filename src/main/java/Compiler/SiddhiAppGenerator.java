@@ -10,7 +10,7 @@ public class SiddhiAppGenerator {
 
     public static String generateSiddhiApp(String generalProjectionSQL) throws JSQLParserException {
 
-        // parse tree and get root node
+        // parse projection SQL and get root node of AST
         Node rootNodeOfASTofSelectStatement = AST.parseAST(generalProjectionSQL);
 
         // traverse tree and see structure of the select statement for debugging purposes
