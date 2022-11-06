@@ -1,5 +1,6 @@
 package Compiler;
 
+import Engine.IEngine;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -15,6 +16,11 @@ import net.sf.jsqlparser.statement.select.SubSelect;
 import java.util.List;
 
 public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
+    private final IEngine middleEngine;
+
+    public CustomExpressionVisitorAdaptor(IEngine middleEngine) {
+        this.middleEngine = middleEngine;
+    }
 
     private void visitLeftAndRightExpressions(BinaryExpression expression){
         Expression rightExpression = expression.getRightExpression();
@@ -31,6 +37,7 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         }
     }
 
+    // siddhi not supports this
     @Override
     public void visit(BitwiseRightShift bitwiseRightShift) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
@@ -55,9 +62,14 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(Function function) {
-        ItemsListVisitor itemsListVisitor = new CustomItemListVisitor();
+        ItemsListVisitor itemsListVisitor = new CustomItemListVisitor(middleEngine);
 
         System.out.println("in function:" + CustomExpressionVisitorAdaptor.class);
+        System.out.println(function.toString()); // COUNT(CustomerID - l)
+        System.out.println(function.isAllColumns()); // false
+        System.out.println(function.getParameters()); // CustomerID - l
+        System.out.println(function.getAttribute()); // null
+        System.out.println(function.isDistinct()); //
 
         String functionName = function.getName();
         System.out.println(functionName);
@@ -75,7 +87,7 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         List<OrderByElement> orderByElementList = function.getOrderByElements();
         if(orderByElementList != null){
             for(OrderByElement orderByElement : orderByElementList){
-                orderByElement.accept(new CustomOrderByElementVisitor());
+                orderByElement.accept(new CustomOrderByElementVisitor(middleEngine));
             }
         }
 
@@ -94,6 +106,8 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         System.out.println(signedExpression.getExpression());
 
         signedExpression.getSign();
+
+        middleEngine.handleSignedExpression(signedExpression);
 
         Expression signExpression = signedExpression.getExpression();
         if(signExpression != null) {
@@ -117,36 +131,47 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     public void visit(DoubleValue doubleValue) {
         System.out.println("in DoubleValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(doubleValue.getValue());
+
+        middleEngine.handleDoubleValue(doubleValue);
     }
 
     @Override
     public void visit(LongValue longValue) {
         System.out.println("in LongValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(longValue.getValue());
+
+        middleEngine.handleLongValue(longValue);
     }
 
     @Override
     public void visit(HexValue hexValue) {
         System.out.println("in HexValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(hexValue.getValue());
+        System.out.println("not supported by siddhiQL");
     }
 
     @Override
     public void visit(DateValue dateValue) {
         System.out.println("in DateValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(dateValue.getValue());
+
+        System.out.println("new releases will support this");
     }
 
     @Override
     public void visit(TimeValue timeValue) {
         System.out.println("in TimeValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(timeValue.getValue());
+
+        System.out.println("new releases will support this");
     }
 
     @Override
     public void visit(TimestampValue timestampValue) {
         System.out.println("in TimestampValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(timestampValue.getValue());
+
+        System.out.println("new releases will support this");
     }
 
     @Override
@@ -154,6 +179,7 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         System.out.println("in Parenthesis:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(parenthesis.getExpression());
 
+        middleEngine.handleParenthesis(parenthesis);
         Expression expression = parenthesis.getExpression();
         if(expression != null) {
             expression.accept(this);
@@ -164,12 +190,16 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     public void visit(StringValue stringValue) {
         System.out.println("in StringValue:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(stringValue.getValue());
+
+        middleEngine.handleStringValue(stringValue);
     }
 
     @Override
     public void visit(Addition addition) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(addition.getStringExpression());
+
+        middleEngine.handleAddition(addition);
 
         this.visitLeftAndRightExpressions(addition);
     }
@@ -179,6 +209,8 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(division.getStringExpression());
 
+        middleEngine.handleDivision(division);
+
         this.visitLeftAndRightExpressions(division);
     }
 
@@ -187,6 +219,8 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(integerDivision.getStringExpression());
 
+        middleEngine.handleIntegerDivision(integerDivision);
+
         this.visitLeftAndRightExpressions(integerDivision);
     }
 
@@ -194,18 +228,24 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     public void visit(Multiplication multiplication) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(multiplication.getStringExpression());
+
+        middleEngine.handleMultiplication(multiplication);
     }
 
     @Override
     public void visit(Subtraction subtraction) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(subtraction.getStringExpression());
+
+        middleEngine.handleSubtraction(subtraction);
     }
 
     @Override
     public void visit(AndExpression andExpression) {
         System.out.println("in AndExpression:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(andExpression.getStringExpression());
+
+        middleEngine.handleAndExpression(andExpression);
 
         this.visitLeftAndRightExpressions(andExpression);
     }
@@ -215,6 +255,8 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         System.out.println("in OrExpression:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(orExpression.getStringExpression());
 
+        middleEngine.handleOrExpression(orExpression);
+
         this.visitLeftAndRightExpressions(orExpression);
     }
 
@@ -223,6 +265,8 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         System.out.println("in XorExpression:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(xorExpression.getStringExpression());
 
+        middleEngine.handleXorExpression(xorExpression);
+
         this.visitLeftAndRightExpressions(xorExpression);
     }
 
@@ -230,12 +274,15 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     public void visit(Between between) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(between.toString());
+        System.out.println("not supported by siddhiQL");
     }
 
     @Override
     public void visit(EqualsTo equalsTo) {
         System.out.println("in EqualsTo:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(equalsTo.getStringExpression());
+
+        middleEngine.handleEqualsTo(equalsTo);
 
         this.visitLeftAndRightExpressions(equalsTo);
     }
@@ -244,69 +291,94 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     public void visit(GreaterThan greaterThan) {
         System.out.println("in GreaterThan:" + CustomExpressionVisitorAdaptor.class);
         System.out.println(greaterThan.getStringExpression());
+
+        middleEngine.handleGreaterThan(greaterThan);
     }
 
     @Override
     public void visit(GreaterThanEquals greaterThanEquals) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(greaterThanEquals.getStringExpression());
+
+        middleEngine.handleGreaterThanEquals(greaterThanEquals);
     }
 
     @Override
     public void visit(InExpression inExpression) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(inExpression.toString());
+        System.out.println("not supported by siddhiQL");
     }
 
     @Override
     public void visit(FullTextSearch fullTextSearch) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(fullTextSearch.toString());
+        System.out.println("not supported by siddhiQL");
     }
 
     @Override
     public void visit(IsNullExpression isNullExpression) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(isNullExpression.toString());
+        System.out.println("not supported by siddhiQL");
     }
 
     @Override
     public void visit(IsBooleanExpression isBooleanExpression) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(isBooleanExpression.toString());
+        System.out.println("not supported by siddhiQL");
     }
 
     @Override
     public void visit(LikeExpression likeExpression) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(likeExpression.getStringExpression());
+        System.out.println("not supported by siddhiQL");
     }
 
     @Override
     public void visit(MinorThan minorThan) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(minorThan.getStringExpression());
+
+        middleEngine.handleMinorThan(minorThan);
     }
 
     @Override
     public void visit(MinorThanEquals minorThanEquals) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(minorThanEquals.getStringExpression());
+
+        middleEngine.handleMinorThanEquals(minorThanEquals);
     }
 
     @Override
     public void visit(NotEqualsTo notEqualsTo) {
         System.out.println("in " + CustomExpressionVisitorAdaptor.class);
         System.out.println(notEqualsTo.getStringExpression());
+
+        middleEngine.handleNotEqualsTo(notEqualsTo);
     }
 
     @Override
     public void visit(Column column) {
-        System.out.println("in column:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(column.getName(true));
-        System.out.println(column.getFullyQualifiedName());
-        System.out.println(column.getColumnName());
-        System.out.println(column.getTable());
+        middleEngine.handleColumn(column);
+        // this function will hit by Function visitor - if function has
+        // a column as an attribute or expression of multiple columns
+        // then we have to extract those columns to put in "define stream" statement
+        // in siddhi app (only this?) - so only to put in stream statement attribute list
+        // also we have to find data type of the column. for all normal select items we provide string
+        // if user doesn't specify the data type. for the function we can't do that. bcz some functions
+        // don't accept strings. we can put float if user doesn't specify the data type since we only support aggregates. but how to
+        // extend this? so we have to know from which function this column has extracted. then we can assume
+        // it is a type that function accepts. eg. sum(column) only accept numeric values.
+        // middleEngine.addColumn(column.getColumnName());
+
+        // if we provide siddhi app as argument to this class constructor?
+        // how to determine this column goes to where?
+
     }
 
     @Override

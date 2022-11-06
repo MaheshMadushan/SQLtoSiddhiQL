@@ -108,7 +108,7 @@ public class SQLtoSiddhiQLCompilerTest {
     @Test
     void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndOrderByClauseAndGroupByAndHavingClauseWithASCAndDescTest() throws JSQLParserException {
 
-        String generalProjectionSQL = "SELECT COUNT(CustomerID), Country\n" +
+        String generalProjectionSQL = "SELECT COUNT(CustomerID - l), Country\n" +
                 "FROM Customers\n" +
                 "GROUP BY Country\n" +
                 "HAVING COUNT(CustomerID) > 5\n" +

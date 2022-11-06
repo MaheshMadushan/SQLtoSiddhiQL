@@ -1,70 +1,49 @@
 package SiddhiApp;
 
-import java.util.List;
+import net.sf.jsqlparser.expression.Alias;
+import net.sf.jsqlparser.expression.Function;
 
 public class AggregateFunction implements IFunction,IAttribute{
 
-    private String functionSignature;
-    private List<Attribute> argumentList;
-    private String alias;
+    private Function function;
+    private Alias alias;
 
-    public AggregateFunction(String functionSignature, List<Attribute> argumentList, String alias) {
-        this.functionSignature = functionSignature;
-        this.argumentList = argumentList;
+    public AggregateFunction(Function function, Alias alias) {
+        this.function = function;
+        if(alias == null){
+            String stringAlias = function.getAttribute().toString();
+            this.alias = new Alias(stringAlias);
+        }
         this.alias = alias;
     }
 
-    public void setFunctionSignature(String functionSignature) {
-        this.functionSignature = functionSignature;
+    public Alias getAlias() {
+        return this.alias;
     }
 
-    public void setAlias(String alias) {
+    public void setAlias(Alias alias) {
         this.alias = alias;
     }
 
-    public void addArgument(Attribute attribute){
-        this.argumentList.add(attribute);
+    public Function getFunction() {
+        return this.function;
     }
 
-    public String getFunctionSignature() {
-        return functionSignature;
+    public void setFunction(Function function) {
+        this.function = function;
     }
 
-    public String getAlias() {
-        return alias;
+    public String toString() {
+        return this.function + (this.alias != null ? this.alias.toString() : "");
     }
 
     @Override
     public String toString(boolean withAliases) {
-
-        StringBuilder functionAsSelectAttribute = new StringBuilder(functionSignature);
-
-        functionAsSelectAttribute.append("(");
-        boolean isFunctionSupported = SupportedAggregationFunctions.isFunctionSupported(this.functionSignature);
-        if(!isFunctionSupported){
-            int numOfArguments = SupportedAggregationFunctions.getNumOfArguments(this.functionSignature);
-            if(numOfArguments == argumentList.size()){
-
-            }else{
-                throw new IllegalArgumentException();
-            }
-
-        }
-
-        for(Attribute attribute : argumentList){
-            functionAsSelectAttribute.append(attribute.getName());
-        }
-
-        if(alias == null){
-            this.alias = 
-        }
-
-        functionAsSelectAttribute.append(") ").append("as ").append(alias); // eg - count(column_a) as alias
-        return functionAsSelectAttribute.toString();
+        return toString();
     }
 
     @Override
     public String getName() {
-        return null;
+        return function.getName();
     }
 }

@@ -1,12 +1,22 @@
 package Compiler;
 
+import Engine.FromItemHandlingBehavior;
+import Engine.IEngine;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.*;
 
 public class CustomFromItemVisitorImpl implements FromItemVisitor {
+    private IEngine middleEngine;
+
+    public CustomFromItemVisitorImpl(IEngine middleEngine) {
+        this.middleEngine = middleEngine;
+    }
+
     @Override
     public void visit(Table table) {
         System.out.println("in Table:" + CustomFromItemVisitorImpl.class);
+        middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehavior());
+        middleEngine.handleTable(table);
         System.out.println(table.toString());
     }
 

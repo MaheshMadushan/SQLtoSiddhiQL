@@ -1,18 +1,11 @@
 package Compiler;
 
+import Engine.IEngine;
+import Engine.MiddleEngine;
 import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.expression.BinaryExpression;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.parser.Node;
-import net.sf.jsqlparser.parser.SimpleNode;
-import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.PlainSelect;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.select.SetOperationList;
-
 
 public class AST {
     public static final String ANSI_RESET = "\u001B[0m";
@@ -39,12 +32,11 @@ public class AST {
 
     private static void traverseAST(Node rootNode, int level, Statement statement){
         if(rootNode == null){
-
+            return;
         }
-        else{
-            for(int i = 0; i < rootNode.jjtGetNumChildren(); i++){
-                traverseAST(rootNode.jjtGetChild(i),level+1, statement);
-            }
+        printNode(rootNode,level);
+        for(int i = 0; i < rootNode.jjtGetNumChildren(); i++){
+            traverseAST(rootNode.jjtGetChild(i),level+1, statement);
         }
     }
 
@@ -56,13 +48,15 @@ public class AST {
         System.out.println(colors[level % 9] + head + colors[0]);
     }
 
-    public static void generateSiddhiApp(String StringSQLSelectstatement){
+    public static void generateSiddhiApp(String StringSQLSelectStatement){
+        IEngine middleEngine = new MiddleEngine();
         Statement statement = null;
         try {
-            statement = CCJSqlParserUtil.parse(StringSQLSelectstatement);
+            statement = CCJSqlParserUtil.parse(StringSQLSelectStatement);
         } catch (JSQLParserException e) {
             e.printStackTrace();
         }
-        statement.accept(new CustomSelectStatementVisitor());
+        assert statement != null;
+        statement.accept(new CustomSelectStatementVisitor(middleEngine));
     }
 }

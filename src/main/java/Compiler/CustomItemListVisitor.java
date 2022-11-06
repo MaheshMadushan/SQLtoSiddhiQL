@@ -1,5 +1,6 @@
 package Compiler;
 
+import Engine.IEngine;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.ItemsListVisitor;
@@ -10,6 +11,13 @@ import net.sf.jsqlparser.statement.select.SubSelect;
 import java.util.List;
 
 public class CustomItemListVisitor implements ItemsListVisitor {
+    private IEngine middleEngine;
+
+    public CustomItemListVisitor(IEngine middleEngine) {
+        this.middleEngine = middleEngine;
+    }
+
+
     @Override
     public void visit(SubSelect subSelect) {
         System.out.println("in subSelect:" + this.getClass());
@@ -21,7 +29,7 @@ public class CustomItemListVisitor implements ItemsListVisitor {
         System.out.println("in ExpressionList:" + this.getClass());
         System.out.println(expressionList.toString());
         List<Expression> expressions = expressionList.getExpressions();
-        for (Expression expression : expressions) expression.accept(new CustomExpressionVisitorAdaptor());
+        for (Expression expression : expressions) expression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
     }
 
     @Override

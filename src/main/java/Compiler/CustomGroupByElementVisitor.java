@@ -12,6 +12,6 @@ public class CustomGroupByElementVisitor implements GroupByVisitor {
 
         ExpressionList groupByExpressionList = groupByElement.getGroupByExpressionList();
 
-        groupByExpressionList.accept(new CustomItemListVisitor());
+//        groupByExpressionList.accept(new CustomItemListVisitor(middleEngine));
     }
 }
