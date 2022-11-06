@@ -8,7 +8,6 @@ import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.select.FunctionItem;
 
 public class MiddleEngine extends IEngine {
 
@@ -89,51 +88,55 @@ public class MiddleEngine extends IEngine {
 
     @Override
     public void handleAndExpression(AndExpression andExpression) {
-        System.out.println("not yet handled");
+        engineBehavior.handleAndExpression(andExpression);
     }
 
     @Override
     public void handleOrExpression(OrExpression orExpression) {
+        engineBehavior.handleOrExpression(orExpression);
 
     }
 
     @Override
     public void handleXorExpression(XorExpression xorExpression) {
+        engineBehavior.handleXorExpression(xorExpression);
 
     }
 
     @Override
     public void handleEqualsTo(EqualsTo equalsTo) {
+        engineBehavior.handleEqualsTo(equalsTo);
 
     }
 
     @Override
     public void handleGreaterThan(GreaterThan greaterThan) {
+        engineBehavior.handleGreaterThan(greaterThan);
 
     }
 
     @Override
     public void handleGreaterThanEquals(GreaterThanEquals greaterThanEquals) {
-
+        engineBehavior.handleGreaterThanEquals(greaterThanEquals);
     }
 
     @Override
     public void handleMinorThan(MinorThan minorThan) {
-
+        engineBehavior.handleMinorThan(minorThan);
     }
 
     @Override
     public void handleMinorThanEquals(MinorThanEquals minorThanEquals) {
-
+        engineBehavior.handleMinorThanEquals(minorThanEquals);
     }
 
     @Override
     public void handleNotEqualsTo(NotEqualsTo notEqualsTo) {
-
+        engineBehavior.handleNotEqualsTo(notEqualsTo);
     }
 
     @Override
     public void handleAlias(Alias alias) {
-
+        engineBehavior.handleAlias(alias);
     }
 }
