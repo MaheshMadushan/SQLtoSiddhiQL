@@ -20,25 +20,23 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     private final IEngine middleEngine;
 
     public CustomExpressionVisitorAdaptor(IEngine middleEngine) {
-
         this.middleEngine = middleEngine;
-
     }
 
     // siddhi not supports this
     @Override
     public void visit(BitwiseRightShift bitwiseRightShift) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(BitwiseLeftShift bitwiseLeftShift) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(NullValue nullValue) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -90,10 +88,12 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(JdbcParameter jdbcParameter) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JdbcNamedParameter jdbcNamedParameter) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -110,21 +110,22 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(HexValue hexValue) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(DateValue dateValue) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TimeValue timeValue) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TimestampValue timestampValue) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -336,27 +337,27 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(InExpression inExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(FullTextSearch fullTextSearch) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(IsNullExpression isNullExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(IsBooleanExpression isBooleanExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(LikeExpression likeExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -401,62 +402,62 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(SubSelect subSelect) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(CaseExpression caseExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(WhenClause whenClause) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ExistsExpression existsExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(AnyComparisonExpression anyComparisonExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(Concat concat) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(Matches matches) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(BitwiseAnd bitwiseAnd) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(BitwiseOr bitwiseOr) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(BitwiseXor bitwiseXor) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(CastExpression castExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TryCastExpression tryCastExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -466,92 +467,92 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(AnalyticExpression analyticExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ExtractExpression extractExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(IntervalExpression intervalExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(OracleHierarchicalExpression oracleHierarchicalExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(RegExpMatchOperator regExpMatchOperator) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JsonExpression jsonExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JsonOperator jsonOperator) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(RegExpMySQLOperator regExpMySQLOperator) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(UserVariable userVariable) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(NumericBind numericBind) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(KeepExpression keepExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(MySQLGroupConcat mySQLGroupConcat) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ValueListExpression valueListExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(RowConstructor rowConstructor) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(RowGetExpression rowGetExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(OracleHint oracleHint) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TimeKeyExpression timeKeyExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(DateTimeLiteralExpression dateTimeLiteralExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -561,62 +562,62 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(NextValExpression nextValExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(CollateExpression collateExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(SimilarToExpression similarToExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ArrayExpression arrayExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ArrayConstructor arrayConstructor) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(VariableAssignment variableAssignment) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(XMLSerializeExpr xmlSerializeExpr) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TimezoneExpression timezoneExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JsonAggregateFunction jsonAggregateFunction) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JsonFunction jsonFunction) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ConnectByRootOperator connectByRootOperator) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(OracleNamedFunctionParameter oracleNamedFunctionParameter) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -636,11 +637,11 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(IsDistinctExpression isDistinctExpression) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(GeometryDistance geometryDistance) {
-
+        throw new UnsupportedOperationException();
     }
 }

@@ -1,6 +1,7 @@
 package Compiler;
 
 import Engine.IEngine;
+import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.AllTableColumns;
@@ -28,7 +29,14 @@ public class CustomSelectItemVisitorImpl implements SelectItemVisitor {
     public void visit(SelectExpressionItem selectExpressionItem) {
         Expression itemExpression = selectExpressionItem.getExpression();
         // middle engine behavior is select item handling behavior
-        middleEngine.handleAlias(selectExpressionItem.getAlias());
+
         itemExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
+
+        Alias aliasOfSelectExpressionItem = selectExpressionItem.getAlias();
+        if(aliasOfSelectExpressionItem == null){
+
+        }else {
+            middleEngine.handleAlias(selectExpressionItem.getAlias());
+        }
     }
 }
