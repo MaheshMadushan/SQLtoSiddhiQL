@@ -77,13 +77,16 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
 
     @Override
     public void visit(SetOperationList setOperationList) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(WithItem withItem) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ValuesStatement valuesStatement) {
+        throw new UnsupportedOperationException();
     }
 }

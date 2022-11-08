@@ -20,6 +20,7 @@ public class CustomItemListVisitor implements ItemsListVisitor {
 
     @Override
     public void visit(SubSelect subSelect) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -30,9 +31,11 @@ public class CustomItemListVisitor implements ItemsListVisitor {
 
     @Override
     public void visit(NamedExpressionList namedExpressionList) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(MultiExpressionList multiExpressionList) {
+        throw new UnsupportedOperationException();
     }
 }
