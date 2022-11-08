@@ -30,16 +30,17 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
             distinct.getOnSelectItems();
         }
 
-        Expression whereExpression = plainSelect.getWhere();
-        if(whereExpression != null) {
-            middleEngine.setExpressionHandlingBehavior(new WhereExpressionHandlingBehavior());
-            whereExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
-        }
 
         FromItem fromItem = plainSelect.getFromItem();
         if(fromItem != null) {
             middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehavior());
             fromItem.accept(new CustomFromItemVisitorImpl(middleEngine));
+        }
+
+        Expression whereExpression = plainSelect.getWhere();
+        if(whereExpression != null) {
+            middleEngine.setExpressionHandlingBehavior(new WhereExpressionHandlingBehavior());
+            whereExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
         }
 
         List<Join> joins = plainSelect.getJoins();
