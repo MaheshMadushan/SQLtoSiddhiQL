@@ -1,6 +1,6 @@
 package SiddhiApp;
 
-public class Attribute implements IAttribute{
+public class Attribute implements IAttribute, ISiddhiAppComposite{
     private String name;
     private String alias;
 
@@ -46,4 +46,12 @@ public class Attribute implements IAttribute{
         }
     }
 
+    @Override
+    public String getSiddhiAppCompositeAsString() {
+        if(alias == null){
+            return " " + name + " ";
+        }else{
+            return " " + name + " AS " + alias + " ";
+        }
+    }
 }

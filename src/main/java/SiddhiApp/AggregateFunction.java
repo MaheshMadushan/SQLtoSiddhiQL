@@ -3,7 +3,7 @@ package SiddhiApp;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Function;
 
-public class AggregateFunction implements IFunction,IAttribute{
+public class AggregateFunction implements IFunction,IAttribute,ISiddhiAppComposite{
 
     private Function function;
     private Alias alias;
@@ -45,5 +45,10 @@ public class AggregateFunction implements IFunction,IAttribute{
     @Override
     public String getName() {
         return function.getName();
+    }
+
+    @Override
+    public String getSiddhiAppCompositeAsString() {
+        return null;
     }
 }

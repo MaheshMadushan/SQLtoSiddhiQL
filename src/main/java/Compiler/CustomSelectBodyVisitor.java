@@ -7,10 +7,9 @@ import Engine.WhereExpressionHandlingBehavior;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
-
 import java.util.List;
-
 public class CustomSelectBodyVisitor implements SelectVisitor {
+
     private final IEngine middleEngine;
 
     public CustomSelectBodyVisitor(IEngine middleEngine) {
@@ -30,7 +29,6 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
             distinct.getOnSelectItems();
         }
 
-
         FromItem fromItem = plainSelect.getFromItem();
         if(fromItem != null) {
             middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehavior());
@@ -46,10 +44,7 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
         List<Join> joins = plainSelect.getJoins();
         if(joins != null){
             for ( Join join : joins){
-
-
                 List<Expression> onExpressions = (List<Expression>) join.getOnExpressions();
-
                 if(onExpressions != null){
                     for(Expression onExpression : onExpressions){
                         onExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
@@ -78,16 +73,16 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
 
     @Override
     public void visit(SetOperationList setOperationList) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Set ops not supported.");
     }
 
     @Override
     public void visit(WithItem withItem) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("With item not supported");
     }
 
     @Override
     public void visit(ValuesStatement valuesStatement) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("values statement not supported");
     }
 }

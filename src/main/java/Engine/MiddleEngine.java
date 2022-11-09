@@ -48,37 +48,31 @@ public class MiddleEngine extends IEngine {
     @Override
     public void handleParenthesis(Parenthesis parenthesis) {
         engineBehavior.handleParenthesis(parenthesis);
-
     }
 
     @Override
     public void handleStringValue(StringValue stringValue) {
         engineBehavior.handleStringValue(stringValue);
-
     }
 
     @Override
     public void handleAddition(Addition addition) {
         engineBehavior.handleAddition(addition);
-
     }
 
     @Override
     public void handleDivision(Division division) {
         engineBehavior.handleDivision(division);
-
     }
 
     @Override
     public void handleIntegerDivision(IntegerDivision integerDivision) {
         engineBehavior.handleIntegerDivision(integerDivision);
-
     }
 
     @Override
     public void handleMultiplication(Multiplication multiplication) {
         engineBehavior.handleMultiplication(multiplication);
-
     }
 
     @Override
@@ -94,25 +88,21 @@ public class MiddleEngine extends IEngine {
     @Override
     public void handleOrExpression(OrExpression orExpression) {
         engineBehavior.handleOrExpression(orExpression);
-
     }
 
     @Override
     public void handleXorExpression(XorExpression xorExpression) {
         engineBehavior.handleXorExpression(xorExpression);
-
     }
 
     @Override
     public void handleEqualsTo(EqualsTo equalsTo) {
         engineBehavior.handleEqualsTo(equalsTo);
-
     }
 
     @Override
     public void handleGreaterThan(GreaterThan greaterThan) {
         engineBehavior.handleGreaterThan(greaterThan);
-
     }
 
     @Override

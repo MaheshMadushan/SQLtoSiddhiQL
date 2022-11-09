@@ -1,31 +1,35 @@
 package SiddhiApp;
 import java.util.List;
-public class SelectStatementAttributeList implements IAttributeList{
-    private List<AttributeList.AttributeDataTypePair<IAttribute, String>> attributeDataTypePairs;
+public class SelectStatementAttributeList implements IAttributeList,ISiddhiAppComposite{
+    // contains functions / columns / coulmns with aliases
+    private List<ISiddhiAppComposite> attributeDataTypePairs;
 
-    public SelectStatementAttributeList(List<AttributeList.AttributeDataTypePair<IAttribute, String>> attributeDataTypePairs) {
+    public SelectStatementAttributeList(List<ISiddhiAppComposite> attributeDataTypePairs) {
         this.attributeDataTypePairs = attributeDataTypePairs;
     }
 
     @Override
-    public void setAttributeSetAndDataTypes(List<AttributeList.AttributeDataTypePair<IAttribute, String>> attributeDataTypePairs) {
+    public void setAttributeSetAndDataTypes(List<ISiddhiAppComposite> attributeDataTypePairs) {
 
     }
 
     @Override
-    public List<AttributeList.AttributeDataTypePair<IAttribute, String>> getAttributeSetAndDataTypes() {
+    public List<ISiddhiAppComposite> getAttributeSetAndDataTypes() {
         return attributeDataTypePairs;
     }
 
     @Override
     public String toString() {
         StringBuilder attributeSetWithAliasesWithOutDataType = new StringBuilder("");
-        for(AttributeList.AttributeDataTypePair<IAttribute,String> attributeDataTypePair : attributeDataTypePairs){
+        for(ISiddhiAppComposite attributeDataTypePair : attributeDataTypePairs){
             attributeSetWithAliasesWithOutDataType
-                    .append(attributeDataTypePair.getAttribute().toString(true))
-                    .append(",  ");
+                    .append(attributeDataTypePair.getSiddhiAppCompositeAsString());
         }
-        attributeSetWithAliasesWithOutDataType.deleteCharAt(attributeSetWithAliasesWithOutDataType.length() - 3); // deleting redundant "," // attributeSetWithDataType - <attribute name> AS <alias>,<attribute name> AS alias,<attribute name> AS <alias>, <attribute name> ... ;
         return attributeSetWithAliasesWithOutDataType.toString();
+    }
+
+    @Override
+    public String getSiddhiAppCompositeAsString() {
+        return null;
     }
 }

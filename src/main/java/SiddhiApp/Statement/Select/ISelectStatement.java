@@ -1,5 +1,7 @@
 package SiddhiApp.Statement.Select;
 
-public interface ISelectStatement {
+import SiddhiApp.ISiddhiAppComposite;
+
+public interface ISelectStatement extends ISiddhiAppComposite {
     String toString();
 }

@@ -1,6 +1,6 @@
 package SiddhiApp;
 
-public class Stream implements IStream{
+public class Stream implements IStream,ISiddhiAppComposite{
     private final String streamName;
     private final AttributeList attributeList;
 
@@ -15,4 +15,8 @@ public class Stream implements IStream{
         return String.format("define stream %s (%s);",streamName,attributeList.toString());
     }
 
+    @Override
+    public String getSiddhiAppCompositeAsString() {
+        return null;
+    }
 }

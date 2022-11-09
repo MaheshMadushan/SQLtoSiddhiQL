@@ -2,9 +2,14 @@ package SiddhiApp;
 
 import java.util.List;
 
-public class AttributeList{
+public class AttributeList implements ISiddhiAppComposite{
 
-    public class AttributeDataTypePair<T,N>{
+    @Override
+    public String getSiddhiAppCompositeAsString() {
+        return null;
+    }
+
+    public static class AttributeDataTypePair<T,N>{
         private T attribute;
         private N dataType;
 
