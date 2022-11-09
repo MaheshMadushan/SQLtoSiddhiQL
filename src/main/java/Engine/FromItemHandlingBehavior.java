@@ -9,6 +9,9 @@ import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 public class FromItemHandlingBehavior extends IExpressionHandleBehavior{
+
+    StringBuilder fromItemString = new StringBuilder("");
+
     @Override
     public void handleTable(Table table) {
         System.out.println("in FromItemHandlingBehavior table ");

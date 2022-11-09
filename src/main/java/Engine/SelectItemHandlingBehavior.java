@@ -10,6 +10,8 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 
 public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
+
+
     @Override
     public void handleTable(Table table) {
         System.out.println("in SelectItemHandlingBehavior table ");
