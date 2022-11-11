@@ -1,5 +1,6 @@
 package Compiler;
 
+import Engine.IEngine;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -16,47 +17,35 @@ import java.util.List;
 
 public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
-    private void visitLeftAndRightExpressions(BinaryExpression expression){
-        Expression rightExpression = expression.getRightExpression();
-        Expression leftExpression = expression.getLeftExpression();
+    private final IEngine middleEngine;
 
-        if(rightExpression != null){
-            System.out.println(rightExpression.toString());
-            rightExpression.accept(this);
-        }
-
-        if(leftExpression != null){
-            System.out.println(leftExpression.toString());
-            leftExpression.accept(this);
-        }
+    public CustomExpressionVisitorAdaptor(IEngine middleEngine) {
+        this.middleEngine = middleEngine;
     }
 
+    // siddhi not supports this
     @Override
     public void visit(BitwiseRightShift bitwiseRightShift) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(bitwiseRightShift.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(BitwiseLeftShift bitwiseLeftShift) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(bitwiseLeftShift.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(NullValue nullValue) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(nullValue.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(Function function) {
-        ItemsListVisitor itemsListVisitor = new CustomItemListVisitor();
+        middleEngine.handleFunction(function);
 
-        System.out.println("in function:" + CustomExpressionVisitorAdaptor.class);
+        ItemsListVisitor itemsListVisitor = new CustomItemListVisitor(middleEngine);
 
         String functionName = function.getName();
-        System.out.println(functionName);
 
         NamedExpressionList namedExpressionList = function.getNamedParameters();
         if(namedExpressionList != null){
@@ -71,7 +60,7 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         List<OrderByElement> orderByElementList = function.getOrderByElements();
         if(orderByElementList != null){
             for(OrderByElement orderByElement : orderByElementList){
-                orderByElement.accept(new CustomOrderByElementVisitor());
+                orderByElement.accept(new CustomOrderByElementVisitor(middleEngine));
             }
         }
 
@@ -86,499 +75,573 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(SignedExpression signedExpression) {
-        System.out.println("in SignedExpression:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(signedExpression.getExpression());
+
+        signedExpression.getSign();
+
+        middleEngine.handleSignedExpression(signedExpression);
+
+        Expression signExpression = signedExpression.getExpression();
+        if(signExpression != null) {
+            signExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(JdbcParameter jdbcParameter) {
-        System.out.println("in JdbcParameter:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(jdbcParameter.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JdbcNamedParameter jdbcNamedParameter) {
-        System.out.println("in JdbcNamedParameter:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(jdbcNamedParameter.getName());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(DoubleValue doubleValue) {
-        System.out.println("in DoubleValue:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(doubleValue.getValue());
+
+        middleEngine.handleDoubleValue(doubleValue);
     }
 
     @Override
     public void visit(LongValue longValue) {
-        System.out.println("in LongValue:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(longValue.getValue());
+
+        middleEngine.handleLongValue(longValue);
     }
 
     @Override
     public void visit(HexValue hexValue) {
-        System.out.println("in HexValue:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(hexValue.getValue());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(DateValue dateValue) {
-        System.out.println("in DateValue:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(dateValue.getValue());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TimeValue timeValue) {
-        System.out.println("in TimeValue:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(timeValue.getValue());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TimestampValue timestampValue) {
-        System.out.println("in TimestampValue:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(timestampValue.getValue());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(Parenthesis parenthesis) {
-        System.out.println("in Parenthesis:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(parenthesis.getExpression());
+
+        middleEngine.handleParenthesis(parenthesis);
+        Expression expression = parenthesis.getExpression();
+        if(expression != null) {
+            expression.accept(this);
+        }
     }
 
     @Override
     public void visit(StringValue stringValue) {
-        System.out.println("in StringValue:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(stringValue.getPrefix());
+
+        middleEngine.handleStringValue(stringValue);
     }
 
     @Override
     public void visit(Addition addition) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(addition.getStringExpression());
+        Expression rightExpression = addition.getRightExpression();
+        Expression leftExpression = addition.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
+        middleEngine.handleAddition(addition);
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(Division division) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(division.getStringExpression());
+        Expression rightExpression = division.getRightExpression();
+        Expression leftExpression = division.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
+        middleEngine.handleDivision(division);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(IntegerDivision integerDivision) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(integerDivision.getStringExpression());
+        Expression rightExpression = integerDivision.getRightExpression();
+        Expression leftExpression = integerDivision.getLeftExpression();
+
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
+        middleEngine.handleIntegerDivision(integerDivision);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(Multiplication multiplication) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(multiplication.getStringExpression());
+        Expression rightExpression = multiplication.getRightExpression();
+        Expression leftExpression = multiplication.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
+        middleEngine.handleMultiplication(multiplication);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(Subtraction subtraction) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(subtraction.getStringExpression());
+        Expression rightExpression = subtraction.getRightExpression();
+        Expression leftExpression = subtraction.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+        middleEngine.handleSubtraction(subtraction);
+
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(AndExpression andExpression) {
-        System.out.println("in AndExpression:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(andExpression.getStringExpression());
+        Expression rightExpression = andExpression.getRightExpression();
+        Expression leftExpression = andExpression.getLeftExpression();
 
-        this.visitLeftAndRightExpressions(andExpression);
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
+        middleEngine.handleAndExpression(andExpression);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(OrExpression orExpression) {
-        System.out.println("in OrExpression:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(orExpression.getStringExpression());
+        Expression rightExpression = orExpression.getRightExpression();
+        Expression leftExpression = orExpression.getLeftExpression();
 
-        this.visitLeftAndRightExpressions(orExpression);
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+        middleEngine.handleOrExpression(orExpression);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(XorExpression xorExpression) {
-        System.out.println("in XorExpression:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(xorExpression.getStringExpression());
+        Expression rightExpression = xorExpression.getRightExpression();
+        Expression leftExpression = xorExpression.getLeftExpression();
 
-        this.visitLeftAndRightExpressions(xorExpression);
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
+        middleEngine.handleXorExpression(xorExpression);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(Between between) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(between.toString());
 
     }
 
     @Override
     public void visit(EqualsTo equalsTo) {
-        System.out.println("in EqualsTo:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(equalsTo.getStringExpression());
+        Expression rightExpression = equalsTo.getRightExpression();
+        Expression leftExpression = equalsTo.getLeftExpression();
 
-        this.visitLeftAndRightExpressions(equalsTo);
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
+        middleEngine.handleEqualsTo(equalsTo);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(GreaterThan greaterThan) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(greaterThan.getStringExpression());
+        Expression rightExpression = greaterThan.getRightExpression();
+        Expression leftExpression = greaterThan.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
+        middleEngine.handleGreaterThan(greaterThan);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(GreaterThanEquals greaterThanEquals) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(greaterThanEquals.getStringExpression());
+        Expression rightExpression = greaterThanEquals.getRightExpression();
+        Expression leftExpression = greaterThanEquals.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
+
+        middleEngine.handleGreaterThanEquals(greaterThanEquals);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
+
     }
 
     @Override
     public void visit(InExpression inExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(inExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(FullTextSearch fullTextSearch) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(fullTextSearch.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(IsNullExpression isNullExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(isNullExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(IsBooleanExpression isBooleanExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(isBooleanExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(LikeExpression likeExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(likeExpression.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(MinorThan minorThan) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(minorThan.getStringExpression());
+
+
+        middleEngine.handleMinorThan(minorThan);
     }
 
     @Override
     public void visit(MinorThanEquals minorThanEquals) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(minorThanEquals.getStringExpression());
+
+
+        middleEngine.handleMinorThanEquals(minorThanEquals);
     }
 
     @Override
     public void visit(NotEqualsTo notEqualsTo) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(notEqualsTo.getStringExpression());
+
+
+        middleEngine.handleNotEqualsTo(notEqualsTo);
     }
 
     @Override
     public void visit(Column column) {
-        System.out.println("in column:" + CustomExpressionVisitorAdaptor.class);
-        System.out.println(column.getName(true));
-        System.out.println(column.getFullyQualifiedName());
-        System.out.println(column.getColumnName());
-        System.out.println(column.getTable());
+        middleEngine.handleColumn(column);
+        // this function will hit by Function visitor - if function has
+        // a column as an attribute or expression of multiple columns
+        // then we have to extract those columns to put in "define stream" statement
+        // in siddhi app (only this?) - so only to put in stream statement attribute list
+        // also we have to find data type of the column. for all normal select items we provide string
+        // if user doesn't specify the data type. for the function we can't do that. bcz some functions
+        // don't accept strings. we can put float if user doesn't specify the data type since we only support aggregates. but how to
+        // extend this? so we have to know from which function this column has extracted. then we can assume
+        // it is a type that function accepts. eg. sum(column) only accept numeric values.
+        // middleEngine.addColumn(column.getColumnName());
+
+        // if we provide siddhi app as argument to this class constructor?
+        // how to determine this column goes to where?
+
     }
 
     @Override
     public void visit(SubSelect subSelect) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(subSelect.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(CaseExpression caseExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(caseExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(WhenClause whenClause) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(whenClause.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ExistsExpression existsExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(existsExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(AnyComparisonExpression anyComparisonExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(anyComparisonExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(Concat concat) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(concat.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(Matches matches) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(matches.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(BitwiseAnd bitwiseAnd) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(bitwiseAnd.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(BitwiseOr bitwiseOr) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(bitwiseOr.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(BitwiseXor bitwiseXor) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(bitwiseXor.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(CastExpression castExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(castExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TryCastExpression tryCastExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(tryCastExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(Modulo modulo) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(modulo.getStringExpression());
+
     }
 
     @Override
     public void visit(AnalyticExpression analyticExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(analyticExpression.getExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ExtractExpression extractExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(extractExpression.getExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(IntervalExpression intervalExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(intervalExpression.getExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(OracleHierarchicalExpression oracleHierarchicalExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(oracleHierarchicalExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(RegExpMatchOperator regExpMatchOperator) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(regExpMatchOperator.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JsonExpression jsonExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(jsonExpression.getExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JsonOperator jsonOperator) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(jsonOperator.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(RegExpMySQLOperator regExpMySQLOperator) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(regExpMySQLOperator.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(UserVariable userVariable) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(userVariable.getName());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(NumericBind numericBind) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(numericBind.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(KeepExpression keepExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(keepExpression.getName());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(MySQLGroupConcat mySQLGroupConcat) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(mySQLGroupConcat.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ValueListExpression valueListExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(valueListExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(RowConstructor rowConstructor) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(rowConstructor.getName());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(RowGetExpression rowGetExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(rowGetExpression.getExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(OracleHint oracleHint) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(oracleHint.getValue());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TimeKeyExpression timeKeyExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(timeKeyExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(DateTimeLiteralExpression dateTimeLiteralExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(dateTimeLiteralExpression.getValue());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(NotExpression notExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(notExpression.getExpression());
+
     }
 
     @Override
     public void visit(NextValExpression nextValExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(nextValExpression.getName());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(CollateExpression collateExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(collateExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(SimilarToExpression similarToExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(similarToExpression.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ArrayExpression arrayExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(arrayExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ArrayConstructor arrayConstructor) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(arrayConstructor.getExpressions());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(VariableAssignment variableAssignment) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(variableAssignment.getExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(XMLSerializeExpr xmlSerializeExpr) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(xmlSerializeExpr.getExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(TimezoneExpression timezoneExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(timezoneExpression.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JsonAggregateFunction jsonAggregateFunction) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(jsonAggregateFunction.getExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(JsonFunction jsonFunction) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(jsonFunction.getExpressions());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(ConnectByRootOperator connectByRootOperator) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(connectByRootOperator.toString());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(OracleNamedFunctionParameter oracleNamedFunctionParameter) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(oracleNamedFunctionParameter.getExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(AllColumns allColumns) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(allColumns.toString());
+
     }
 
     @Override
     public void visit(AllTableColumns allTableColumns) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(allTableColumns.toString());
+
     }
 
     @Override
     public void visit(AllValue allValue) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(allValue.toString());
+
     }
 
     @Override
     public void visit(IsDistinctExpression isDistinctExpression) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(isDistinctExpression.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void visit(GeometryDistance geometryDistance) {
-        System.out.println("in " + CustomExpressionVisitorAdaptor.class);
-        System.out.println(geometryDistance.getStringExpression());
+        throw new UnsupportedOperationException();
     }
 }

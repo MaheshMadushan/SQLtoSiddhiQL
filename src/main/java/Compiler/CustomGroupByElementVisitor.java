@@ -7,11 +7,9 @@ import net.sf.jsqlparser.statement.select.GroupByVisitor;
 public class CustomGroupByElementVisitor implements GroupByVisitor {
     @Override
     public void visit(GroupByElement groupByElement) {
-        System.out.println("in " + CustomGroupByElementVisitor.class);
-        System.out.println(groupByElement.toString());
 
-        ExpressionList expressionList = groupByElement.getGroupByExpressionList();
+        ExpressionList groupByExpressionList = groupByElement.getGroupByExpressionList();
 
-        expressionList.accept(new CustomItemListVisitor());
+//        groupByExpressionList.accept(new CustomItemListVisitor(middleEngine));
     }
 }

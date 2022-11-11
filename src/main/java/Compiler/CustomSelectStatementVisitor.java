@@ -1,5 +1,6 @@
 package Compiler;
 
+import Engine.IEngine;
 import net.sf.jsqlparser.statement.*;
 import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.alter.AlterSession;
@@ -30,216 +31,263 @@ import net.sf.jsqlparser.statement.upsert.Upsert;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
 
 public class CustomSelectStatementVisitor implements StatementVisitor {
+    private IEngine middleEngine;
+
+    public CustomSelectStatementVisitor(IEngine middleEngine) {
+        this.middleEngine = middleEngine;
+    }
+
+
+
     @Override
     public void visit(SavepointStatement savepointStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(RollbackStatement rollbackStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Comment comment) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Commit commit) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Delete delete) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Update update) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Insert insert) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Replace replace) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Drop drop) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Truncate truncate) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(CreateIndex createIndex) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(CreateSchema createSchema) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(CreateTable createTable) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(CreateView createView) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(AlterView alterView) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Alter alter) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Statements statements) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Execute execute) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(SetStatement setStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(ResetStatement resetStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(ShowColumnsStatement showColumnsStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(ShowTablesStatement showTablesStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Merge merge) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Select select) {
-        System.out.println("in " + CustomSelectStatementVisitor.class);
-        System.out.println(select.toString());
         SelectBody selectBody = select.getSelectBody();
-        selectBody.accept(new CustomSelectBodyVisitor());
+        selectBody.accept(new CustomSelectBodyVisitor(middleEngine));
     }
 
     @Override
     public void visit(Upsert upsert) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(UseStatement useStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Block block) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(ValuesStatement valuesStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(DescribeStatement describeStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(ExplainStatement explainStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(ShowStatement showStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(DeclareStatement declareStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(Grant grant) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(CreateSequence createSequence) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(AlterSequence alterSequence) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(CreateFunctionalStatement createFunctionalStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(CreateSynonym createSynonym) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(AlterSession alterSession) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(IfElseStatement ifElseStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(RenameTableStatement renameTableStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(PurgeStatement purgeStatement) {
+        throw new UnsupportedOperationException();
 
     }
 
     @Override
     public void visit(AlterSystemStatement alterSystemStatement) {
+        throw new UnsupportedOperationException();
 
     }
 }
