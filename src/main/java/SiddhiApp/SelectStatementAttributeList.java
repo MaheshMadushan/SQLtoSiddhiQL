@@ -1,35 +1,34 @@
 package SiddhiApp;
+import java.util.ArrayList;
 import java.util.List;
-public class SelectStatementAttributeList implements IAttributeList,ISiddhiAppComposite{
-    // contains functions / columns / coulmns with aliases
-    private List<ISiddhiAppComposite> attributeDataTypePairs;
+public class SelectStatementAttributeList implements IAttributeList{
 
-    public SelectStatementAttributeList(List<ISiddhiAppComposite> attributeDataTypePairs) {
-        this.attributeDataTypePairs = attributeDataTypePairs;
+    private final List<ISiddhiAppComposite> attributesWithOrWithoutAliases;
+
+    public SelectStatementAttributeList() {
+        this.attributesWithOrWithoutAliases = new ArrayList<>(10);
     }
 
-    @Override
-    public void setAttributeSetAndDataTypes(List<ISiddhiAppComposite> attributeDataTypePairs) {
-
+    public List<ISiddhiAppComposite> getAttributesWithOrWithoutAliases() {
+        return attributesWithOrWithoutAliases;
     }
 
-    @Override
-    public List<ISiddhiAppComposite> getAttributeSetAndDataTypes() {
-        return attributeDataTypePairs;
+    public void addAttribute(ISiddhiAppComposite attribute){
+         attributesWithOrWithoutAliases.add(attribute);
     }
 
     @Override
     public String toString() {
         StringBuilder attributeSetWithAliasesWithOutDataType = new StringBuilder("");
-        for(ISiddhiAppComposite attributeDataTypePair : attributeDataTypePairs){
+        for(ISiddhiAppComposite attributeDataTypePair : attributesWithOrWithoutAliases){
             attributeSetWithAliasesWithOutDataType
-                    .append(attributeDataTypePair.getSiddhiAppCompositeAsString());
+                    .append(attributeDataTypePair.getSiddhiAppCompositeAsString()).append(",");
         }
         return attributeSetWithAliasesWithOutDataType.toString();
     }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        return null;
+        return toString();
     }
 }

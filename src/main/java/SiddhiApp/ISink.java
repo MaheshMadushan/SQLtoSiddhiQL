@@ -1,4 +1,4 @@
 package SiddhiApp;
 
-public interface ISink {
+public interface ISink  {
 }

@@ -12,7 +12,6 @@ import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.AllTableColumns;
 import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.SubSelect;
-
 import java.util.List;
 
 public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {

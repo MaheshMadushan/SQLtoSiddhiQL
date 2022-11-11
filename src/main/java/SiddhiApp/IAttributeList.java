@@ -2,8 +2,7 @@ package SiddhiApp;
 
 import java.util.List;
 
-public interface IAttributeList {
+public interface IAttributeList extends ISiddhiAppComposite {
     String toString();
-    void setAttributeSetAndDataTypes(List<ISiddhiAppComposite> attributeDataTypePairs);
-    List<ISiddhiAppComposite> getAttributeSetAndDataTypes();
+    void addAttribute(ISiddhiAppComposite attribute);
 }
