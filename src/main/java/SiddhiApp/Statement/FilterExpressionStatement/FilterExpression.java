@@ -2,9 +2,8 @@ package SiddhiApp.Statement.FilterExpressionStatement;
 
 public class FilterExpression implements IFilterExpression {
 
-    private boolean isparenthesis = false;
     private TreeNode rootNode;
-    private String filterStatement;
+    private String filterStatement = "";
     private static class TreeNode{
         private TreeNode leftNode;
         private TreeNode rightNode;
@@ -34,16 +33,17 @@ public class FilterExpression implements IFilterExpression {
     public void addOperand(String operand){
     }
 
-    public void setIsparenthesis(boolean isparenthesis) {
-        this.isparenthesis = isparenthesis;
+    // TODO : this is a quick implementation. Do create a bin tree
+    public void addOpenBracket() {
+        this.filterStatement += "(";
+    }
+
+    public void addCloseBracket() {
+        this.filterStatement += ")";
     }
 
     public void addSymbol(String symbol){
-        if(isparenthesis){
-            this.filterStatement += String.format("(%s)", filterStatement + " " + symbol + " ");
-        }else {
-            this.filterStatement += String.format("%s", filterStatement + " " + symbol + " ");
-        }
+        this.filterStatement += symbol + " ";
     }
 
     @Override
@@ -51,7 +51,3 @@ public class FilterExpression implements IFilterExpression {
         return filterStatement;
     }
 }
-
-
-
-

@@ -1,5 +1,6 @@
 import Engine.IEngine;
 import Engine.MiddleEngine;
+import SiddhiApp.SiddhiApp;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.*;
@@ -1335,7 +1336,9 @@ public class App {
 //
 //            }
 //        });
-        IEngine middleEngine  = new MiddleEngine();
+        SiddhiApp siddhiApp = new SiddhiApp();
+
+        IEngine middleEngine  = new MiddleEngine().setSiddhiApp(siddhiApp);
 
         statement.accept(new CustomSelectStatementVisitor(middleEngine));
 

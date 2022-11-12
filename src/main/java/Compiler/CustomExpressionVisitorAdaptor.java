@@ -130,11 +130,12 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     @Override
     public void visit(Parenthesis parenthesis) {
 
-        middleEngine.handleParenthesis(parenthesis);
+        middleEngine.handleOpenBracket();
         Expression expression = parenthesis.getExpression();
         if(expression != null) {
             expression.accept(this);
         }
+        middleEngine.handleCloseBracket();
     }
 
     @Override

@@ -1,19 +1,27 @@
 package Engine;
 
+import SiddhiApp.SiddhiApp;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
-import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
+import net.sf.jsqlparser.expression.operators.conditional.*;
 import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 
 public abstract class IEngine {
     protected IExpressionHandleBehavior engineBehavior;
+    protected SiddhiApp siddhiApp;
+
+    public IEngine(){
+    }
 
     public void setExpressionHandlingBehavior(IExpressionHandleBehavior engineBehavior){
-        this.engineBehavior = engineBehavior;
+        engineBehavior.setSiddhiApp(this.siddhiApp);
+        this.engineBehavior = engineBehavior; }
+
+    public IEngine setSiddhiApp(SiddhiApp siddhiApp) {
+        this.siddhiApp = siddhiApp;
+        return this;
     }
 
     public abstract void handleTable(Table table);
@@ -48,6 +56,11 @@ public abstract class IEngine {
 
     public abstract void handleXorExpression(XorExpression xorExpression);
 
+    // TODO : temp methods for handling brackets until create bin tree
+    public abstract void handleOpenBracket();
+    // TODO : temp methods for handling brackets until create bin tree
+    public abstract void handleCloseBracket();
+
     public abstract void handleEqualsTo(EqualsTo equalsTo);
 
     public abstract void handleGreaterThan(GreaterThan greaterThan);
@@ -61,4 +74,5 @@ public abstract class IEngine {
     public abstract void handleNotEqualsTo(NotEqualsTo notEqualsTo);
 
     public abstract void handleAlias(Alias alias);
+
 }

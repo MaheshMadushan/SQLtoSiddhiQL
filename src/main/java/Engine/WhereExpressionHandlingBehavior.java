@@ -1,5 +1,6 @@
 package Engine;
 
+import SiddhiApp.SiddhiApp;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -11,6 +12,9 @@ import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.FunctionItem;
 
 public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
+
+    public WhereExpressionHandlingBehavior() {
+    }
 
     @Override
     public void handleTable(Table table) {
@@ -106,6 +110,16 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
     public void handleXorExpression(XorExpression xorExpression) {
         System.out.println("in WhereExpressionHandlingBehavior xorExpression");
         System.out.println(xorExpression.getStringExpression());
+    }
+
+    @Override
+    public void handleOpenBracket() {
+
+    }
+
+    @Override
+    public void handleCloseBracket() {
+
     }
 
     @Override

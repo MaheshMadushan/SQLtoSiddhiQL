@@ -30,7 +30,7 @@ public class Column implements IAttribute, ISiddhiAppComposite{
         if(alias == null){
             return " " + name + " ";
         }else{
-            return " " + name + " AS " + alias + " ";
+            return " " + name + " as " + alias + " ";
         }
     }
 

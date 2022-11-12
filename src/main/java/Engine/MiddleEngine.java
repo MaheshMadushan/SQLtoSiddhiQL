@@ -1,5 +1,6 @@
 package Engine;
 
+import SiddhiApp.SiddhiApp;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -93,6 +94,16 @@ public class MiddleEngine extends IEngine {
     @Override
     public void handleXorExpression(XorExpression xorExpression) {
         engineBehavior.handleXorExpression(xorExpression);
+    }
+
+    @Override
+    public void handleOpenBracket() {
+        engineBehavior.handleOpenBracket();
+    }
+
+    @Override
+    public void handleCloseBracket() {
+        engineBehavior.handleCloseBracket();
     }
 
     @Override

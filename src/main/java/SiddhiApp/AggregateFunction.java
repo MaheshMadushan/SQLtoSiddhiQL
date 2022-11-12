@@ -37,12 +37,10 @@ public class AggregateFunction implements IFunction,IAttribute,ISiddhiAppComposi
         return this.function + (this.alias != null ? this.alias.toString() : "");
     }
 
-    @Override
     public String toString(boolean withAliases) {
         return toString();
     }
 
-    @Override
     public String getName() {
         return function.getName();
     }

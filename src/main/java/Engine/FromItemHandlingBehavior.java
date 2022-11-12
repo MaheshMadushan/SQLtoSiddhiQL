@@ -1,5 +1,6 @@
 package Engine;
 
+import SiddhiApp.SiddhiApp;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -10,7 +11,8 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 public class FromItemHandlingBehavior extends IExpressionHandleBehavior{
 
-    StringBuilder fromItemString = new StringBuilder("");
+    public FromItemHandlingBehavior() {
+    }
 
     @Override
     public void handleTable(Table table) {
@@ -106,6 +108,16 @@ public class FromItemHandlingBehavior extends IExpressionHandleBehavior{
     public void handleXorExpression(XorExpression xorExpression) {
         System.out.println("in FromItemHandlingBehavior xorExpression");
         System.out.println(xorExpression.getStringExpression());
+    }
+
+    @Override
+    public void handleOpenBracket() {
+
+    }
+
+    @Override
+    public void handleCloseBracket() {
+
     }
 
     @Override
