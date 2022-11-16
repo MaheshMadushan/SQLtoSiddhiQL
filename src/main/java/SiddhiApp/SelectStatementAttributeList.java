@@ -20,9 +20,9 @@ public class SelectStatementAttributeList implements IAttributeList{
     @Override
     public String toString() {
         StringBuilder attributeSetWithAliasesWithOutDataType = new StringBuilder("");
-        for(ISiddhiAppComposite attributeDataTypePair : attributesWithOrWithoutAliases){
+        for(ISiddhiAppComposite attributeWithAlias : attributesWithOrWithoutAliases){
             attributeSetWithAliasesWithOutDataType
-                    .append(attributeDataTypePair.getSiddhiAppCompositeAsString()).append(",");
+                    .append(attributeWithAlias.getSiddhiAppCompositeAsString()).append(",");
         }
         return attributeSetWithAliasesWithOutDataType.toString();
     }
