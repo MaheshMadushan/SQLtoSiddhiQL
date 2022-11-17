@@ -3,7 +3,7 @@ package SiddhiApp;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Function;
 
-public class AggregateFunction implements IFunction,IAttribute,ISiddhiAppComposite{
+public class AggregateFunction implements IFunction,IAttribute{
 
     private Function function;
     private Alias alias;

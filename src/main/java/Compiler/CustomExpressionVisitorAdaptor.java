@@ -40,26 +40,28 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(Function function) {
-        middleEngine.handleFunction(function);
+        middleEngine
+                .handleFunctionBegin(function);
 
         ItemsListVisitor itemsListVisitor = new CustomItemListVisitor(middleEngine);
 
-        String functionName = function.getName();
-
         NamedExpressionList namedExpressionList = function.getNamedParameters();
         if(namedExpressionList != null){
-            namedExpressionList.accept(itemsListVisitor);
+            namedExpressionList
+                    .accept(itemsListVisitor);
         }
 
         ExpressionList expressionList = function.getParameters();
         if(expressionList != null){
-            expressionList.accept(itemsListVisitor);
+            expressionList
+                    .accept(itemsListVisitor);
         }
 
-        List<OrderByElement> orderByElementList = function.getOrderByElements();
+        List<OrderByElement> orderByElementList = function.getOrderByElements(); // deprecate support in sqltosiddhiql
         if(orderByElementList != null){
             for(OrderByElement orderByElement : orderByElementList){
-                orderByElement.accept(new CustomOrderByElementVisitor(middleEngine));
+                orderByElement
+                        .accept(new CustomOrderByElementVisitor(middleEngine));
             }
         }
 
@@ -67,9 +69,11 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
         Expression attribute = function.getAttribute();
         if(attribute != null) {
-            attribute.accept(this);
+            attribute
+                    .accept(this);
         }
-
+        middleEngine
+                .handleFunctionExit(function);
     }
 
     @Override

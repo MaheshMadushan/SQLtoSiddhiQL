@@ -75,4 +75,7 @@ public abstract class IEngine {
 
     public abstract void handleAlias(Alias alias);
 
+    public abstract void handleFunctionExit(Function function);
+
+    public abstract void handleFunctionBegin(Function function);
 }

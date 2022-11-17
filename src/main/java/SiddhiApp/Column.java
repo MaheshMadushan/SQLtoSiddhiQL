@@ -10,6 +10,11 @@ public class Column implements IAttribute, ISiddhiAppComposite{
         this.alias = alias;
     }
 
+    public Column(){
+        this.name = null;
+        this.alias = null;
+    }
+
     public String getName() {
         return name;
     }

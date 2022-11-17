@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectItem implements IAttribute{
-    private List<ISiddhiAppComposite> selectItemComposites;
+    private final List<ISiddhiAppComposite> selectItemComposites;
 
     public SelectItem(){
         selectItemComposites = new ArrayList<ISiddhiAppComposite>();
@@ -18,8 +18,7 @@ public class SelectItem implements IAttribute{
     public String getSiddhiAppCompositeAsString() {
         StringBuilder selectItem = new StringBuilder("");
         for(ISiddhiAppComposite selectItemComposite : selectItemComposites){
-            selectItem
-                    .append(selectItemComposite.getSiddhiAppCompositeAsString()).append(",");
+            selectItem.append(selectItemComposite.getSiddhiAppCompositeAsString()).append(",");
         }
         return selectItem.toString();
     }

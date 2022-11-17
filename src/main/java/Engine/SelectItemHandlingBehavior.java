@@ -1,5 +1,8 @@
 package Engine;
 
+import SiddhiApp.AggregateFunction;
+import SiddhiApp.SelectItem;
+import SiddhiApp.Symbol;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -9,9 +12,17 @@ import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 
+import java.util.Stack;
+
 public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
+    private final SelectItem selectItem;
+    private SiddhiApp.Column siddhiColumn;
+    private SiddhiApp.Alias siddhiAlias;
+    private Stack<AggregateFunction> aggregateFunctions = new Stack<>();
+
     public SelectItemHandlingBehavior() {
+        selectItem  = new SelectItem();
     }
 
     @Override
@@ -19,14 +30,28 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     }
 
     @Override
-    public void handleColumn(Column column) {
-        System.out.println("hi from select item column");
+    public void handleColumn(Column sqlColumn) {
+        siddhiColumn = new SiddhiApp.Column();
+        siddhiColumn.setName(sqlColumn.getName(false));
+        selectItem.addSelectItemComposite(siddhiColumn);
         // need to add to stream definition
         // need to add to select statement
     }
 
+    // function depth is for identifying that CustomExpressionVisitor still inside the visit(function), or it has got into
+    // the nested function inside the function.
+    // example :- SELECT COUNT(col_a), STDDEV(col_a + col_b)
     @Override
     public void handleFunction(Function function) {
+//        selectItem.addSelectItemComposite(function.getName());
+    }
+
+    @Override
+    public void handleFunctionExit(Function function) {
+    }
+
+    @Override
+    public void handleFunctionBegin(Function function) {
     }
 
     @Override
@@ -83,12 +108,12 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleOpenBracket() {
-
+        selectItem.addSelectItemComposite(new Symbol("("));
     }
 
     @Override
     public void handleCloseBracket() {
-
+        selectItem.addSelectItemComposite(new Symbol(")"));
     }
 
     @Override
@@ -118,4 +143,6 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     @Override
     public void handleAlias(Alias alias) {
     }
+
+
 }
