@@ -12,7 +12,6 @@ import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.AllTableColumns;
 import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.SubSelect;
-
 import java.util.List;
 
 public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
@@ -41,26 +40,28 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
     @Override
     public void visit(Function function) {
-        middleEngine.handleFunction(function);
+        middleEngine
+                .handleFunctionBegin(function);
 
         ItemsListVisitor itemsListVisitor = new CustomItemListVisitor(middleEngine);
 
-        String functionName = function.getName();
-
         NamedExpressionList namedExpressionList = function.getNamedParameters();
         if(namedExpressionList != null){
-            namedExpressionList.accept(itemsListVisitor);
+            namedExpressionList
+                    .accept(itemsListVisitor);
         }
 
         ExpressionList expressionList = function.getParameters();
         if(expressionList != null){
-            expressionList.accept(itemsListVisitor);
+            expressionList
+                    .accept(itemsListVisitor);
         }
 
-        List<OrderByElement> orderByElementList = function.getOrderByElements();
+        List<OrderByElement> orderByElementList = function.getOrderByElements(); // deprecate support in sqltosiddhiql
         if(orderByElementList != null){
             for(OrderByElement orderByElement : orderByElementList){
-                orderByElement.accept(new CustomOrderByElementVisitor(middleEngine));
+                orderByElement
+                        .accept(new CustomOrderByElementVisitor(middleEngine));
             }
         }
 
@@ -68,9 +69,11 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
 
         Expression attribute = function.getAttribute();
         if(attribute != null) {
-            attribute.accept(this);
+            attribute
+                    .accept(this);
         }
-
+        middleEngine
+                .handleFunctionExit(function);
     }
 
     @Override
@@ -131,11 +134,12 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     @Override
     public void visit(Parenthesis parenthesis) {
 
-        middleEngine.handleParenthesis(parenthesis);
+        middleEngine.handleOpenBracket();
         Expression expression = parenthesis.getExpression();
         if(expression != null) {
             expression.accept(this);
         }
+        middleEngine.handleCloseBracket();
     }
 
     @Override

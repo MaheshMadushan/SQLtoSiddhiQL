@@ -1,12 +1,18 @@
 package SiddhiApp;
 
-public class Attribute implements IAttribute, ISiddhiAppComposite{
+public class Column implements IAttribute, ISiddhiAppComposite{
+
     private String name;
     private String alias;
 
-    public Attribute(String name, String alias) {
+    public Column(String name, String alias) {
         this.name = name;
         this.alias = alias;
+    }
+
+    public Column(){
+        this.name = null;
+        this.alias = null;
     }
 
     public String getName() {
@@ -25,33 +31,16 @@ public class Attribute implements IAttribute, ISiddhiAppComposite{
         this.alias = alias;
     }
 
-    @Override
-    public String toString() {
-        return getAttributeWithAlias();
-    }
-
-    public String toString(boolean withAliases){
-        if(withAliases){
-            return getAttributeWithAlias();
-        }else{
-            return " " + getName() + " ";
-        }
-    }
-
     private String getAttributeWithAlias(){
         if(alias == null){
             return " " + name + " ";
         }else{
-            return " " + name + " AS " + alias + " ";
+            return " " + name + " as " + alias + " ";
         }
     }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        if(alias == null){
-            return " " + name + " ";
-        }else{
-            return " " + name + " AS " + alias + " ";
-        }
+        return getAttributeWithAlias();
     }
 }

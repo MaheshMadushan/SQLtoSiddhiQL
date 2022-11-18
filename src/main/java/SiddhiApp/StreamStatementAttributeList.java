@@ -1,31 +1,34 @@
 package SiddhiApp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StreamStatementAttributeList implements IAttributeList, ISiddhiAppComposite{
-    private List<ISiddhiAppComposite> attributeDataTypePairs;
 
-    @Override
-    public void setAttributeSetAndDataTypes(List<ISiddhiAppComposite> attributeDataTypePairs) {
-        this.attributeDataTypePairs = attributeDataTypePairs;
+    private final List<ISiddhiAppComposite> attributeDataTypePairs;
+
+    public StreamStatementAttributeList() {
+        this.attributeDataTypePairs = new ArrayList<>(10);
     }
 
-    @Override
     public List<ISiddhiAppComposite> getAttributeSetAndDataTypes() {
         return attributeDataTypePairs;
+    }
+
+    public void addAttribute(ISiddhiAppComposite attribute){
+        attributeDataTypePairs.add(attribute);
     }
 
     public String toString(){
         StringBuilder attributeSetWithDataType = new StringBuilder("");
         for(ISiddhiAppComposite attributeDataTypePair : attributeDataTypePairs){
-            attributeSetWithDataType
-                    .append(attributeDataTypePair.getSiddhiAppCompositeAsString());
+            attributeSetWithDataType.append(attributeDataTypePair.getSiddhiAppCompositeAsString()).append(",");
         }
         return attributeSetWithDataType.toString();
     }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        return null;
+        return toString();
     }
 }

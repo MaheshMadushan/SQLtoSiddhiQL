@@ -2,6 +2,7 @@ package Compiler;
 
 import Engine.IEngine;
 import Engine.MiddleEngine;
+import SiddhiApp.SiddhiApp;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.parser.Node;
@@ -49,7 +50,9 @@ public class AST {
     }
 
     public static void generateSiddhiApp(String StringSQLSelectStatement){
-        IEngine middleEngine = new MiddleEngine();
+        SiddhiApp siddhiApp = new SiddhiApp();
+
+        IEngine middleEngine  = new MiddleEngine().setSiddhiApp(siddhiApp);
         Statement statement = null;
         try {
             statement = CCJSqlParserUtil.parse(StringSQLSelectStatement);

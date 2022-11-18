@@ -1,54 +1,48 @@
 package SiddhiApp;
 
-import net.sf.jsqlparser.expression.Alias;
-import net.sf.jsqlparser.expression.Function;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AggregateFunction implements IFunction,IAttribute,ISiddhiAppComposite{
+public class AggregateFunction implements IFunction,IAttribute{
 
-    private Function function;
-    private Alias alias;
+    private String functionName;
+    private List<ISiddhiAppComposite> attributeList;
+    private ISiddhiAppComposite alias;
 
-    public AggregateFunction(Function function, Alias alias) {
-        this.function = function;
-        if(alias == null){
-            String stringAlias = function.getAttribute().toString();
-            this.alias = new Alias(stringAlias);
-        }
-        this.alias = alias;
+    public AggregateFunction(String functionName) {
+        this.functionName = functionName;
+        this.attributeList = new ArrayList<>(10);
     }
 
-    public Alias getAlias() {
+    public ISiddhiAppComposite getAlias() {
         return this.alias;
     }
 
-    public void setAlias(Alias alias) {
+    public void setAlias(ISiddhiAppComposite alias) {
         this.alias = alias;
     }
 
-    public Function getFunction() {
-        return this.function;
-    }
+    public String getFunctionName(){ return this.functionName; }
 
-    public void setFunction(Function function) {
-        this.function = function;
-    }
-
-    public String toString() {
-        return this.function + (this.alias != null ? this.alias.toString() : "");
-    }
-
-    @Override
     public String toString(boolean withAliases) {
         return toString();
     }
 
-    @Override
-    public String getName() {
-        return function.getName();
+    public void addAttribute(ISiddhiAppComposite attribute){
+        attributeList.add(attribute);
     }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        return null;
+        StringBuilder functionDeclaration = new StringBuilder(functionName).append("(");
+        for(ISiddhiAppComposite attribute : attributeList ){
+            functionDeclaration
+                    .append(attribute.getSiddhiAppCompositeAsString())
+                    .append(", ");
+        }
+        functionDeclaration
+                .append(")").append(((Alias) alias).getSiddhiAppCompositeAsString());
+
+        return functionDeclaration.toString();
     }
 }

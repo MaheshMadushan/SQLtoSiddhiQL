@@ -24,11 +24,6 @@ public class MiddleEngine extends IEngine {
     }
 
     @Override
-    public void handleFunction(Function function) {
-        engineBehavior.handleFunction(function);
-    }
-
-    @Override
     public void handleSignedExpression(SignedExpression signedExpression) {
         engineBehavior.handleSignedExpression(signedExpression);
     }
@@ -96,6 +91,16 @@ public class MiddleEngine extends IEngine {
     }
 
     @Override
+    public void handleOpenBracket() {
+        engineBehavior.handleOpenBracket();
+    }
+
+    @Override
+    public void handleCloseBracket() {
+        engineBehavior.handleCloseBracket();
+    }
+
+    @Override
     public void handleEqualsTo(EqualsTo equalsTo) {
         engineBehavior.handleEqualsTo(equalsTo);
     }
@@ -128,5 +133,20 @@ public class MiddleEngine extends IEngine {
     @Override
     public void handleAlias(Alias alias) {
         engineBehavior.handleAlias(alias);
+    }
+
+    @Override
+    public void addToSiddhiApp() {
+        engineBehavior.addToSiddhiApp();
+    }
+
+    @Override
+    public void handleFunctionExit(Function function) {
+        engineBehavior.handleFunctionExit(function);
+    }
+
+    @Override
+    public void handleFunctionBegin(Function function) {
+        engineBehavior.handleFunctionBegin(function);
     }
 }

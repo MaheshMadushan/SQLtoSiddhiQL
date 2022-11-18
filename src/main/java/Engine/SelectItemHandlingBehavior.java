@@ -1,5 +1,8 @@
 package Engine;
 
+import SiddhiApp.AggregateFunction;
+import SiddhiApp.SelectItem;
+import SiddhiApp.Symbol;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -9,144 +12,195 @@ import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 
+import java.util.Stack;
+
 public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
+    private final SelectItem selectItem;
+    private SiddhiApp.Column siddhiColumn;
+    private Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
+    private AggregateFunction aggregateFunction;
+
+    public SelectItemHandlingBehavior() {
+        selectItem  = new SelectItem();
+    }
 
     @Override
     public void handleTable(Table table) {
-        System.out.println("in SelectItemHandlingBehavior table ");
-        System.out.println(table.getName());
     }
 
     @Override
-    public void handleColumn(Column column) {
-        System.out.println("in SelectItemHandlingBehavior column");
-        System.out.println(column.getColumnName());
+    public void handleColumn(Column sqlColumn) {
+        siddhiColumn = new SiddhiApp.Column();
+        siddhiColumn.setName(sqlColumn.getName(false));
+
+        // if still processing on function attributes add to function attribute list
+
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiColumn);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiColumn);
+        }
+
+        // need to add to stream definition
+        // need to add to select statement
     }
 
     @Override
-    public void handleFunction(Function function) {
-        System.out.println("in SelectItemHandlingBehavior function");
-        System.out.println(function.getName());
+    public void handleFunctionExit(Function function) {
+        aggregateFunction = aggregateFunctionsStack.pop();
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(aggregateFunction);
+        }
+        else{
+            aggregateFunctionsStack.peek().addAttribute(aggregateFunction);
+        }
+    }
+
+    @Override
+    public void handleFunctionBegin(Function function) {
+        aggregateFunction = new AggregateFunction(function.getName());
+        aggregateFunctionsStack.push(aggregateFunction);
     }
 
     @Override
     public void handleSignedExpression(SignedExpression signedExpression) {
-        System.out.println("in SelectItemHandlingBehavior signedExpression");
-        System.out.println(signedExpression.getSign());
     }
 
     @Override
     public void handleDoubleValue(DoubleValue doubleValue) {
-        System.out.println("in SelectItemHandlingBehavior doubleValue");
-        System.out.println(doubleValue.getValue());
     }
 
     @Override
     public void handleLongValue(LongValue longValue) {
-        System.out.println("in SelectItemHandlingBehavior longValue");
-        System.out.println(longValue.getValue());
     }
 
     @Override
     public void handleParenthesis(Parenthesis parenthesis) {
-        System.out.println("in SelectItemHandlingBehavior parenthesis");
-        System.out.println(parenthesis.toString());
     }
 
     @Override
     public void handleStringValue(StringValue stringValue) {
-        System.out.println("in SelectItemHandlingBehavior stringValue");
-        System.out.println(stringValue.getValue());
     }
 
     @Override
     public void handleAddition(Addition addition) {
-        System.out.println("in SelectItemHandlingBehavior addition");
-        System.out.println(addition.toString());
     }
 
     @Override
     public void handleDivision(Division division) {
-        System.out.println("in SelectItemHandlingBehavior division");
-        System.out.println(division.getStringExpression());
     }
 
     @Override
     public void handleIntegerDivision(IntegerDivision integerDivision) {
-        System.out.println("in SelectItemHandlingBehavior integerDivision");
-        System.out.println(integerDivision.getStringExpression());
     }
 
     @Override
     public void handleMultiplication(Multiplication multiplication) {
-        System.out.println("in SelectItemHandlingBehavior multiplication");
-        System.out.println(multiplication.getStringExpression());
     }
 
     @Override
     public void handleSubtraction(Subtraction subtraction) {
-        System.out.println("in SelectItemHandlingBehavior subtraction");
-        System.out.println(subtraction.getStringExpression());
     }
 
     @Override
     public void handleAndExpression(AndExpression andExpression) {
-        System.out.println("in SelectItemHandlingBehavior andExpression");
-        System.out.println(andExpression.getStringExpression());
     }
 
     @Override
     public void handleOrExpression(OrExpression orExpression) {
-        System.out.println("in SelectItemHandlingBehavior orExpression");
-        System.out.println(orExpression.getStringExpression());
     }
 
     @Override
     public void handleXorExpression(XorExpression xorExpression) {
-        System.out.println("in SelectItemHandlingBehavior xorExpression");
-        System.out.println(xorExpression.getStringExpression());
+    }
+
+    @Override
+    public void handleOpenBracket() {
+        Symbol openBracket = new Symbol("(");
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(openBracket);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(openBracket);
+        }
+    }
+
+    @Override
+    public void handleCloseBracket() {
+        Symbol closeBracket = new Symbol(")");
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(closeBracket);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(closeBracket);
+        }
     }
 
     @Override
     public void handleEqualsTo(EqualsTo equalsTo) {
-        System.out.println("in SelectItemHandlingBehavior equalsTo");
-        System.out.println(equalsTo.getStringExpression());
+        Symbol siddhiEqualsTo = new Symbol(equalsTo.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiEqualsTo);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiEqualsTo);
+        }
     }
 
     @Override
     public void handleGreaterThan(GreaterThan greaterThan) {
-        System.out.println("in SelectItemHandlingBehavior GreaterThan");
-        System.out.println(greaterThan.getStringExpression());
+        Symbol siddhiGreaterThan = new Symbol(greaterThan.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiGreaterThan);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiGreaterThan);
+        }
     }
 
     @Override
     public void handleGreaterThanEquals(GreaterThanEquals greaterThanEquals) {
-        System.out.println("in SelectItemHandlingBehavior greaterThanEquals");
-        System.out.println(greaterThanEquals.getStringExpression());
+        Symbol siddhiGreaterThanEquals = new Symbol(greaterThanEquals.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiGreaterThanEquals);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiGreaterThanEquals);
+        }
     }
 
     @Override
     public void handleMinorThan(MinorThan minorThan) {
-        System.out.println("in SelectItemHandlingBehavior minorThan");
-        System.out.println(minorThan.getStringExpression());
+        Symbol siddhiMinorThan = new Symbol(minorThan.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiMinorThan);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiMinorThan);
+        }
     }
 
     @Override
     public void handleMinorThanEquals(MinorThanEquals minorThanEquals) {
-        System.out.println("in SelectItemHandlingBehavior minorThanEquals");
-        System.out.println(minorThanEquals.getStringExpression());
+        Symbol siddhiMinorThanEquals = new Symbol(minorThanEquals.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiMinorThanEquals);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiMinorThanEquals);
+        }
     }
 
     @Override
     public void handleNotEqualsTo(NotEqualsTo notEqualsTo) {
-        System.out.println("in SelectItemHandlingBehavior notEqualsTo");
-        System.out.println(notEqualsTo.getStringExpression());
+        Symbol siddhiNotEqualsTo = new Symbol(notEqualsTo.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiNotEqualsTo);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiNotEqualsTo);
+        }
     }
 
     @Override
     public void handleAlias(Alias alias) {
-        System.out.println("in SelectItemHandlingBehavior alias");
-        System.out.println(alias.getName());
+    }
+
+    @Override
+    public void addToSiddhiApp() {
+        siddhiApp.addSelectItem(selectItem);
     }
 }
