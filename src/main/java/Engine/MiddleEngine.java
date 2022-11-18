@@ -1,6 +1,5 @@
 package Engine;
 
-import SiddhiApp.SiddhiApp;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -22,11 +21,6 @@ public class MiddleEngine extends IEngine {
     @Override
     public void handleColumn(Column column) {
         engineBehavior.handleColumn(column);
-    }
-
-    @Override
-    public void handleFunction(Function function) {
-        engineBehavior.handleFunction(function);
     }
 
     @Override
@@ -139,5 +133,15 @@ public class MiddleEngine extends IEngine {
     @Override
     public void handleAlias(Alias alias) {
         engineBehavior.handleAlias(alias);
+    }
+
+    @Override
+    public void handleFunctionExit(Function function) {
+        engineBehavior.handleFunctionBegin(function);
+    }
+
+    @Override
+    public void handleFunctionBegin(Function function) {
+        engineBehavior.handleFunctionExit(function);
     }
 }

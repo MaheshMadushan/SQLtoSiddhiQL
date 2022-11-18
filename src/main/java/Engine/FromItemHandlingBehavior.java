@@ -27,10 +27,15 @@ public class FromItemHandlingBehavior extends IExpressionHandleBehavior{
     }
 
     @Override
-    public void handleFunction(Function function) {
-        System.out.println("in FromItemHandlingBehavior function");
-        System.out.println(function.getName());
+    public void handleFunctionExit(Function function) {
+
     }
+
+    @Override
+    public void handleFunctionBegin(Function function) {
+
+    }
+
 
     @Override
     public void handleSignedExpression(SignedExpression signedExpression) {

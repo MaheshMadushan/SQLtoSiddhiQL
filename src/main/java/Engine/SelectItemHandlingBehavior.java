@@ -19,7 +19,8 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     private final SelectItem selectItem;
     private SiddhiApp.Column siddhiColumn;
     private SiddhiApp.Alias siddhiAlias;
-    private Stack<AggregateFunction> aggregateFunctions = new Stack<>();
+    private Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
+    private AggregateFunction aggregateFunction;
 
     public SelectItemHandlingBehavior() {
         selectItem  = new SelectItem();
@@ -33,7 +34,13 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     public void handleColumn(Column sqlColumn) {
         siddhiColumn = new SiddhiApp.Column();
         siddhiColumn.setName(sqlColumn.getName(false));
-        selectItem.addSelectItemComposite(siddhiColumn);
+
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiColumn);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiColumn);
+        }
+
         // need to add to stream definition
         // need to add to select statement
     }
@@ -41,17 +48,22 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     // function depth is for identifying that CustomExpressionVisitor still inside the visit(function), or it has got into
     // the nested function inside the function.
     // example :- SELECT COUNT(col_a), STDDEV(col_a + col_b)
-    @Override
-    public void handleFunction(Function function) {
-//        selectItem.addSelectItemComposite(function.getName());
-    }
 
     @Override
     public void handleFunctionExit(Function function) {
+        aggregateFunction = aggregateFunctionsStack.pop();
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(aggregateFunction);
+        }
+        else{
+            aggregateFunctionsStack.peek().addAttribute(aggregateFunction);
+        }
     }
 
     @Override
     public void handleFunctionBegin(Function function) {
+        aggregateFunction = new AggregateFunction(function.getName());
+        aggregateFunctionsStack.push(aggregateFunction);
     }
 
     @Override
