@@ -136,12 +136,17 @@ public class MiddleEngine extends IEngine {
     }
 
     @Override
+    public void addToSiddhiApp() {
+        engineBehavior.addToSiddhiApp();
+    }
+
+    @Override
     public void handleFunctionExit(Function function) {
-        engineBehavior.handleFunctionBegin(function);
+        engineBehavior.handleFunctionExit(function);
     }
 
     @Override
     public void handleFunctionBegin(Function function) {
-        engineBehavior.handleFunctionExit(function);
+        engineBehavior.handleFunctionBegin(function);
     }
 }

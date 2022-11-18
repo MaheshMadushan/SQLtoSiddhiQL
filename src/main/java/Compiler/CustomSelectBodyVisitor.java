@@ -22,6 +22,7 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
         for(SelectItem selectItem : selectItemList){
             middleEngine.setExpressionHandlingBehavior(new SelectItemHandlingBehavior());
             selectItem.accept(new CustomSelectItemVisitorImpl(middleEngine));
+            middleEngine.addToSiddhiApp();
         }
         // seem like distinct not supported by siddhiQL
         Distinct distinct = plainSelect.getDistinct();

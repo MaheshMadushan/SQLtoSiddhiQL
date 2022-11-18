@@ -18,7 +18,6 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
     private final SelectItem selectItem;
     private SiddhiApp.Column siddhiColumn;
-    private SiddhiApp.Alias siddhiAlias;
     private Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
     private AggregateFunction aggregateFunction;
 
@@ -35,6 +34,8 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
         siddhiColumn = new SiddhiApp.Column();
         siddhiColumn.setName(sqlColumn.getName(false));
 
+        // if still processing on function attributes add to function attribute list
+
         if(aggregateFunctionsStack.empty()) {
             selectItem.addSelectItemComposite(siddhiColumn);
         }else{
@@ -44,10 +45,6 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
         // need to add to stream definition
         // need to add to select statement
     }
-
-    // function depth is for identifying that CustomExpressionVisitor still inside the visit(function), or it has got into
-    // the nested function inside the function.
-    // example :- SELECT COUNT(col_a), STDDEV(col_a + col_b)
 
     @Override
     public void handleFunctionExit(Function function) {
@@ -120,41 +117,90 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleOpenBracket() {
-        selectItem.addSelectItemComposite(new Symbol("("));
+        Symbol openBracket = new Symbol("(");
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(openBracket);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(openBracket);
+        }
     }
 
     @Override
     public void handleCloseBracket() {
-        selectItem.addSelectItemComposite(new Symbol(")"));
+        Symbol closeBracket = new Symbol(")");
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(closeBracket);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(closeBracket);
+        }
     }
 
     @Override
     public void handleEqualsTo(EqualsTo equalsTo) {
+        Symbol siddhiEqualsTo = new Symbol(equalsTo.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiEqualsTo);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiEqualsTo);
+        }
     }
 
     @Override
     public void handleGreaterThan(GreaterThan greaterThan) {
+        Symbol siddhiGreaterThan = new Symbol(greaterThan.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiGreaterThan);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiGreaterThan);
+        }
     }
 
     @Override
     public void handleGreaterThanEquals(GreaterThanEquals greaterThanEquals) {
+        Symbol siddhiGreaterThanEquals = new Symbol(greaterThanEquals.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiGreaterThanEquals);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiGreaterThanEquals);
+        }
     }
 
     @Override
     public void handleMinorThan(MinorThan minorThan) {
+        Symbol siddhiMinorThan = new Symbol(minorThan.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiMinorThan);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiMinorThan);
+        }
     }
 
     @Override
     public void handleMinorThanEquals(MinorThanEquals minorThanEquals) {
+        Symbol siddhiMinorThanEquals = new Symbol(minorThanEquals.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiMinorThanEquals);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiMinorThanEquals);
+        }
     }
 
     @Override
     public void handleNotEqualsTo(NotEqualsTo notEqualsTo) {
+        Symbol siddhiNotEqualsTo = new Symbol(notEqualsTo.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiNotEqualsTo);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiNotEqualsTo);
+        }
     }
 
     @Override
     public void handleAlias(Alias alias) {
     }
 
-
+    @Override
+    public void addToSiddhiApp() {
+        siddhiApp.addSelectItem(selectItem);
+    }
 }
