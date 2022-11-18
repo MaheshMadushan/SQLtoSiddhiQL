@@ -1,4 +1,4 @@
 package SiddhiApp;
 
-public interface IStream {
+public interface IStream extends ISiddhiAppComposite {
 }

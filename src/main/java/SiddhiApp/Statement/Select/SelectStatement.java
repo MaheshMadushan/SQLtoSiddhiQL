@@ -1,26 +1,23 @@
 package SiddhiApp.Statement.Select;
 
+import SiddhiApp.IAttributeList;
 import SiddhiApp.ISiddhiAppComposite;
 import SiddhiApp.SelectStatementAttributeList;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SelectStatement implements ISelectStatement {
 
-    private SelectStatementAttributeList selectListItems;
+    private final IAttributeList selectItemsList;
 
     public SelectStatement() {
+        selectItemsList = new SelectStatementAttributeList();
     }
 
-    public void setSelectListItems(SelectStatementAttributeList selectListItems) {
-        this.selectListItems = selectListItems;
+    public void addSelectItem(ISiddhiAppComposite selectItem){
+        selectItemsList.addAttribute(selectItem);
     }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        return null;
+        return "select " + selectItemsList.getSiddhiAppCompositeAsString() + "\n";
     }
-    // has functions
-    // has attributes
 }
