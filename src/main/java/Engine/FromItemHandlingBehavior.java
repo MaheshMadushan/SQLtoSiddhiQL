@@ -166,4 +166,9 @@ public class FromItemHandlingBehavior extends IExpressionHandleBehavior{
         System.out.println("in FromItemHandlingBehavior alias");
         System.out.println(alias.getName());
     }
+
+    @Override
+    public void addToSiddhiApp() {
+
+    }
 }

@@ -4,14 +4,24 @@ import SiddhiApp.Statement.Select.SelectStatement;
 
 public class SiddhiApp {
     // create define stream
-        // create ip stream
-        // create op stream
+    DefineStreamStatement defineStreamStatement = new DefineStreamStatement("InputStream");
     // from statement
     // select statement
     SelectStatement selectStatement = new SelectStatement();
 
+
+
     public void addSelectItem(ISiddhiAppComposite selectItem){
         selectStatement.addSelectItem(selectItem);
+    }
+
+    public void addColumnWithDataType(ISiddhiAppComposite columnWithDataType){
+        defineStreamStatement.addAttributeWithDataType(columnWithDataType);
+    }
+    public String getSelectItemListAsString(){
+        System.out.println(selectStatement.getSiddhiAppCompositeAsString());
+        System.out.println(defineStreamStatement.getSiddhiAppCompositeAsString());
+        return selectStatement.getSiddhiAppCompositeAsString();
     }
         // has attributes (with aliases or not)
         // functions

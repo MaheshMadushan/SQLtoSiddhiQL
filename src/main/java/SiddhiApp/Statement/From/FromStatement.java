@@ -2,7 +2,7 @@ package SiddhiApp.Statement.From;
 
 import SiddhiApp.ISiddhiAppComposite;
 import SiddhiApp.Statement.FilterExpressionStatement.IFilterExpression;
-import SiddhiApp.Stream;
+import SiddhiApp.DefineStreamStatement;
 
 public class FromStatement implements IFromStatement {
     private ISiddhiAppComposite inputStream;
@@ -14,7 +14,7 @@ public class FromStatement implements IFromStatement {
     }
 
     public void setStreamName(String streamName){
-        inputStream = new Stream(streamName);
+        inputStream = new DefineStreamStatement(streamName);
     }
 
     public void setFilterStatement(IFilterExpression filterStatement) {

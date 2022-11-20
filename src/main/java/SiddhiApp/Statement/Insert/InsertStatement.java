@@ -1,7 +1,7 @@
 package SiddhiApp.Statement.Insert;
 
 import SiddhiApp.ISiddhiAppComposite;
-import SiddhiApp.Stream;
+import SiddhiApp.DefineStreamStatement;
 
 public class InsertStatement implements IInsertStatement {
 
@@ -12,7 +12,7 @@ public class InsertStatement implements IInsertStatement {
     }
 
     public void setOutputStreamName(String streamName){
-        outputStream = new Stream(streamName);
+        outputStream = new DefineStreamStatement(streamName);
     }
 
     @Override

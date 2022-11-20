@@ -1,6 +1,7 @@
 package Engine;
 
 import SiddhiApp.AggregateFunction;
+import SiddhiApp.ColumnWIthDataType;
 import SiddhiApp.SelectItem;
 import SiddhiApp.Symbol;
 import net.sf.jsqlparser.expression.*;
@@ -33,17 +34,16 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     public void handleColumn(Column sqlColumn) {
         siddhiColumn = new SiddhiApp.Column();
         siddhiColumn.setName(sqlColumn.getName(false));
-
         // if still processing on function attributes add to function attribute list
-
         if(aggregateFunctionsStack.empty()) {
-            selectItem.addSelectItemComposite(siddhiColumn);
+            selectItem.addSelectItemComposite(siddhiColumn); // add to select statement
+            siddhiApp.addColumnWithDataType(
+                    new ColumnWIthDataType(siddhiColumn, "String")); // add to stream definition
         }else{
-            aggregateFunctionsStack.peek().addAttribute(siddhiColumn);
+            aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to select statement
+            siddhiApp.addColumnWithDataType(
+                    new ColumnWIthDataType(siddhiColumn, aggregateFunctionsStack.peek().getFunctionAttributeDataType())); // add to stream definition
         }
-
-        // need to add to stream definition
-        // need to add to select statement
     }
 
     @Override
@@ -65,54 +65,132 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleSignedExpression(SignedExpression signedExpression) {
+        Symbol siddhiSignedExpression = new Symbol(String.valueOf(signedExpression.getSign()));
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiSignedExpression);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiSignedExpression);
+        }
     }
 
     @Override
     public void handleDoubleValue(DoubleValue doubleValue) {
+        Symbol siddhiDoubleValue = new Symbol(String.valueOf(doubleValue.getValue()));
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiDoubleValue);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiDoubleValue);
+        }
     }
 
     @Override
     public void handleLongValue(LongValue longValue) {
+        Symbol siddhiLongValue = new Symbol(String.valueOf(longValue.getValue()));
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiLongValue);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiLongValue);
+        }
     }
 
     @Override
     public void handleParenthesis(Parenthesis parenthesis) {
+//        Symbol siddhiNotEqualsTo = new Symbol(notEqualsTo.getStringExpression());
+//        if(aggregateFunctionsStack.empty()) {
+//            selectItem.addSelectItemComposite(siddhiNotEqualsTo);
+//        }else{
+//            aggregateFunctionsStack.peek().addAttribute(siddhiNotEqualsTo);
+//        }
     }
 
     @Override
     public void handleStringValue(StringValue stringValue) {
+        Symbol siddhiStringValue = new Symbol(stringValue.getValue());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiStringValue);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiStringValue);
+        }
     }
 
     @Override
     public void handleAddition(Addition addition) {
+        Symbol siddhiAddition = new Symbol(addition.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiAddition);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiAddition);
+        }
     }
 
     @Override
     public void handleDivision(Division division) {
+        Symbol siddhiDivision = new Symbol(division.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiDivision);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiDivision);
+        }
     }
 
     @Override
     public void handleIntegerDivision(IntegerDivision integerDivision) {
+        Symbol siddhiIntegerDivision = new Symbol(integerDivision.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiIntegerDivision);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiIntegerDivision);
+        }
     }
 
     @Override
     public void handleMultiplication(Multiplication multiplication) {
+        Symbol siddhiMultiplication = new Symbol(multiplication.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiMultiplication);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiMultiplication);
+        }
     }
 
     @Override
     public void handleSubtraction(Subtraction subtraction) {
+        Symbol siddhiSubtraction = new Symbol(subtraction.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiSubtraction);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiSubtraction);
+        }
     }
 
     @Override
     public void handleAndExpression(AndExpression andExpression) {
+        Symbol siddhiAndExpression = new Symbol(andExpression.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiAndExpression);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiAndExpression);
+        }
     }
 
     @Override
     public void handleOrExpression(OrExpression orExpression) {
+        Symbol siddhiNOrExpression = new Symbol(orExpression.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiNOrExpression);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiNOrExpression);
+        }
     }
 
     @Override
     public void handleXorExpression(XorExpression xorExpression) {
+        Symbol siddhiXorExpression = new Symbol(xorExpression.getStringExpression());
+        if(aggregateFunctionsStack.empty()) {
+            selectItem.addSelectItemComposite(siddhiXorExpression);
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiXorExpression);
+        }
     }
 
     @Override
@@ -197,6 +275,9 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleAlias(Alias alias) {
+        // TODO : add feature to combine alias with the select item (eg - aggregateFunction has a alias)
+        SiddhiApp.Alias siddhiAlias = new SiddhiApp.Alias(alias.getName());
+        selectItem.setSelectItemAlias(siddhiAlias);
     }
 
     @Override

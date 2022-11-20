@@ -168,4 +168,9 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
         System.out.println("in WhereExpressionHandlingBehavior alias");
         System.out.println(alias.getName());
     }
+
+    @Override
+    public void addToSiddhiApp() {
+
+    }
 }
