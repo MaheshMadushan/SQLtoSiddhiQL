@@ -10,6 +10,7 @@ public class SiddhiApp {
     // select statement
     SelectStatement selectStatement = new SelectStatement();
     // from statement
+
     // filter statement
     IFilterExpression filterExpression = new FilterExpression();
 
