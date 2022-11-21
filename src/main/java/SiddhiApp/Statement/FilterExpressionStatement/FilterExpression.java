@@ -2,7 +2,7 @@ package SiddhiApp.Statement.FilterExpressionStatement;
 
 public class FilterExpression implements IFilterExpression {
 
-    private StringBuilder filterStatement = new StringBuilder("");
+    private final StringBuilder filterStatement = new StringBuilder("");
     // TODO : this is a quick implementation. Do create a bin tree
     public void addSymbol(String symbol){
         this.filterStatement.append(symbol).append(" ");

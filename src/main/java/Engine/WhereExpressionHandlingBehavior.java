@@ -33,8 +33,6 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
         siddhiColumn.setName(sqlColumn.getName(false));
         // if still processing on function attributes add to function attribute list
         if(aggregateFunctionsStack.empty()) {
-            siddhiApp.addColumnWithDataType(
-                    new ColumnWIthDataType(siddhiColumn, "String")); // add to stream definition
             siddhiApp.addSymbolToFilterExpression(siddhiColumn.getName());
         }else{
             aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function (this is a function inside function) attribute
@@ -87,6 +85,12 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleAddition(Addition addition) {
+        // handling columns related to this addition
+        Expression leftExpressionOfAddition = addition.getLeftExpression();
+        if(leftExpressionOfAddition instanceof Column){
+            siddhiApp.addColumnWithDataType(new ColumnWIthDataType(
+                    new SiddhiApp.Column(((Column) leftExpressionOfAddition).getColumnName(),null),"double"));
+        }
         siddhiApp.addSymbolToFilterExpression(addition.getStringExpression());
     }
 

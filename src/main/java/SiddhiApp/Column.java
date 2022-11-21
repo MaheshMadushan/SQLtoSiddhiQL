@@ -1,6 +1,6 @@
 package SiddhiApp;
 
-public class Column implements IAttribute, ISiddhiAppComposite{
+public class Column implements IAttribute{
 
     private String name;
     private String alias;
