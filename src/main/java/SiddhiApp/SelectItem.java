@@ -7,12 +7,10 @@ import java.util.List;
 public class SelectItem implements IAttribute{
     private final List<ISiddhiAppComposite> selectItemComposites;
     private final Alias selectItemAlias;
-    private Iterator<ISiddhiAppComposite> selectItemIterator;
 
     public SelectItem(){
-        selectItemComposites = new ArrayList<ISiddhiAppComposite>();
+        selectItemComposites = new ArrayList<>();
         selectItemAlias = new Alias();
-
     }
 
     public void setSelectItemAlias(ISiddhiAppComposite selectItemAlias){
@@ -25,7 +23,7 @@ public class SelectItem implements IAttribute{
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        selectItemIterator = selectItemComposites.iterator();
+        Iterator<ISiddhiAppComposite> selectItemIterator = selectItemComposites.iterator();
         StringBuilder selectItem = new StringBuilder("");
         boolean thereIsNextComponent = selectItemIterator.hasNext();
 

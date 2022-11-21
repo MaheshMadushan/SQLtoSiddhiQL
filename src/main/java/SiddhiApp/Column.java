@@ -11,8 +11,6 @@ public class Column implements IAttribute{
     }
 
     public Column(){
-        this.name = null;
-        this.alias = null;
     }
 
     public String getName() {
