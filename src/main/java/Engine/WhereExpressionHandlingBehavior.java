@@ -1,7 +1,7 @@
 package Engine;
 
 import SiddhiApp.AggregateFunction;
-import SiddhiApp.ColumnWIthDataType;
+import SiddhiApp.ColumnWithDataType;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -37,7 +37,7 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
         }else{
             aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function (this is a function inside function) attribute
             siddhiApp.addColumnWithDataType(
-                    new ColumnWIthDataType(siddhiColumn, aggregateFunctionsStack.peek().getFunctionAttributeDataType())); // add to stream definition
+                    new ColumnWithDataType(siddhiColumn, aggregateFunctionsStack.peek().getFunctionAttributeDataType())); // add to stream definition
         }
     }
 
@@ -87,9 +87,16 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
     public void handleAddition(Addition addition) {
         // handling columns related to this addition
         Expression leftExpressionOfAddition = addition.getLeftExpression();
+        Expression rightExpressionOfAddition = addition.getRightExpression();
+
         if(leftExpressionOfAddition instanceof Column){
-            siddhiApp.addColumnWithDataType(new ColumnWIthDataType(
+            siddhiApp.addColumnWithDataType(new ColumnWithDataType(
                     new SiddhiApp.Column(((Column) leftExpressionOfAddition).getColumnName(),null),"double"));
+        }
+
+        if(rightExpressionOfAddition instanceof Column){
+            siddhiApp.addColumnWithDataType(new ColumnWithDataType(
+                    new SiddhiApp.Column(((Column) rightExpressionOfAddition).getColumnName(),null),"double"));
         }
         siddhiApp.addSymbolToFilterExpression(addition.getStringExpression());
     }

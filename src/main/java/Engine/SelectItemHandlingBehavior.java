@@ -1,7 +1,7 @@
 package Engine;
 
 import SiddhiApp.AggregateFunction;
-import SiddhiApp.ColumnWIthDataType;
+import SiddhiApp.ColumnWithDataType;
 import SiddhiApp.SelectItem;
 import SiddhiApp.Symbol;
 import net.sf.jsqlparser.expression.*;
@@ -38,11 +38,11 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
         if(aggregateFunctionsStack.empty()) {
             selectItem.addSelectItemComposite(siddhiColumn); // add to select statement
             siddhiApp.addColumnWithDataType(
-                    new ColumnWIthDataType(siddhiColumn, "String")); // add to stream definition
+                    new ColumnWithDataType(siddhiColumn, "String")); // add to stream definition
         }else{
             aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to select statement
             siddhiApp.addColumnWithDataType(
-                    new ColumnWIthDataType(siddhiColumn, aggregateFunctionsStack.peek().getFunctionAttributeDataType())); // add to stream definition
+                    new ColumnWithDataType(siddhiColumn, aggregateFunctionsStack.peek().getFunctionAttributeDataType())); // add to stream definition
         }
     }
 

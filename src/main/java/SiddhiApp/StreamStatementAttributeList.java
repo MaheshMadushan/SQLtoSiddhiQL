@@ -19,26 +19,39 @@ public class StreamStatementAttributeList implements IAttributeList{
 
     public void addAttribute(ISiddhiAppComposite attributeWithDataType){
         // TODO : create a hashmap and avoid O(n) comparisons
+        for(int indexOfAttributeWithDataType = 0; indexOfAttributeWithDataType < attributeListWithoutAliasesWithDataType.size() ; indexOfAttributeWithDataType++){
+            ColumnWithDataType PersistedAttributeWIthDataType = (ColumnWithDataType) attributeListWithoutAliasesWithDataType.get(indexOfAttributeWithDataType);
 
-        for(int i = 0; i < attributeListWithoutAliasesWithDataType.size() ; i++){
+            if(PersistedAttributeWIthDataType.equals(attributeWithDataType)){ // equals data type and column name ?
+                return;
+            }else if(PersistedAttributeWIthDataType.isSameColumnAndDifferentDataType(attributeWithDataType)){ // column and diff data type conflict resolving
+                System.out.println("data type conflict on column " + PersistedAttributeWIthDataType.getColumnName());
 
-            if(attributeListWithoutAliasesWithDataType.get(i).equals(attributeWithDataType)){
+                PersistedAttributeWIthDataType.setDataType(
+                        ((ColumnWithDataType) attributeWithDataType).getDataType()
+                ); //  replaces data type with most recent data type given
+                attributeListWithoutAliasesWithDataType.add(indexOfAttributeWithDataType,PersistedAttributeWIthDataType); // replacing
                 return;
             }
 
         }
-        this.attributeListWithoutAliasesWithDataType.add(attributeWithDataType);
+        this.attributeListWithoutAliasesWithDataType
+                .add(attributeWithDataType);
     }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
+
         StringBuilder attributeSetWithoutAliasesWithDataType = new StringBuilder(""); // eg. "" -->
         this.attributeListWithoutAliasesWithDataTypeIterator = this.attributeListWithoutAliasesWithDataType.iterator();
 
         boolean thereIsNextComponent = this.attributeListWithoutAliasesWithDataTypeIterator.hasNext();
+
         while(thereIsNextComponent){
+
             ISiddhiAppComposite selectItemComposite = this.attributeListWithoutAliasesWithDataTypeIterator.next();
             thereIsNextComponent = this.attributeListWithoutAliasesWithDataTypeIterator.hasNext();
+
             if(thereIsNextComponent){
                 attributeSetWithoutAliasesWithDataType
                         .append(
