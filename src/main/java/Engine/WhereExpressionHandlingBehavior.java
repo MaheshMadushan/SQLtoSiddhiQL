@@ -85,7 +85,7 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleAddition(Addition addition) {
-        // handling columns related to this addition
+        // handling data types of the columns related to this addition
         Expression leftExpressionOfAddition = addition.getLeftExpression();
         Expression rightExpressionOfAddition = addition.getRightExpression();
 
