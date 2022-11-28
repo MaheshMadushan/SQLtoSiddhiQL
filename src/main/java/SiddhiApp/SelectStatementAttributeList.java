@@ -1,30 +1,53 @@
 package SiddhiApp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 public class SelectStatementAttributeList implements IAttributeList{
 
-    private final List<ISiddhiAppComposite> attributesWithOrWithoutAliases;
+    private final List<ISiddhiAppComposite> attributesWithOrWithoutAliasesList;
+    private Iterator<ISiddhiAppComposite> attributesWithOrWithoutAliasesIterator;
 
     public SelectStatementAttributeList() {
-        this.attributesWithOrWithoutAliases = new ArrayList<>(10);
+        this.attributesWithOrWithoutAliasesList = new ArrayList<>(10);
     }
 
     public List<ISiddhiAppComposite> getAttributesWithOrWithoutAliases() {
-        return attributesWithOrWithoutAliases;
+        return attributesWithOrWithoutAliasesList;
     }
 
     public void addAttribute(ISiddhiAppComposite attribute){
-         attributesWithOrWithoutAliases.add(attribute);
+        attributesWithOrWithoutAliasesList.add(attribute);
     }
 
     @Override
     public String toString() {
-        StringBuilder attributeSetWithAliasesWithOutDataType = new StringBuilder("");
-        for(ISiddhiAppComposite attributeWithAlias : attributesWithOrWithoutAliases){
-            attributeSetWithAliasesWithOutDataType
-                    .append(attributeWithAlias.getSiddhiAppCompositeAsString()).append(",");
+        StringBuilder attributeSetWithAliasesWithOutDataType = new StringBuilder(""); // eg. - SUM( -->
+        attributesWithOrWithoutAliasesIterator = attributesWithOrWithoutAliasesList.iterator();
+
+        boolean thereIsNextComponent = attributesWithOrWithoutAliasesIterator.hasNext();
+
+        while(thereIsNextComponent){
+            ISiddhiAppComposite selectItemComposite = attributesWithOrWithoutAliasesIterator.next();
+            thereIsNextComponent = attributesWithOrWithoutAliasesIterator.hasNext();
+
+            if(thereIsNextComponent){
+                attributeSetWithAliasesWithOutDataType
+                        .append(
+                                selectItemComposite
+                                        .getSiddhiAppCompositeAsString()
+                        )
+                        .append(","); // --> col ,
+            }else{
+                attributeSetWithAliasesWithOutDataType
+                        .append(
+                                selectItemComposite.
+                                        getSiddhiAppCompositeAsString()
+                        ); // --> col , SUM(col + col) AS alias -->
+            }
         }
-        return attributeSetWithAliasesWithOutDataType.toString();
+
+        return attributeSetWithAliasesWithOutDataType
+                .toString(); // col , SUM(col + col) AS alias
     }
 
     @Override

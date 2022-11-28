@@ -21,6 +21,6 @@ public class Alias implements ISiddhiAppComposite{
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        return " AS " + alias + " ";
+        return " as " + alias + " ";
     }
 }

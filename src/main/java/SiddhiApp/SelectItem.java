@@ -1,13 +1,20 @@
 package SiddhiApp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class SelectItem implements IAttribute{
     private final List<ISiddhiAppComposite> selectItemComposites;
+    private final Alias selectItemAlias;
 
     public SelectItem(){
-        selectItemComposites = new ArrayList<ISiddhiAppComposite>();
+        selectItemComposites = new ArrayList<>();
+        selectItemAlias = new Alias();
+    }
+
+    public void setSelectItemAlias(ISiddhiAppComposite selectItemAlias){
+        this.selectItemAlias.setAlias(selectItemAlias.getSiddhiAppCompositeAsString());
     }
 
     public void addSelectItemComposite(ISiddhiAppComposite selectItemComposite){
@@ -16,9 +23,24 @@ public class SelectItem implements IAttribute{
 
     @Override
     public String getSiddhiAppCompositeAsString() {
+        Iterator<ISiddhiAppComposite> selectItemIterator = selectItemComposites.iterator();
         StringBuilder selectItem = new StringBuilder("");
-        for(ISiddhiAppComposite selectItemComposite : selectItemComposites){
-            selectItem.append(selectItemComposite.getSiddhiAppCompositeAsString()).append(",");
+        boolean thereIsNextComponent = selectItemIterator.hasNext();
+
+        while(thereIsNextComponent){
+            ISiddhiAppComposite selectItemComposite = selectItemIterator.next();
+            thereIsNextComponent = selectItemIterator.hasNext();
+
+            if(selectItemAlias.getAlias() == null) {
+                selectItem
+                        .append(selectItemComposite.getSiddhiAppCompositeAsString())
+                        .append(" ");
+            }else{
+                selectItem
+                        .append(selectItemComposite.getSiddhiAppCompositeAsString())
+                        .append(" ")
+                        .append(selectItemAlias.getAlias());
+            }
         }
         return selectItem.toString();
     }
