@@ -23,7 +23,7 @@ public class SQLtoSiddhiQLCompilerTest {
     void generateSiddhiAppForSimpleSQLSelectStatementWithWhereClauseTest() throws JSQLParserException {
 
         String generalProjectionSQL = "SELECT col1@int, col2@bool, col3@bool, col4@double, col5@double , col99@string " +
-                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 + col4 = 30 AND col5 = 98;";
+                "FROM table WHERE col1@int = 10 AND col2@int = 20 XOR col3@int + col4@int = 30 AND col5@int = 98;";
 
         String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);

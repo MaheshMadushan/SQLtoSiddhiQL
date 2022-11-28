@@ -14,6 +14,9 @@ import net.sf.jsqlparser.schema.Table;
 import java.util.Stack;
 
 public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
+    private final int COLUMN_NAME_INDEX = 0;
+    private final int DATA_TYPE_INDEX = 1;
+    private String[] ColumnNameAndDataTypeArr;
 
     private SiddhiApp.Column siddhiColumn;
     private AggregateFunction aggregateFunction;
@@ -27,10 +30,25 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
         throw new UnsupportedOperationException("Table names in where statement not supported.");
     }
 
+    private String getColumnName(){
+        return ColumnNameAndDataTypeArr[COLUMN_NAME_INDEX];
+    }
+
+    private String getDataType(){
+        return ColumnNameAndDataTypeArr[DATA_TYPE_INDEX];
+    }
+
+    private void tokenizeColumnName(String sqlColumnWithDataType){
+        ColumnNameAndDataTypeArr = sqlColumnWithDataType.split("[@]", 0);
+        if(ColumnNameAndDataTypeArr.length != 2){throw new IllegalArgumentException("provided column and data type format is should be \"ColumnName@DataType\". but provided : " + "[" + sqlColumnWithDataType + "] in Where Clause");}
+    }
+
     @Override
-    public void handleColumn(Column sqlColumn) {
-        siddhiColumn = new SiddhiApp.Column();
-        siddhiColumn.setName(sqlColumn.getName(false));
+    public void handleColumn(Column sqlColumnWithDataType) {
+        tokenizeColumnName(sqlColumnWithDataType.getColumnName()); // eg - this tokenize "ColumnName@DataType" to ["ColumnName", "DataType"]
+        SiddhiApp.Column siddhiColumn = new SiddhiApp.Column();
+        siddhiColumn.setName(getColumnName());
+        siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
         // if still processing on function attributes add to function attribute list
         if(aggregateFunctionsStack.empty()) {
             siddhiApp.addSymbolToFilterExpression(siddhiColumn.getName());
@@ -85,19 +103,6 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleAddition(Addition addition) {
-        // handling data types of the columns related to this addition
-        Expression leftExpressionOfAddition = addition.getLeftExpression();
-        Expression rightExpressionOfAddition = addition.getRightExpression();
-
-        if(leftExpressionOfAddition instanceof Column){
-            siddhiApp.addColumnWithDataType(new ColumnWithDataType(
-                    new SiddhiApp.Column(((Column) leftExpressionOfAddition).getColumnName(),null),"double"));
-        }
-
-        if(rightExpressionOfAddition instanceof Column){
-            siddhiApp.addColumnWithDataType(new ColumnWithDataType(
-                    new SiddhiApp.Column(((Column) rightExpressionOfAddition).getColumnName(),null),"double"));
-        }
         siddhiApp.addSymbolToFilterExpression(addition.getStringExpression());
     }
 
