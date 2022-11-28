@@ -1,17 +1,25 @@
 package SiddhiApp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class AggregateFunction implements IFunction,IAttribute{
 
-    private String functionName;
-    private List<ISiddhiAppComposite> attributeList;
+    private final String functionName;
+    private final List<ISiddhiAppComposite> attributeList;
     private ISiddhiAppComposite alias;
+    private Iterator<ISiddhiAppComposite> attributeIterator;
 
     public AggregateFunction(String functionName) {
-        this.functionName = functionName;
         this.attributeList = new ArrayList<>(10);
+        if(SupportedAggregationFunctions.isFunctionSupported(functionName)) {
+            this.functionName = functionName;
+        }
+        else{
+            this.functionName = null;
+            throw new UnsupportedOperationException("Unsupported function " + functionName);
+        }
     }
 
     public ISiddhiAppComposite getAlias() {
@@ -22,10 +30,8 @@ public class AggregateFunction implements IFunction,IAttribute{
         this.alias = alias;
     }
 
-    public String getFunctionName(){ return this.functionName; }
-
-    public String toString(boolean withAliases) {
-        return toString();
+    public String getFunctionAttributeDataType() {
+        return SupportedAggregationFunctions.getAttributeDataType(this.functionName);
     }
 
     public void addAttribute(ISiddhiAppComposite attribute){
@@ -34,15 +40,45 @@ public class AggregateFunction implements IFunction,IAttribute{
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        StringBuilder functionDeclaration = new StringBuilder(functionName).append("(");
-        for(ISiddhiAppComposite attribute : attributeList ){
-            functionDeclaration
-                    .append(attribute.getSiddhiAppCompositeAsString())
-                    .append(", ");
+        attributeIterator = attributeList.iterator();
+        if(functionName == null){
+            throw new UnsupportedOperationException("Function name is null.");
         }
-        functionDeclaration
-                .append(")").append(((Alias) alias).getSiddhiAppCompositeAsString());
+        StringBuilder functionDeclaration = new StringBuilder(functionName).append("("); // eg. - SUM( -->
+        boolean thereIsNextComponent = attributeIterator.hasNext();
 
-        return functionDeclaration.toString();
+        while(thereIsNextComponent){
+            ISiddhiAppComposite selectItemComposite = attributeIterator.next();
+            thereIsNextComponent = attributeIterator.hasNext();
+
+            if(thereIsNextComponent){
+                functionDeclaration
+                        .append(
+                                selectItemComposite
+                                        .getSiddhiAppCompositeAsString()
+                        )
+                        .append(" "); // --> SUM(col  --> SUM(col + -->
+            }else{
+                functionDeclaration
+                        .append(
+                                selectItemComposite.
+                                        getSiddhiAppCompositeAsString()
+                        ); // --> SUM (col + col
+            }
+        }
+        if(alias == null){
+            functionDeclaration
+                    .append(")"); // --> SUM (col + col)
+        }else {
+            functionDeclaration
+                    .append(")")
+                    .append(
+                            ((Alias) alias)
+                                    .getSiddhiAppCompositeAsString()
+                    ); // --> SUM (col + col) AS alias
+        }
+
+        return functionDeclaration
+                .toString(); // SUM (col + col) AS alias
     }
 }

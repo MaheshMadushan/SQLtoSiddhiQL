@@ -23,7 +23,7 @@ public class SQLtoSiddhiQLCompilerTest {
     void generateSiddhiAppForSimpleSQLSelectStatementWithWhereClauseTest() throws JSQLParserException {
 
         String generalProjectionSQL = "SELECT col1, col2, col3, col4, col5 , col99 " +
-                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30 AND col5 = 98;";
+                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 + col4 = 30 AND col5 = 98;";
 
         String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
@@ -135,12 +135,13 @@ public class SQLtoSiddhiQLCompilerTest {
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
-//    @Test
-//    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseTest() throws JSQLParserException {
-//
-//        String generalProjectionSQL = "SELECT * FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980 UNION SELECT * FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980;";
-//        AST.traverseAST(AST.parseAST(generalProjectionSQL), 0);
-//        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
-//        assertEquals(siddhiAppDefinition,siddhiApp);
-//    }
+    @Test
+    void flowing() throws JSQLParserException {
+
+        String generalProjectionSQL_with_setOps = "SELECT STDDEV(a + b) FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980 UNION SELECT * FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980;";
+        String generalProjectionSQL_not_setOps = "SELECT a+b+l,l FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980;";
+
+        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL_not_setOps);
+        assertEquals(siddhiAppDefinition,siddhiApp);
+    }
 }

@@ -1,6 +1,7 @@
 package Engine;
 
-import SiddhiApp.SiddhiApp;
+import SiddhiApp.AggregateFunction;
+import SiddhiApp.ColumnWithDataType;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -9,163 +10,184 @@ import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.select.FunctionItem;
+
+import java.util.Stack;
 
 public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
+
+    private SiddhiApp.Column siddhiColumn;
+    private AggregateFunction aggregateFunction;
+    private final Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
 
     public WhereExpressionHandlingBehavior() {
     }
 
     @Override
     public void handleTable(Table table) {
-        System.out.println("in WhereExpressionHandlingBehavior table ");
-        System.out.println(table.getName());
+        throw new UnsupportedOperationException("Table names in where statement not supported.");
     }
 
     @Override
-    public void handleColumn(Column column) {
-        System.out.println("in WhereExpressionHandlingBehavior column");
-        System.out.println(column.getColumnName());
+    public void handleColumn(Column sqlColumn) {
+        siddhiColumn = new SiddhiApp.Column();
+        siddhiColumn.setName(sqlColumn.getName(false));
+        // if still processing on function attributes add to function attribute list
+        if(aggregateFunctionsStack.empty()) {
+            siddhiApp.addSymbolToFilterExpression(siddhiColumn.getName());
+        }else{
+            aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function (this is a function inside function) attribute
+            siddhiApp.addColumnWithDataType(
+                    new ColumnWithDataType(siddhiColumn, aggregateFunctionsStack.peek().getFunctionAttributeDataType())); // add to stream definition
+        }
     }
 
     @Override
     public void handleFunctionExit(Function function) {
-
+        aggregateFunction = aggregateFunctionsStack.pop();
+        if(aggregateFunctionsStack.empty()) {
+            siddhiApp.addSymbolToFilterExpression(aggregateFunction.getSiddhiAppCompositeAsString()); // selectItem.addSelectItemComposite(aggregateFunction);
+        }
+        else{
+            aggregateFunctionsStack.peek().addAttribute(aggregateFunction);
+        }
     }
 
     @Override
     public void handleFunctionBegin(Function function) {
-
+        aggregateFunction = new AggregateFunction(function.getName());
+        aggregateFunctionsStack.push(aggregateFunction);
     }
-
 
     @Override
     public void handleSignedExpression(SignedExpression signedExpression) {
-        System.out.println("in WhereExpressionHandlingBehavior signedExpression");
-        System.out.println(signedExpression.getSign());
+        throw new UnsupportedOperationException("Signed Expression " + signedExpression.getExpression() +" not supported.");
     }
 
     @Override
     public void handleDoubleValue(DoubleValue doubleValue) {
-        System.out.println("in WhereExpressionHandlingBehavior doubleValue");
-        System.out.println(doubleValue.getValue());
+        siddhiApp.addSymbolToFilterExpression(doubleValue.toString());
     }
 
     @Override
     public void handleLongValue(LongValue longValue) {
-        System.out.println("in WhereExpressionHandlingBehavior longValue");
-        System.out.println(longValue.getValue());
+        siddhiApp.addSymbolToFilterExpression(longValue.toString());
     }
 
     @Override
     public void handleParenthesis(Parenthesis parenthesis) {
-        System.out.println("in WhereExpressionHandlingBehavior parenthesis");
-        System.out.println(parenthesis.toString());
+
     }
 
     @Override
     public void handleStringValue(StringValue stringValue) {
-        System.out.println("in WhereExpressionHandlingBehavior stringValue");
-        System.out.println(stringValue.getValue());
+        siddhiApp.addSymbolToFilterExpression(stringValue.getValue());
     }
 
     @Override
     public void handleAddition(Addition addition) {
-        System.out.println("in WhereExpressionHandlingBehavior addition");
-        System.out.println(addition.toString());
+        // handling data types of the columns related to this addition
+        Expression leftExpressionOfAddition = addition.getLeftExpression();
+        Expression rightExpressionOfAddition = addition.getRightExpression();
+
+        if(leftExpressionOfAddition instanceof Column){
+            siddhiApp.addColumnWithDataType(new ColumnWithDataType(
+                    new SiddhiApp.Column(((Column) leftExpressionOfAddition).getColumnName(),null),"double"));
+        }
+
+        if(rightExpressionOfAddition instanceof Column){
+            siddhiApp.addColumnWithDataType(new ColumnWithDataType(
+                    new SiddhiApp.Column(((Column) rightExpressionOfAddition).getColumnName(),null),"double"));
+        }
+        siddhiApp.addSymbolToFilterExpression(addition.getStringExpression());
     }
 
     @Override
     public void handleDivision(Division division) {
-        System.out.println("in WhereExpressionHandlingBehavior division");
-        System.out.println(division.getStringExpression());
+        siddhiApp.addSymbolToFilterExpression(division.getStringExpression());
     }
 
     @Override
     public void handleIntegerDivision(IntegerDivision integerDivision) {
-        System.out.println("in WhereExpressionHandlingBehavior integerDivision");
-        System.out.println(integerDivision.getStringExpression());
+        throw new UnsupportedOperationException("Integer division " + integerDivision.getStringExpression() + " not supported.");
     }
 
     @Override
     public void handleMultiplication(Multiplication multiplication) {
-        System.out.println("in WhereExpressionHandlingBehavior multiplication");
-        System.out.println(multiplication.getStringExpression());
+        siddhiApp.addSymbolToFilterExpression(multiplication.getStringExpression());
     }
 
     @Override
     public void handleSubtraction(Subtraction subtraction) {
-        System.out.println("in WhereExpressionHandlingBehavior subtraction");
-        System.out.println(subtraction.getStringExpression());
+        siddhiApp.addSymbolToFilterExpression(subtraction.getStringExpression());
     }
 
     @Override
     public void handleAndExpression(AndExpression andExpression) {
-        System.out.println("in WhereExpressionHandlingBehavior andExpression");
-        System.out.println(andExpression.getStringExpression());
+        siddhiApp.addSymbolToFilterExpression(andExpression.getStringExpression());
     }
 
     @Override
     public void handleOrExpression(OrExpression orExpression) {
-        System.out.println("in WhereExpressionHandlingBehavior orExpression");
-        System.out.println(orExpression.getStringExpression());
+        siddhiApp.addSymbolToFilterExpression(orExpression.getStringExpression());
     }
 
     @Override
     public void handleXorExpression(XorExpression xorExpression) {
-        System.out.println("in WhereExpressionHandlingBehavior xorExpression");
-        System.out.println(xorExpression.getStringExpression());
+        siddhiApp.addSymbolToFilterExpression(xorExpression.getStringExpression());
+    }
+
+    @Override
+    public void handleEqualsTo(EqualsTo equalsTo) {
+        siddhiApp.addSymbolToFilterExpression(equalsTo.getStringExpression());
+    }
+
+    @Override
+    public void handleGreaterThan(GreaterThan greaterThan) {
+        siddhiApp.addSymbolToFilterExpression(greaterThan.getStringExpression());
+    }
+
+    @Override
+    public void handleGreaterThanEquals(GreaterThanEquals greaterThanEquals) {
+        siddhiApp.addSymbolToFilterExpression(greaterThanEquals.getStringExpression());
+    }
+
+    @Override
+    public void handleMinorThan(MinorThan minorThan) {
+        siddhiApp.addSymbolToFilterExpression(minorThan.getStringExpression());
     }
 
     @Override
     public void handleOpenBracket() {
+        siddhiApp.addSymbolToFilterExpression("(");
 
     }
 
     @Override
     public void handleCloseBracket() {
+        siddhiApp.addSymbolToFilterExpression(")");
 
     }
 
-    @Override
-    public void handleEqualsTo(EqualsTo equalsTo) {
-        System.out.println("in WhereExpressionHandlingBehavior equalsTo");
-        System.out.println(equalsTo.getStringExpression());
-    }
 
-    @Override
-    public void handleGreaterThan(GreaterThan greaterThan) {
-        System.out.println("in WhereExpressionHandlingBehavior GreaterThan");
-        System.out.println(greaterThan.getStringExpression());
-    }
-
-    @Override
-    public void handleGreaterThanEquals(GreaterThanEquals greaterThanEquals) {
-        System.out.println("in WhereExpressionHandlingBehavior greaterThanEquals");
-        System.out.println(greaterThanEquals.getStringExpression());
-    }
-
-    @Override
-    public void handleMinorThan(MinorThan minorThan) {
-        System.out.println("in WhereExpressionHandlingBehavior minorThan");
-        System.out.println(minorThan.getStringExpression());
-    }
 
     @Override
     public void handleMinorThanEquals(MinorThanEquals minorThanEquals) {
-        System.out.println("in WhereExpressionHandlingBehavior minorThanEquals");
-        System.out.println(minorThanEquals.getStringExpression());
+        siddhiApp.addSymbolToFilterExpression(minorThanEquals.getStringExpression());
     }
 
     @Override
     public void handleNotEqualsTo(NotEqualsTo notEqualsTo) {
-        System.out.println("in WhereExpressionHandlingBehavior notEqualsTo");
-        System.out.println(notEqualsTo.getStringExpression());
+        siddhiApp.addSymbolToFilterExpression(notEqualsTo.getStringExpression());
     }
 
     @Override
     public void handleAlias(Alias alias) {
-        System.out.println("in WhereExpressionHandlingBehavior alias");
-        System.out.println(alias.getName());
+        siddhiApp.addSymbolToFilterExpression(alias.getName());
+    }
+
+    @Override
+    public void addToSiddhiApp() {
+        throw new UnsupportedOperationException();
+
     }
 }
