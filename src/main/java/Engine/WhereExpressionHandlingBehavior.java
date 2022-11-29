@@ -16,7 +16,7 @@ import java.util.Stack;
 public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
     private final int COLUMN_NAME_INDEX = 0;
     private final int DATA_TYPE_INDEX = 1;
-    private String[] ColumnNameAndDataTypeArr;
+    private String[] ColumnNameAndDataTypeArr; // length is 2 ["columnName","dataType"]
 
     private SiddhiApp.Column siddhiColumn;
     private AggregateFunction aggregateFunction;
@@ -55,7 +55,7 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
         }else{
             aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function (this is a function inside function) attribute
             siddhiApp.addColumnWithDataType(
-                    new ColumnWithDataType(siddhiColumn, aggregateFunctionsStack.peek().getFunctionAttributeDataType())); // add to stream definition
+                    new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
         }
     }
 

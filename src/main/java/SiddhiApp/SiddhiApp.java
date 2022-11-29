@@ -27,8 +27,8 @@ public class SiddhiApp {
     }
 
     public String getSelectItemListAsString(){
+        System.out.println(defineStreamStatement.getSiddhiAppCompositeAsString() + "[" + filterExpression.getSiddhiAppCompositeAsString() + "]");
         System.out.println(selectStatement.getSiddhiAppCompositeAsString());
-        System.out.println(defineStreamStatement.getSiddhiAppCompositeAsString());
         return selectStatement.getSiddhiAppCompositeAsString();
     }
         // has attributes (with aliases or not)
