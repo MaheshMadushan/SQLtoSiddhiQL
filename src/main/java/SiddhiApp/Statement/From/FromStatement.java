@@ -5,30 +5,30 @@ import SiddhiApp.Statement.FilterExpressionStatement.IFilterExpression;
 import SiddhiApp.DefineStreamStatement;
 
 public class FromStatement implements IFromStatement {
-    private ISiddhiAppComposite inputStream;
-    private ISiddhiAppComposite filterStatement;
+    private ISiddhiAppComposite inputStreamOrNamedWindow;
+    private ISiddhiAppComposite fromStatementComposite; // filter statement,window,stream function,join, join with window...
 
     public FromStatement(){
-        inputStream = null;
-        filterStatement = null;
+        inputStreamOrNamedWindow = null;
+        fromStatementComposite = null;
     }
 
-    public void setStreamName(String streamName){
-        inputStream = new DefineStreamStatement(streamName);
+    public void setStreamName(String inputStreamName){
+        inputStreamOrNamedWindow = new DefineStreamStatement(streamName);
     }
 
-    public void setFilterStatement(IFilterExpression filterStatement) {
-        this.filterStatement = filterStatement;
+    public void setFromStatementComposite(ISiddhiAppComposite filterStatement) {
+        this.fromStatementComposite = filterStatement;
     }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        String fromWithStreamName = "from " + inputStream.getSiddhiAppCompositeAsString();
-        if(filterStatement == null) {
+        String fromWithStreamName = "from " + inputStreamOrNamedWindow.getSiddhiAppCompositeAsString();
+        if(fromStatementComposite == null) {
             return fromWithStreamName + "\n";
         }
         else{
-            return fromWithStreamName + filterStatement.getSiddhiAppCompositeAsString() + "\n";
+            return fromWithStreamName + fromStatementComposite.getSiddhiAppCompositeAsString() + "\n";
         }
     }
 }

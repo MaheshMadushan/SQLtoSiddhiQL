@@ -2,17 +2,28 @@ package SiddhiApp;
 
 import SiddhiApp.Statement.FilterExpressionStatement.FilterExpression;
 import SiddhiApp.Statement.FilterExpressionStatement.IFilterExpression;
+import SiddhiApp.Statement.From.FromStatement;
+import SiddhiApp.Statement.From.IFromStatement;
+import SiddhiApp.Statement.Insert.IInsertStatement;
+import SiddhiApp.Statement.Insert.InsertStatement;
 import SiddhiApp.Statement.Select.SelectStatement;
 
 public class SiddhiApp {
-    // create define stream
-    DefineStreamStatement defineStreamStatement = new DefineStreamStatement("InputStream");
+    // Annotations
+        // app name
+        // source
+        // map
+    // create define stream // use this for output stream also
+    DefineStreamStatement defineStreamStatement = new DefineStreamStatement();
     // select statement
     SelectStatement selectStatement = new SelectStatement();
     // from statement
-
+    IFromStatement fromStatement = new FromStatement();
     // filter statement
     IFilterExpression filterExpression = new FilterExpression();
+    // insert into statement
+    IInsertStatement insertStatement = new InsertStatement();
+    String inputOutputStreamNamePrefix = null;
 
     public void addSymbolToFilterExpression(String symbol){
         ((FilterExpression) this.filterExpression).addSymbol(symbol);
@@ -27,8 +38,20 @@ public class SiddhiApp {
     }
 
     public String getSelectItemListAsString(){
-        System.out.println(defineStreamStatement.getSiddhiAppCompositeAsString() + "[" + filterExpression.getSiddhiAppCompositeAsString() + "]");
+        // Annotations
+            // app name
+            // source
+        defineStreamStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream");
+        System.out.println(defineStreamStatement.getSiddhiAppCompositeAsString()); // IPStream
+        // Annotations
+            // sink
+        defineStreamStatement.setStreamName(inputOutputStreamNamePrefix + "OutputStream");
+        System.out.println(defineStreamStatement.getSiddhiAppCompositeAsString()); // OPStream
+        fromStatement.
+        System.out.println(fromStatement.getSiddhiAppCompositeAsString() + "[" + filterExpression.getSiddhiAppCompositeAsString() + "]");
         System.out.println(selectStatement.getSiddhiAppCompositeAsString());
+        insertStatement.setOutputStreamName(inputOutputStreamNamePrefix + "OutputStream");
+        System.out.println(insertStatement.getSiddhiAppCompositeAsString());
         return selectStatement.getSiddhiAppCompositeAsString();
     }
         // has attributes (with aliases or not)

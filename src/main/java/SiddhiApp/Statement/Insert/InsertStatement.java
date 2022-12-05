@@ -5,18 +5,18 @@ import SiddhiApp.DefineStreamStatement;
 
 public class InsertStatement implements IInsertStatement {
 
-    private ISiddhiAppComposite outputStream;
+    private String outputStream;
 
     public InsertStatement(){
         outputStream = null;
     }
 
-    public void setOutputStreamName(String streamName){
-        outputStream = new DefineStreamStatement(streamName);
+    public void setOutputStreamName(String outputStreamName){
+        this.outputStream = outputStreamName;
     }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        return "insert into " + outputStream.getSiddhiAppCompositeAsString() + ";";
+        return "insert into " + outputStream + ";";
     }
 }
