@@ -22,6 +22,6 @@ public class InsertStatement implements IInsertStatement {
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        return "insert into " + outputStream + ";";
+        return "insert into " + outputStream + ";\n";
     }
 }

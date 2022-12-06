@@ -19,7 +19,7 @@ public class App {
 
         statement.accept(new CustomSelectStatementVisitor(middleEngine));
 
-        siddhiApp.getSelectItemListAsString();
+        System.out.println(siddhiApp.getSiddhiAppStringRepresentation());
 
     }
 
