@@ -20,22 +20,22 @@ public class CustomFromItemVisitorImpl implements FromItemVisitor {
 
     @Override
     public void visit(SubSelect subSelect) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Sub selects not supported");
     }
 
     @Override
     public void visit(SubJoin subJoin) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("sub joins not supported");
     }
 
     @Override
     public void visit(LateralSubSelect lateralSubSelect) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("lateral sub select not supported");
     }
 
     @Override
     public void visit(ValuesList valuesList) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("value list not supported");
     }
 
     @Override

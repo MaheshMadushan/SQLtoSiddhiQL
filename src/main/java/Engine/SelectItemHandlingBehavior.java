@@ -43,7 +43,10 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
     private void tokenizeColumnName(String sqlColumnWithDataType){
         ColumnNameAndDataTypeArr = sqlColumnWithDataType.split("[@]", 0);
-        if(ColumnNameAndDataTypeArr.length != 2){throw new IllegalArgumentException("provided column and data type format is should be \"ColumnName@DataType\". but provided : " + "[" + sqlColumnWithDataType + "] in Select items");}
+        if(ColumnNameAndDataTypeArr.length != 2){
+            throw new IllegalArgumentException("provided column and data type format is " +
+                    "should be \"ColumnName@DataType\". but provided : " + "[" + sqlColumnWithDataType + "] in Select items");
+        }
     }
 
     @Override

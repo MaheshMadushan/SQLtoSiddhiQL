@@ -8,6 +8,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
 import java.util.List;
+
 public class CustomSelectBodyVisitor implements SelectVisitor {
 
     private final IEngine middleEngine;
@@ -42,7 +43,7 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
             whereExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
         }
 
-        List<Join> joins = plainSelect.getJoins();
+        List<Join> joins = plainSelect.getJoins(); // not handled yet
         if(joins != null){
             for ( Join join : joins){
                 List<Expression> onExpressions = (List<Expression>) join.getOnExpressions();
@@ -54,19 +55,19 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
             }
         }
 
-        GroupByElement groupByElement = plainSelect.getGroupBy();
+        GroupByElement groupByElement = plainSelect.getGroupBy(); // not handled yet
         if(groupByElement != null) {
             groupByElement.accept(new CustomGroupByElementVisitor());
         }
 
-        List<OrderByElement> orderByElements = plainSelect.getOrderByElements();
+        List<OrderByElement> orderByElements = plainSelect.getOrderByElements(); // not handled yet
         if(orderByElements != null) {
             for(OrderByElement orderByElement: orderByElements) {
                 orderByElement.accept(new CustomOrderByElementVisitor(middleEngine));
             }
         }
 
-        Expression havingExpression = plainSelect.getHaving();
+        Expression havingExpression = plainSelect.getHaving(); // not handled yet
         if(havingExpression != null) {
             havingExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
         }
