@@ -16,6 +16,11 @@ public class InsertStatement implements IInsertStatement {
     }
 
     @Override
+    public void setStreamName(String outputStreamName) {
+        this.outputStream = outputStreamName;
+    }
+
+    @Override
     public String getSiddhiAppCompositeAsString() {
         return "insert into " + outputStream + ";";
     }

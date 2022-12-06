@@ -23,7 +23,7 @@ public class SiddhiApp {
     IFilterExpression filterExpression = new FilterExpression();
     // insert into statement
     IInsertStatement insertStatement = new InsertStatement();
-    String inputOutputStreamNamePrefix = null;
+    String inputOutputStreamNamePrefix = "networkTraffic";
 
     public void addSymbolToFilterExpression(String symbol){
         ((FilterExpression) this.filterExpression).addSymbol(symbol);
@@ -47,11 +47,16 @@ public class SiddhiApp {
             // sink
         defineStreamStatement.setStreamName(inputOutputStreamNamePrefix + "OutputStream");
         System.out.println(defineStreamStatement.getSiddhiAppCompositeAsString()); // OPStream
-        fromStatement.
-        System.out.println(fromStatement.getSiddhiAppCompositeAsString() + "[" + filterExpression.getSiddhiAppCompositeAsString() + "]");
+
+        fromStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream");
+        fromStatement.setFromStatementComposite(filterExpression);
+        System.out.println(fromStatement.getSiddhiAppCompositeAsString());
+
         System.out.println(selectStatement.getSiddhiAppCompositeAsString());
+
         insertStatement.setOutputStreamName(inputOutputStreamNamePrefix + "OutputStream");
         System.out.println(insertStatement.getSiddhiAppCompositeAsString());
+
         return selectStatement.getSiddhiAppCompositeAsString();
     }
         // has attributes (with aliases or not)
