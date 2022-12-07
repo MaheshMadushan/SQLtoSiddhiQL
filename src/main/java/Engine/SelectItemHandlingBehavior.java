@@ -16,11 +16,14 @@ import net.sf.jsqlparser.schema.Table;
 import java.util.Stack;
 
 public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
+    private final int COLUMN_NAME_INDEX = 0;
+    private final int DATA_TYPE_INDEX = 1;
+    private String[] ColumnNameAndDataTypeArr;
 
     private final SelectItem selectItem;
-    private SiddhiApp.Column siddhiColumn;
-    private Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
+    private final Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
     private AggregateFunction aggregateFunction;
+
 
     public SelectItemHandlingBehavior() {
         selectItem  = new SelectItem();
@@ -30,19 +33,33 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     public void handleTable(Table table) {
     }
 
+    private String getColumnName(){
+        return ColumnNameAndDataTypeArr[COLUMN_NAME_INDEX];
+    }
+
+    private String getDataType(){
+        return ColumnNameAndDataTypeArr[DATA_TYPE_INDEX];
+    }
+
+    private void tokenizeColumnName(String sqlColumnWithDataType){
+        ColumnNameAndDataTypeArr = sqlColumnWithDataType.split("[@]", 0);
+        if(ColumnNameAndDataTypeArr.length != 2){
+            throw new IllegalArgumentException("provided column and data type format is " +
+                    "should be \"ColumnName@DataType\". but provided : " + "[" + sqlColumnWithDataType + "] in Select items");
+        }
+    }
+
     @Override
-    public void handleColumn(Column sqlColumn) {
-        siddhiColumn = new SiddhiApp.Column();
-        siddhiColumn.setName(sqlColumn.getName(false));
+    public void handleColumn(Column sqlColumnWithDataType) {
+        tokenizeColumnName(sqlColumnWithDataType.getColumnName()); // eg - this tokenize "ColumnName@DataType" to ["ColumnName", "DataType"]
+        SiddhiApp.Column siddhiColumn = new SiddhiApp.Column();
+        siddhiColumn.setName(getColumnName());
+        siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
         // if still processing on function attributes add to function attribute list
         if(aggregateFunctionsStack.empty()) {
             selectItem.addSelectItemComposite(siddhiColumn); // add to select statement
-            siddhiApp.addColumnWithDataType(
-                    new ColumnWithDataType(siddhiColumn, "String")); // add to stream definition
         }else{
             aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to select statement
-            siddhiApp.addColumnWithDataType(
-                    new ColumnWithDataType(siddhiColumn, aggregateFunctionsStack.peek().getFunctionAttributeDataType())); // add to stream definition
         }
     }
 

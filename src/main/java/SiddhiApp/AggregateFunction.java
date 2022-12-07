@@ -30,10 +30,6 @@ public class AggregateFunction implements IFunction,IAttribute{
         this.alias = alias;
     }
 
-    public String getFunctionAttributeDataType() {
-        return SupportedAggregationFunctions.getAttributeDataType(this.functionName);
-    }
-
     public void addAttribute(ISiddhiAppComposite attribute){
         attributeList.add(attribute);
     }
