@@ -15,6 +15,7 @@ public class SiddhiApp {
     private final IFilterExpression filterExpression = new FilterExpression(); // filter statement
     private final IInsertStatement insertStatement = new InsertStatement(); // insert into statement
     private String inputOutputStreamNamePrefix = null;
+    private String siddhiAppName = null;
     private final StringBuilder stringSiddhiApp = new StringBuilder("");
 
     public void addSymbolToFilterExpression(String symbol){
@@ -28,6 +29,9 @@ public class SiddhiApp {
     }
     public void setStreamNamePrefix(String inputOutputStreamNamePrefix) {
         this.inputOutputStreamNamePrefix = inputOutputStreamNamePrefix;
+    }
+    public void setSiddhiAppName(String siddhiAppName){
+        this.siddhiAppName = siddhiAppName;
     }
     public String getSiddhiAppStringRepresentation(){
         // Annotations
