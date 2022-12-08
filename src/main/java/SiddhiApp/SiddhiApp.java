@@ -1,5 +1,11 @@
 package SiddhiApp;
 
+import SiddhiApp.Annotation.App.App;
+import SiddhiApp.Annotation.Attributes.IAttributes;
+import SiddhiApp.Annotation.Info.IInfo;
+import SiddhiApp.Annotation.Map.IMap;
+import SiddhiApp.Annotation.Sink.ISink;
+import SiddhiApp.Annotation.Source.ISource;
 import SiddhiApp.Statement.FilterExpressionStatement.FilterExpression;
 import SiddhiApp.Statement.FilterExpressionStatement.IFilterExpression;
 import SiddhiApp.Statement.From.FromStatement;
@@ -14,6 +20,13 @@ public class SiddhiApp {
     private final IFromStatement fromStatement = new FromStatement(); // from statement
     private final IFilterExpression filterExpression = new FilterExpression(); // filter statement
     private final IInsertStatement insertStatement = new InsertStatement(); // insert into statement
+    // Annotations
+    private final App annotationApp = new App();
+    private ISource annotationSource;
+    private IAttributes annotationAttributes;
+    private IMap annotationMap;
+    private ISink annotationSink;
+    private IInfo annotationInfo;
     private String inputOutputStreamNamePrefix = null;
     private String siddhiAppName = null;
     private final StringBuilder stringSiddhiApp = new StringBuilder("");
@@ -21,31 +34,63 @@ public class SiddhiApp {
     public void addSymbolToFilterExpression(String symbol){
         ((FilterExpression) this.filterExpression).addSymbol(symbol);
     }
+
     public void addSelectItem(ISiddhiAppComposite selectItem){
         selectStatement.addSelectItem(selectItem);
     }
     public void addColumnWithDataType(ISiddhiAppComposite columnWithDataType){
         defineStreamStatement.addAttributeWithDataType(columnWithDataType);
     }
+
     public void setStreamNamePrefix(String inputOutputStreamNamePrefix) {
         this.inputOutputStreamNamePrefix = inputOutputStreamNamePrefix;
     }
+
     public void setSiddhiAppName(String siddhiAppName){
         this.siddhiAppName = siddhiAppName;
     }
+
+    public void setAnnotationSource(ISource annotationSource) {
+        this.annotationSource = annotationSource;
+    }
+
+    public void setAnnotationSink(ISink annotationSink) {
+        this.annotationSink = annotationSink;
+    }
+
+    public void setAnnotationInfo(IInfo annotationInfo) {
+        this.annotationInfo = annotationInfo;
+    }
+
+    public void setAnnotationAttributes(IAttributes annotationAttributes) {
+        this.annotationAttributes = annotationAttributes;
+    }
+
+    public void setAnnotationMap(IMap annotationMap) {
+        this.annotationMap = annotationMap;
+    }
+
     public String getSiddhiAppStringRepresentation(){
         // Annotations
             // app name
+        stringSiddhiApp.append(annotationApp.getSiddhiAppCompositeAsString());
             // source
+        // annotationMap.
+        annotationSource.addSourceComposite(annotationMap);
+        stringSiddhiApp.append(annotationSource.getSiddhiAppCompositeAsString());
         defineStreamStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // IPStream set I/P Stream Name
         stringSiddhiApp.append(defineStreamStatement.getSiddhiAppCompositeAsString());
 
         // Annotations
             // sink
+        stringSiddhiApp.append(annotationSink.getSiddhiAppCompositeAsString());
+
         defineStreamStatement.setStreamName(inputOutputStreamNamePrefix + "OutputStream"); // OPStream set O/P Stream Name
         stringSiddhiApp.append(defineStreamStatement.getSiddhiAppCompositeAsString());
         // Annotations
             // info
+        stringSiddhiApp.append(annotationInfo.getSiddhiAppCompositeAsString());
+
         fromStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // From Statement set I/P Stream Name
         fromStatement.setFromStatementComposite(filterExpression); // From statement filter expression
         stringSiddhiApp.append(fromStatement.getSiddhiAppCompositeAsString());
