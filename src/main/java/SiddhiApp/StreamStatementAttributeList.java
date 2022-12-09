@@ -26,6 +26,7 @@ public class StreamStatementAttributeList implements IAttributeList{
                 return;
             }else if(PersistedAttributeWIthDataType.isSameColumnAndDifferentDataType(attributeWithDataType)){ // column and diff data type conflict resolving
                 System.out.println("data type conflict on column " + PersistedAttributeWIthDataType.getColumnName());
+                // TODO : existing data type overwriting strategy should re-evaluate
 
                 PersistedAttributeWIthDataType.setDataType(
                         ((ColumnWithDataType) attributeWithDataType).getDataType()

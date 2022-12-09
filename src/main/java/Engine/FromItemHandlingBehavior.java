@@ -1,6 +1,5 @@
 package Engine;
 
-import SiddhiApp.SiddhiApp;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -16,8 +15,7 @@ public class FromItemHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleTable(Table table) {
-        System.out.println("in FromItemHandlingBehavior table ");
-        System.out.println(table.getName());
+        siddhiApp.setStreamNamePrefix(table.getName());
     }
 
     @Override

@@ -1,11 +1,13 @@
 import Compiler.SiddhiAppGenerator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import SiddhiApp.SiddhiApp;
 import net.sf.jsqlparser.JSQLParserException;
 import org.junit.jupiter.api.Test;
 
 public class SQLtoSiddhiQLCompilerTest {
 
-    String siddhiAppDefinition = "";
+     String siddhiAppDefinition = "";
 
     @Test
     void generateSiddhiAppForSimpleSQLSelectStatementTest() throws JSQLParserException {
@@ -15,17 +17,17 @@ public class SQLtoSiddhiQLCompilerTest {
                 "(col_98 > col_97 XOR col_90) XOR (col_90 > col_98) " +
                 "UNION SELECT * FROM TABLE";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
     @Test
     void generateSiddhiAppForSimpleSQLSelectStatementWithWhereClauseTest() throws JSQLParserException {
 
-        String generalProjectionSQL = "SELECT col1, col2, col3, col4, col5 , col99 " +
-                "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 + col4 = 30 AND col5 = 98;";
+        String generalProjectionSQL = "SELECT col1@int, col2@int, col3@int, col4@int, col5@int , col99@int " +
+                "FROM table WHERE col1@int = 10 AND col2@int = 20 XOR col3@int + col4@int = 30 AND col5@int = 98;";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -36,7 +38,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 "col5  as E, col99 as F " +
                 "FROM table";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -48,7 +50,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 "col4 as D, col5 as E, col99 as F " +
                 "FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 = 30 AND col5 = 98;";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -59,7 +61,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 " COUNT(col5) , col99 " +
                 "FROM table";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -71,7 +73,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 "as MIN, COUNT(col5) as COUNT, col99 " +
                 "FROM table";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -80,7 +82,7 @@ public class SQLtoSiddhiQLCompilerTest {
 
         String generalProjectionSQL = "SELECT * FROM table JOIN table90 ON table.id = table90.id";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -89,7 +91,7 @@ public class SQLtoSiddhiQLCompilerTest {
 
         String generalProjectionSQL = "SELECT * FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980;";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -99,7 +101,7 @@ public class SQLtoSiddhiQLCompilerTest {
         String generalProjectionSQL = "SELECT * FROM Customers\n" +
                 "ORDER BY Country, CustomerName;";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -109,7 +111,7 @@ public class SQLtoSiddhiQLCompilerTest {
         String generalProjectionSQL = "SELECT * FROM Customers " +
                 "ORDER BY Country ASC, CustomerName DESC;";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -122,7 +124,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 "HAVING COUNT(CustomerID) > 5\n" +
                 "ORDER BY COUNT(CustomerID) DESC;";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -131,7 +133,7 @@ public class SQLtoSiddhiQLCompilerTest {
 
         String generalProjectionSQL = "SELECT COUNT(CustomerID), Country FROM Customers GROUP BY Country ORDER BY COUNT(CustomerID) DESC ";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -141,7 +143,7 @@ public class SQLtoSiddhiQLCompilerTest {
         String generalProjectionSQL_with_setOps = "SELECT STDDEV(a + b) FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980 UNION SELECT * FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980;";
         String generalProjectionSQL_not_setOps = "SELECT a+b+l,l FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980;";
 
-        String siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL_not_setOps);
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL_not_setOps);
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 }

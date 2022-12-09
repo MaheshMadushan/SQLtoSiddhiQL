@@ -1,34 +1,36 @@
 package SiddhiApp.Statement.From;
 
 import SiddhiApp.ISiddhiAppComposite;
-import SiddhiApp.Statement.FilterExpressionStatement.IFilterExpression;
-import SiddhiApp.DefineStreamStatement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FromStatement implements IFromStatement {
-    private ISiddhiAppComposite inputStream;
-    private ISiddhiAppComposite filterStatement;
+    private String inputStreamOrNamedWindow;
+    private List<ISiddhiAppComposite> fromStatementComposite; // filter statement,window,stream function,join, join with window...
 
     public FromStatement(){
-        inputStream = null;
-        filterStatement = null;
+        inputStreamOrNamedWindow = null;
+        fromStatementComposite = new ArrayList<>(10);
     }
 
-    public void setStreamName(String streamName){
-        inputStream = new DefineStreamStatement(streamName);
+    public void setStreamName(String inputStreamOrNamedWindow){
+        this.inputStreamOrNamedWindow = inputStreamOrNamedWindow;
     }
 
-    public void setFilterStatement(IFilterExpression filterStatement) {
-        this.filterStatement = filterStatement;
+    public void setFromStatementComposite(ISiddhiAppComposite filterStatement) {
+        fromStatementComposite.add(filterStatement);
     }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        String fromWithStreamName = "from " + inputStream.getSiddhiAppCompositeAsString();
-        if(filterStatement == null) {
+        String fromWithStreamName = "from " + inputStreamOrNamedWindow;
+        if(fromStatementComposite == null) {
             return fromWithStreamName + "\n";
         }
         else{
-            return fromWithStreamName + filterStatement.getSiddhiAppCompositeAsString() + "\n";
+            return fromWithStreamName +
+                    fromStatementComposite.stream().iterator().next().getSiddhiAppCompositeAsString() + "\n";
         }
     }
 }

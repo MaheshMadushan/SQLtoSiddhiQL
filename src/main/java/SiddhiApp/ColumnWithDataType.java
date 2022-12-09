@@ -9,7 +9,12 @@ public class ColumnWithDataType implements IAttribute{
 
     public ColumnWithDataType(Column column, String dataType) {
         this.column = column;
-        this.dataType = dataType;
+        if(SupportedDataTypes.isDataTypeSupported(dataType)) {
+            this.dataType = dataType;
+        }
+        else{
+            throw new TypeNotPresentException(dataType,new Throwable("data type not supported by siddhiQL : " + "[" + dataType + "]"));
+        }
     }
 
     @Override
