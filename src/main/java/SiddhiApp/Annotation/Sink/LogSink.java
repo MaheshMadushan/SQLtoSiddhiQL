@@ -17,7 +17,7 @@ public class LogSink implements ISink {
     public String getSiddhiAppCompositeAsString() {
         sinkAnnotation
                 .append(sinkSignature.getAnnotationTypeSignature())
-                .append("(").append("type = ").append(logSink.getSinkTypeSignature()).append(","); // @sink(type = "log",
+                .append("(").append("type = '").append(logSink.getSinkTypeSignature()).append("',"); // @sink(type = "log",
         Iterator<ISiddhiAppComposite> sourceAnnotationCompositesIterator = annotationComposites.iterator();
 
         while(sourceAnnotationCompositesIterator.hasNext()){
@@ -28,7 +28,7 @@ public class LogSink implements ISink {
         }
 
         sinkAnnotation
-                .append(")"); // @sink(type = "log", .....)
+                .append(")\n"); // @sink(type = "log", .....)
 
         return sinkAnnotation.toString();
     }

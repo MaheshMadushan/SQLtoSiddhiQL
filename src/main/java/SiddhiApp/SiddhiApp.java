@@ -2,10 +2,15 @@ package SiddhiApp;
 
 import SiddhiApp.Annotation.App.App;
 import SiddhiApp.Annotation.Attributes.IAttributes;
+import SiddhiApp.Annotation.Attributes.JsonMapAttributes;
 import SiddhiApp.Annotation.Info.IInfo;
+import SiddhiApp.Annotation.Info.QueryInfo;
 import SiddhiApp.Annotation.Map.IMap;
+import SiddhiApp.Annotation.Map.JsonMap;
 import SiddhiApp.Annotation.Sink.ISink;
+import SiddhiApp.Annotation.Sink.LogSink;
 import SiddhiApp.Annotation.Source.ISource;
+import SiddhiApp.Annotation.Source.LiveSource;
 import SiddhiApp.Statement.FilterExpressionStatement.FilterExpression;
 import SiddhiApp.Statement.FilterExpressionStatement.IFilterExpression;
 import SiddhiApp.Statement.From.FromStatement;
@@ -15,6 +20,7 @@ import SiddhiApp.Statement.Insert.InsertStatement;
 import SiddhiApp.Statement.Select.SelectStatement;
 
 public class SiddhiApp {
+
     private final DefineStreamStatement defineStreamStatement = new DefineStreamStatement(); // create define stream // use this for output stream also
     private final SelectStatement selectStatement = new SelectStatement(); // select statement
     private final IFromStatement fromStatement = new FromStatement(); // from statement
@@ -22,13 +28,15 @@ public class SiddhiApp {
     private final IInsertStatement insertStatement = new InsertStatement(); // insert into statement
     // Annotations
     private final App annotationApp = new App();
-    private ISource annotationSource;
-    private IAttributes annotationAttributes;
-    private IMap annotationMap;
-    private ISink annotationSink;
-    private IInfo annotationInfo;
+    private ISource annotationSource = new LiveSource();
+    private IAttributes annotationAttributes = new JsonMapAttributes();
+    private IMap annotationMap = new JsonMap();
+    private ISink annotationSink = new LogSink();
+    private IInfo annotationInfo = new QueryInfo();
+
     private String inputOutputStreamNamePrefix = null;
-    private String siddhiAppName = null;
+    private String siddhiAppName = "defaultSiddhiAppName";
+
     private final StringBuilder stringSiddhiApp = new StringBuilder("");
 
     public void addSymbolToFilterExpression(String symbol){
@@ -38,6 +46,7 @@ public class SiddhiApp {
     public void addSelectItem(ISiddhiAppComposite selectItem){
         selectStatement.addSelectItem(selectItem);
     }
+
     public void addColumnWithDataType(ISiddhiAppComposite columnWithDataType){
         defineStreamStatement.addAttributeWithDataType(columnWithDataType);
     }
@@ -73,9 +82,10 @@ public class SiddhiApp {
     public String getSiddhiAppStringRepresentation(){
         // Annotations
             // app name
+        annotationApp.setSiddhiApplicationName(siddhiAppName);
         stringSiddhiApp.append(annotationApp.getSiddhiAppCompositeAsString());
             // source
-        // annotationMap.
+         annotationMap.addMapComposite(annotationAttributes);
         annotationSource.addSourceComposite(annotationMap);
         stringSiddhiApp.append(annotationSource.getSiddhiAppCompositeAsString());
         defineStreamStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // IPStream set I/P Stream Name
@@ -100,5 +110,9 @@ public class SiddhiApp {
         insertStatement.setOutputStreamName(inputOutputStreamNamePrefix + "OutputStream"); // insert statement set O/P Stream name
         stringSiddhiApp.append(insertStatement.getSiddhiAppCompositeAsString());
         return stringSiddhiApp.toString();
+    }
+
+    public static class SiddhiAppBuilder{
+
     }
 }

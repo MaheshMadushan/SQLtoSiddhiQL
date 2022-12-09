@@ -48,7 +48,7 @@ public class AST {
         System.out.println(colors[level % 9] + head + colors[0]);
     }
 
-    public static void generateSiddhiApp(String StringSQLSelectStatement){
+    public static SiddhiApp generateSiddhiApp(String StringSQLSelectStatement){
         SiddhiApp siddhiApp = new SiddhiApp();
 
         IEngine middleEngine  = new MiddleEngine().setSiddhiApp(siddhiApp);
@@ -59,6 +59,6 @@ public class AST {
             e.printStackTrace();
         }
         assert statement != null;
-        statement.accept(new CustomSelectStatementVisitor(middleEngine));
+        statement.accept(new CustomSelectStatementVisitor(middleEngine));return siddhiApp;
     }
 }

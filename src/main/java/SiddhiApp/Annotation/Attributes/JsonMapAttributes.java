@@ -19,14 +19,14 @@ public class JsonMapAttributes implements IAttributes {
         Iterator<ISiddhiAppComposite> JsonMapAttributesAnnotationCompositesIterator = annotationComposites.iterator();
 
         while(JsonMapAttributesAnnotationCompositesIterator.hasNext()){
-            JsonMapAttributesAnnotation.append(JsonMapAttributesAnnotationCompositesIterator.next());
+            JsonMapAttributesAnnotation.append(JsonMapAttributesAnnotationCompositesIterator.next().getSiddhiAppCompositeAsString());
             if(JsonMapAttributesAnnotationCompositesIterator.hasNext()){
                 JsonMapAttributesAnnotation.append(",");
             }
         }
 
         JsonMapAttributesAnnotation
-                .append(")"); // @attributes(type = "live", .....)
+                .append(")"); // @attributes(columnName = "columnName", .....)
 
         return JsonMapAttributesAnnotation.toString();
     }

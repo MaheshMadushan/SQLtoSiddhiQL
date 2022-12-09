@@ -17,18 +17,18 @@ public class LiveSource implements ISource {
     public String getSiddhiAppCompositeAsString() {
         sourceAnnotation
                 .append(sourceSignature.getAnnotationTypeSignature())
-                .append("(").append("type = ").append(liveSource.getSourceTypeSignature()).append(","); // @source(type = "live",
+                .append("(").append("type = '").append(liveSource.getSourceTypeSignature()).append("',"); // @source(type = "live",
         Iterator<ISiddhiAppComposite> sourceAnnotationCompositesIterator = annotationComposites.iterator();
 
        while(sourceAnnotationCompositesIterator.hasNext()){
-            sourceAnnotation.append(sourceAnnotationCompositesIterator.next());
+            sourceAnnotation.append(sourceAnnotationCompositesIterator.next().getSiddhiAppCompositeAsString());
             if(sourceAnnotationCompositesIterator.hasNext()){
                 sourceAnnotation.append(",");
             }
         }
 
         sourceAnnotation
-                .append(")"); // @source(type = "live", .....)
+                .append(")\n"); // @source(type = "live", .....)
 
         return sourceAnnotation.toString();
     }

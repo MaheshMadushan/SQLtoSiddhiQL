@@ -12,6 +12,6 @@ public class KeyValue<K,V> implements ICommonAnnotationComposite{
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        return key.toString() + " = " + value.toString();
+        return key.toString() + " = '" + value.toString() + "'";
     }
 }
