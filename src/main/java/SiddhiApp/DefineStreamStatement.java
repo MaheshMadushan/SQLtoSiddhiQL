@@ -18,6 +18,6 @@ public class DefineStreamStatement implements IStream{
     @Override
     public String getSiddhiAppCompositeAsString() {
         if(streamName == null) { throw new NullPointerException("Stream name should provided."); }
-        return "define " + streamName + "(" + attributeListWithoutAliasesWithDataType.getSiddhiAppCompositeAsString() + ")\n";
+        return "define " + streamName + "(" + attributeListWithoutAliasesWithDataType.getSiddhiAppCompositeAsString() + ");\n";
     }
 }

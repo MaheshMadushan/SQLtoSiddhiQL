@@ -28,7 +28,7 @@ public class LiveSource implements ISource {
         }
 
         sourceAnnotation
-                .append(")\n"); // @source(type = "live", .....)
+                .append(")\n"); // @source(type = 'live', .....)
 
         return sourceAnnotation.toString();
     }
