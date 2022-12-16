@@ -2,7 +2,7 @@ package SiddhiApp;
 
 public class DefineStreamStatement implements IStream{
     private String streamName;
-    private IAttributeList attributeListWithoutAliasesWithDataType;
+    private final IAttributeList attributeListWithoutAliasesWithDataType;
 
     public DefineStreamStatement(String streamName) {
         this.streamName = streamName;
@@ -18,6 +18,6 @@ public class DefineStreamStatement implements IStream{
     @Override
     public String getSiddhiAppCompositeAsString() {
         if(streamName == null) { throw new NullPointerException("Stream name should provided."); }
-        return "define " + streamName + "(" + attributeListWithoutAliasesWithDataType.getSiddhiAppCompositeAsString() + ");\n";
+        return "define stream " + streamName + "(" + attributeListWithoutAliasesWithDataType.getSiddhiAppCompositeAsString() + ");\n";
     }
 }
