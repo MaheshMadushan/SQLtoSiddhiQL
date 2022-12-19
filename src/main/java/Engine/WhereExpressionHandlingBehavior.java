@@ -143,7 +143,7 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleEqualsTo(EqualsTo equalsTo) {
-        siddhiApp.addSymbolToFilterExpression("==");
+        siddhiApp.addSymbolToFilterExpression(equalsTo.getStringExpression());
     }
 
     @Override
