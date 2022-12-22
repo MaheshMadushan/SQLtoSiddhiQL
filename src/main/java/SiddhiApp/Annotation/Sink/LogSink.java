@@ -13,7 +13,7 @@ public class LogSink extends ISink {
     private final AnnotationType sinkSignature = AnnotationType.SINK;
 
     public LogSink() {
-        annotationComposites = new ArrayList<>(10);
+
     }
 
     @Override

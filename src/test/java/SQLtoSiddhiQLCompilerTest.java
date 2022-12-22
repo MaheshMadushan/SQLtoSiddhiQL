@@ -32,7 +32,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 "@sink(type = 'log')\n" +
                 "define stream tableOutputStream(col1 int,col2 int,col3 int,col4 int,col5 int,col99 int);\n" +
                 "@info(name = 'null')\n" +
-                "from tableInputStream[col1 = 10 AND col2 = 20 XOR col3 + col4 = 30 AND col5 = 98 ]\n" +
+                "from tableInputStream[col1 == 10 AND col2 == 20 XOR col3 + col4 == 30 AND col5 == 98 ]\n" +
                 "select  col1  , col2  , col3  , col4  , col5  , col99  \n" +
                 "insert into tableOutputStream;\n";
         assertEquals(siddhiAppDefinition,siddhiApp.getSiddhiAppStringRepresentation());
@@ -82,7 +82,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 "@sink(type = 'log')\n" +
                 "define stream tableOutputStream(a int,b int,c float,d string,e bool);\n" +
                 "@info(name = 'null')\n" +
-                "from tableInputStream[a = 90 AND b > 98 OR ( a > b XOR e ) XOR ( a + b > b ) ]\n" +
+                "from tableInputStream[a == 90 AND b > 98 OR ( a > b XOR e ) XOR ( a + b > b ) ]\n" +
                 "select  a   as A , b   as B , c   as C , d   as D , e   as E \n" +
                 "insert into tableOutputStream;\n";
         assertEquals(siddhiAppDefinition,siddhiApp.getSiddhiAppStringRepresentation());

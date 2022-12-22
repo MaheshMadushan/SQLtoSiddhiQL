@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ISink implements IAnnotation {
-    List<ISiddhiAppComposite> annotationComposites;
+    List<ISiddhiAppComposite> annotationComposites = new ArrayList<>(10);;
 
     ISink addSourceComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
         this.annotationComposites.add(iCommonAnnotationComposite);

@@ -12,7 +12,7 @@ public class JsonMap extends IMap {
     private final AnnotationType jsonMapSignature = AnnotationType.MAP;
 
     public JsonMap() {
-        annotationComposites = new ArrayList<>(10);
+
     }
 
     @Override

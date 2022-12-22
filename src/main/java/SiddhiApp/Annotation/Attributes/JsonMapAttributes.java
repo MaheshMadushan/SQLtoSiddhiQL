@@ -11,7 +11,7 @@ public class JsonMapAttributes extends IAttributes {
     private final AnnotationType JsonMapAttributesSignature = AnnotationType.ATTRIBUTES;
 
     public JsonMapAttributes(){
-        annotationComposites = new HashSet<>(10);
+
     }
 
 

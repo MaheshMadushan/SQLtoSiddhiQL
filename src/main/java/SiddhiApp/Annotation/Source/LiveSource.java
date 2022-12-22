@@ -12,7 +12,7 @@ public class LiveSource extends ISource {
     private final AnnotationType sourceSignature = AnnotationType.SOURCE;
 
     public LiveSource() {
-        annotationComposites = new ArrayList<>(10);
+
     }
 
     @Override

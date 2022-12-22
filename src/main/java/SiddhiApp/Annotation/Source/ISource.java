@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ISource implements IAnnotation {
-    List<ISiddhiAppComposite> annotationComposites;
+    List<ISiddhiAppComposite> annotationComposites = new ArrayList<>(10);;
 
     public ISource addSourceComposite(ISourceComposite iSourceComposite){
         this.annotationComposites.add(iSourceComposite);

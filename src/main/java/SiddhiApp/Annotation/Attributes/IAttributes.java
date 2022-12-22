@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public abstract class IAttributes implements IAnnotation, IMapComposite {
-    HashSet<ISiddhiAppComposite> annotationComposites;
+    HashSet<ISiddhiAppComposite> annotationComposites = new HashSet<>(10);;
 
     public IAttributes addAttributeComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
         this.annotationComposites.add(iCommonAnnotationComposite);
