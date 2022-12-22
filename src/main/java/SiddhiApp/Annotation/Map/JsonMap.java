@@ -3,14 +3,16 @@ package SiddhiApp.Annotation.Map;
 import SiddhiApp.Annotation.AnnotationType;
 import SiddhiApp.ISiddhiAppComposite;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
-public class JsonMap implements IMap {
+public class JsonMap extends IMap {
     private final MapType jsonMap = MapType.JSON;
     private final StringBuilder jsonMapAnnotation = new StringBuilder("");
     private final AnnotationType jsonMapSignature = AnnotationType.MAP;
 
     public JsonMap() {
+        annotationComposites = new ArrayList<>(10);
     }
 
     @Override

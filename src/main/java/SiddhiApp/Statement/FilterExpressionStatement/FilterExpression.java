@@ -10,6 +10,9 @@ public class FilterExpression implements IFilterExpression {
 
     @Override
     public String getSiddhiAppCompositeAsString() {
+        if(filterStatement.toString().equals("")){
+            return filterStatement.toString();
+        }
         return "[" + filterStatement.toString() + "]";
     }
 }

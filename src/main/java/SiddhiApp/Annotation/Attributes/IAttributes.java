@@ -6,12 +6,13 @@ import SiddhiApp.Annotation.Map.IMapComposite;
 import SiddhiApp.ISiddhiAppComposite;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
-public interface IAttributes extends IAnnotation, IMapComposite {
-    List<ISiddhiAppComposite> annotationComposites = new ArrayList<>(10);;
+public abstract class IAttributes implements IAnnotation, IMapComposite {
+    HashSet<ISiddhiAppComposite> annotationComposites;
 
-    default IAttributes addAttributeComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
+    public IAttributes addAttributeComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
         this.annotationComposites.add(iCommonAnnotationComposite);
         return this;
     }

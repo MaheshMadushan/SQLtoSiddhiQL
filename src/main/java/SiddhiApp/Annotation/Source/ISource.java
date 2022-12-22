@@ -8,15 +8,15 @@ import SiddhiApp.ISiddhiAppComposite;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface ISource extends IAnnotation {
-    List<ISiddhiAppComposite> annotationComposites = new ArrayList<>(10);;
+public abstract class ISource implements IAnnotation {
+    List<ISiddhiAppComposite> annotationComposites;
 
-    default ISource addSourceComposite(ISourceComposite iSourceComposite){
+    public ISource addSourceComposite(ISourceComposite iSourceComposite){
         this.annotationComposites.add(iSourceComposite);
         return this;
     }
 
-    default ISource addSourceComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
+    public ISource addSourceComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
         this.annotationComposites.add(iCommonAnnotationComposite);
         return this;
     }

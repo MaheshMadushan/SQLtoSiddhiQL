@@ -3,13 +3,16 @@ package SiddhiApp.Annotation.Attributes;
 import SiddhiApp.Annotation.AnnotationType;
 import SiddhiApp.ISiddhiAppComposite;
 
+import java.util.HashSet;
 import java.util.Iterator;
 
-public class JsonMapAttributes implements IAttributes {
+public class JsonMapAttributes extends IAttributes {
     private final StringBuilder JsonMapAttributesAnnotation = new StringBuilder("");
     private final AnnotationType JsonMapAttributesSignature = AnnotationType.ATTRIBUTES;
 
-    public JsonMapAttributes(){}
+    public JsonMapAttributes(){
+        annotationComposites = new HashSet<>(10);
+    }
 
 
     @Override
