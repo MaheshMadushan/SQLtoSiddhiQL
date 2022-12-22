@@ -14,7 +14,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 "@source(type = 'live',sql.query = 'SELECT a, b, c, d, e FROM table WHERE a = 90 AND b > 98 OR (a > b XOR e) XOR (a + b > b)',@map(type = 'json',@attributes(a = 'a',b = 'b',c = 'c',d = 'd',e = 'e')))\n" +
                 "define stream tableInputStream(a int,b int,c float,d string,e bool);\n@sink(type = 'log')\n" +
                 "define stream tableOutputStream(a int,b int,c float,d string,e bool);\n@info(name = 'null')\n" +
-                "from tableInputStream[a = 90 AND b > 98 OR ( a > b XOR e ) XOR ( a + b > b ) ]\nselect  a  , b  , c  , d  , e  \ninsert into tableOutputStream;\n";
+                "from tableInputStream[a == 90 AND b > 98 OR ( a > b XOR e ) XOR ( a + b > b ) ]\nselect  a  , b  , c  , d  , e  \ninsert into tableOutputStream;\n";
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp.getSiddhiAppStringRepresentation());
     }
@@ -168,11 +168,11 @@ public class SQLtoSiddhiQLCompilerTest {
     @Test
     void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndOrderByClauseAndGroupByAndHavingClauseWithASCAndDescTest() throws JSQLParserException {
 
-        String generalProjectionSQL = "SELECT COUNT(CustomerID - l), Country\n" +
-                "FROM Customers\n" +
-                "GROUP BY Country\n" +
-                "HAVING COUNT(CustomerID) > 5\n" +
-                "ORDER BY COUNT(CustomerID) DESC;";
+        String generalProjectionSQL = "SELECT COUNT(CustomerID@int - l@int), Country@string\n" +
+                "FROM Customers@string\n" +
+                "GROUP BY Country@string\n" +
+                "HAVING COUNT(CustomerID@string) > 5\n" +
+                "ORDER BY COUNT(CustomerID@string) DESC;";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);
@@ -187,13 +187,4 @@ public class SQLtoSiddhiQLCompilerTest {
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
-    @Test
-    void flowing() throws JSQLParserException {
-
-        String generalProjectionSQL_with_setOps = "SELECT STDDEV(a + b) FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980 UNION SELECT * FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980;";
-        String generalProjectionSQL_not_setOps = "SELECT a+b+l,l FROM table WHERE (colA = 90 AND colB = 98 OR colS = 78) XOR colV = 980;";
-
-        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL_not_setOps);
-        assertEquals(siddhiAppDefinition,siddhiApp);
-    }
 }
