@@ -2,7 +2,7 @@ package SiddhiApp.Annotation.Info;
 
 import SiddhiApp.Annotation.AnnotationType;
 
-public class QueryInfo implements IInfo {
+public class QueryInfo extends IInfo {
     private final AnnotationType queryInfo = AnnotationType.INFO;
     private String queryName;
     private final StringBuilder infoAnnotation = new StringBuilder("");

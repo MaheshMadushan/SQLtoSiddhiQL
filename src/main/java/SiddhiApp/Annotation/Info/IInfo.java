@@ -3,5 +3,5 @@ package SiddhiApp.Annotation.Info;
 
 import SiddhiApp.Annotation.IAnnotation;
 
-public interface IInfo extends IAnnotation {
+public abstract class IInfo implements IAnnotation {
 }

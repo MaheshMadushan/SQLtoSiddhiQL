@@ -2,7 +2,7 @@ package SiddhiApp.Annotation.Common;
 
 import java.util.Objects;
 
-public class KeyValue<K,V> implements ICommonAnnotationComposite{
+public class KeyValue<K,V> extends ICommonAnnotationComposite {
     // self sorting map would be the best
     private final K key;
     private final V value;
