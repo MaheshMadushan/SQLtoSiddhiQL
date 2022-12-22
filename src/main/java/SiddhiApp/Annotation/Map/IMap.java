@@ -8,15 +8,15 @@ import SiddhiApp.ISiddhiAppComposite;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IMap extends IAnnotation, ISourceComposite {
-    List<ISiddhiAppComposite> annotationComposites = new ArrayList<>(10);;
+public abstract class IMap implements IAnnotation, ISourceComposite {
+    List<ISiddhiAppComposite> annotationComposites;
 
-    default IMap addMapComposite(IMapComposite iMapComposite){
+    public IMap addMapComposite(IMapComposite iMapComposite){
         this.annotationComposites.add(iMapComposite);
         return this;
     }
 
-    default IMap addMapComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
+    public IMap addMapComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
         this.annotationComposites.add(iCommonAnnotationComposite);
         return this;
     }

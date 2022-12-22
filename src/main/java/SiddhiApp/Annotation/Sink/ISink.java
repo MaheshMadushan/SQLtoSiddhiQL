@@ -7,10 +7,10 @@ import SiddhiApp.ISiddhiAppComposite;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface ISink extends IAnnotation {
-    List<ISiddhiAppComposite> annotationComposites = new ArrayList<>(10);;
+public abstract class ISink implements IAnnotation {
+    List<ISiddhiAppComposite> annotationComposites;
 
-    default ISink addSourceComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
+    ISink addSourceComposite(ICommonAnnotationComposite iCommonAnnotationComposite){
         this.annotationComposites.add(iCommonAnnotationComposite);
         return this;
     }
