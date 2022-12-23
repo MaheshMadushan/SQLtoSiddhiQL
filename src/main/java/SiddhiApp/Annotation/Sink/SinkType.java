@@ -3,7 +3,7 @@ package SiddhiApp.Annotation.Sink;
 import SiddhiApp.SupportedDataTypes;
 
 public enum SinkType {
-    LOG("log");
+    LOG("log"),LIVE("live");
 
     private final String sinkType;
 
