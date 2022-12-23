@@ -28,7 +28,7 @@ public class LogSink extends ISink {
         for (ISiddhiAppComposite annotationComposite : annotationComposites) {
             sinkAnnotation
                     .append(",")
-                    .append(annotationComposite);
+                    .append(annotationComposite.getSiddhiAppCompositeAsString());
         }
 
         sinkAnnotation

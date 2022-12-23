@@ -27,7 +27,7 @@ public class App {
                         new LiveSource().addSourceComposite(new KeyValue<>("newFieldToSourceAnnotation", "FieldValue")),
                         new JsonMap().addMapComposite(new KeyValue<>("enclosing.element", "$.properties")),
                         new JsonMapAttributes(),
-                        new LogSink(),
+                        new LogSink().addMapComposite(new JsonMap()),
                         new QueryInfo().setQueryName("SQL-SiddhiQL-dev")
                 );
 

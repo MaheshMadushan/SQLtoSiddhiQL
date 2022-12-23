@@ -19,14 +19,14 @@ public class JsonMap extends IMap {
     public String getSiddhiAppCompositeAsString() {
         jsonMapAnnotation
                 .append(jsonMapSignature.getAnnotationTypeSignature())
-                .append("(").append("type = '").append(jsonMap.getMapTypeSignature()).append("',"); // @map(type = "json",
+                .append("(").append("type = '").append(jsonMap.getMapTypeSignature()).append("'"); // @map(type = "json",
         Iterator<ISiddhiAppComposite> sourceAnnotationCompositesIterator = annotationComposites.iterator();
 
         while(sourceAnnotationCompositesIterator.hasNext()){
-            jsonMapAnnotation.append(sourceAnnotationCompositesIterator.next().getSiddhiAppCompositeAsString());
             if(sourceAnnotationCompositesIterator.hasNext()){
                 jsonMapAnnotation.append(",");
             }
+            jsonMapAnnotation.append(sourceAnnotationCompositesIterator.next().getSiddhiAppCompositeAsString());
         }
 
         jsonMapAnnotation
