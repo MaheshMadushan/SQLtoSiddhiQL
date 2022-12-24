@@ -31,7 +31,7 @@ public class StreamStatementAttributeList implements IAttributeList{
                 PersistedAttributeWIthDataType.setDataType(
                         ((ColumnWithDataType) attributeWithDataType).getDataType()
                 ); //  replaces data type with most recent data type given
-                attributeListWithoutAliasesWithDataType.add(indexOfAttributeWithDataType,PersistedAttributeWIthDataType); // replacing
+                attributeListWithoutAliasesWithDataType.set(indexOfAttributeWithDataType,PersistedAttributeWIthDataType); // replacing
                 return;
             }
 
