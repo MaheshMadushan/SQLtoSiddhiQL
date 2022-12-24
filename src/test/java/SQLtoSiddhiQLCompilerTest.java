@@ -93,7 +93,7 @@ public class SQLtoSiddhiQLCompilerTest {
 
         String generalProjectionSQL =
                 "SELECT " +
-                        "SUM(col1@int) , " +
+                        "SUM(col1@int) AS sum, " +
                         "STDDEV(col2@int), " +
                         "MAX(col3@int) , " +
                         "MIN(col4@int) ," +
