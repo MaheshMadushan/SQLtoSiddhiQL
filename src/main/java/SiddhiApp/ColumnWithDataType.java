@@ -45,6 +45,10 @@ public class ColumnWithDataType implements IAttribute{
         this.dataType = dataType;
     }
 
+    public String getAlias(){
+        return column.getAlias();
+    }
+
     public String getColumnName(){
         return this.column.getName();
     }

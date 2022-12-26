@@ -16,7 +16,8 @@ import SiddhiApp.Statement.Insert.InsertStatement;
 import SiddhiApp.Statement.Select.SelectStatement;
 
 public class SiddhiApp {
-    private final DefineStreamStatement defineStreamStatement = new DefineStreamStatement(); // create define stream // use this for output stream also
+    private final DefineStreamStatement defineStreamStatement = new DefineStreamStatement(); // create define input stream
+    private final DefineStreamStatement defineOutputStreamStatement = new DefineStreamStatement(); // create define output stream
     private final SelectStatement selectStatement = new SelectStatement(); // select statement
     private final IFromStatement fromStatement = new FromStatement(); // from statement
     private final IFilterExpression filterExpression = new FilterExpression(); // filter statement
@@ -50,6 +51,15 @@ public class SiddhiApp {
     public void addColumnWithDataType(ISiddhiAppComposite columnWithDataType){
         defineStreamStatement.addAttributeWithDataType(columnWithDataType);
         String columnName = ((ColumnWithDataType) columnWithDataType).getColumnName();
+        String columnAlias = ((ColumnWithDataType) columnWithDataType).getAlias();
+        if(columnAlias == null) {
+            defineOutputStreamStatement.addAttributeWithDataType(columnWithDataType);
+        }else{
+            ColumnWithDataType columnWithDataTypeWithAlias = new ColumnWithDataType(
+                    new Column(columnAlias,null),((ColumnWithDataType) columnWithDataType).getDataType()
+            );
+            defineOutputStreamStatement.addAttributeWithDataType(columnWithDataTypeWithAlias);
+        }
         annotationAttributes.addAttributeComposite(new KeyValue<>(columnName,columnName)); // add to attribute annotation
     }
 
@@ -72,8 +82,8 @@ public class SiddhiApp {
             // sink
         stringSiddhiApp.append(annotationSink.getSiddhiAppCompositeAsString());
 
-        defineStreamStatement.setStreamName(inputOutputStreamNamePrefix + "OutputStream"); // OPStream set O/P Stream Name
-        stringSiddhiApp.append(defineStreamStatement.getSiddhiAppCompositeAsString());
+        defineOutputStreamStatement.setStreamName(inputOutputStreamNamePrefix + "OutputStream"); // OPStream set O/P Stream Name
+        stringSiddhiApp.append(defineOutputStreamStatement.getSiddhiAppCompositeAsString());
         // Annotations
             // info
         stringSiddhiApp.append(annotationInfo.getSiddhiAppCompositeAsString());

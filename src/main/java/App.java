@@ -17,8 +17,8 @@ public class App {
         System.out.println("Max Mem           : " + runtime.maxMemory() / (1024 * 1024 * 1024) + " GB");
         System.out.println("Num of Processors : " + runtime.availableProcessors() + "\n");
 
-        String sqlStatement = "SELECT  ip@string,  timestamp@string, SUM(traffic@int)  " +
-                " FROM networkTrafficTable WHERE (traffic@int = 1000 AND traffic@int > 2000)";
+        String sqlStatement = "SELECT ip@string,browser@string,date@string as d, count(traffic@int) as sum_traffic, " +
+                "eventtimestamp@long, initial_data@string FROM NetworkTrafficTable WHERE traffic@int = 884800000 LIMIT 50";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator
                 .generateSiddhiApp(

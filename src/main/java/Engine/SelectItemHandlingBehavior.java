@@ -19,7 +19,8 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     private final int COLUMN_NAME_INDEX = 0;
     private final int DATA_TYPE_INDEX = 1;
     private String[] ColumnNameAndDataTypeArr;
-
+    private SiddhiApp.Column siddhiColumn;
+    private boolean isHandlingFunction;
     private final SelectItem selectItem;
     private final Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
     private AggregateFunction aggregateFunction;
@@ -44,22 +45,19 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     private void tokenizeColumnName(String sqlColumnWithDataType){
         ColumnNameAndDataTypeArr = sqlColumnWithDataType.split("[@]", 0);
         if(ColumnNameAndDataTypeArr.length != 2){
-            throw new IllegalArgumentException("provided column and data type format is " +
-                    "should be \"ColumnName@DataType\". but provided : " + "[" + sqlColumnWithDataType + "] in Select items");
+            throw new IllegalArgumentException("provided column and data type format is should be \"ColumnName@DataType\". but provided : " + "[" + sqlColumnWithDataType + "] in Select items");
         }
     }
 
     @Override
     public void handleColumn(Column sqlColumnWithDataType) {
         tokenizeColumnName(sqlColumnWithDataType.getColumnName()); // eg - this tokenize "ColumnName@DataType" to ["ColumnName", "DataType"]
-        SiddhiApp.Column siddhiColumn = new SiddhiApp.Column();
-        siddhiColumn.setName(getColumnName());
-        siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
+        siddhiColumn = new SiddhiApp.Column(getColumnName(),null);
         // if still processing on function attributes add to function attribute list
         if(aggregateFunctionsStack.empty()) {
             selectItem.addSelectItemComposite(siddhiColumn); // add to select statement
         }else{
-            aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to select statement
+            aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function
         }
     }
 
@@ -76,6 +74,7 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleFunctionBegin(Function function) {
+        isHandlingFunction = true;
         aggregateFunction = new AggregateFunction(function.getName());
         aggregateFunctionsStack.push(aggregateFunction);
     }
@@ -294,11 +293,16 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     public void handleAlias(Alias alias) {
         // TODO : add feature to combine alias with the select item (eg - aggregateFunction has a alias)
         SiddhiApp.Alias siddhiAlias = new SiddhiApp.Alias(alias.getName());
-        selectItem.setSelectItemAlias(siddhiAlias);
+        if(isHandlingFunction){
+            selectItem.setSelectItemAlias(siddhiAlias);
+        }else{
+            siddhiColumn.setAlias(alias.getName());
+        }
     }
 
     @Override
     public void addToSiddhiApp() {
+        siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
         siddhiApp.addSelectItem(selectItem);
     }
 }
