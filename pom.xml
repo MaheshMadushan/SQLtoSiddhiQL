@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>SQLtoSiddhiQL</artifactId>
-    <version>0.8.3-SNAPSHOT</version>
+    <groupId>org.mahesh</groupId>
+    <artifactId>sqltosiddhiql</artifactId>
+    <version>0.8.4-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -40,6 +40,12 @@
         </dependency>
     </dependencies>
 
-
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Mahesh Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/MaheshMadushan/SQLtiSiddhiQL</url>
+        </repository>
+    </distributionManagement>
 
 </project>

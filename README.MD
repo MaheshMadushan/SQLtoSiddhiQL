@@ -5,7 +5,7 @@
 String sqlStatement = "SELECT  ip@string,  timestamp@string, SUM(traffic@int)  " +
                 " FROM networkTrafficTable WHERE (traffic@int = 1000 AND traffic@int > 2000)";
 
-        SiddhiApp siddhiApp = SiddhiAppGenerator
+        SiddhiAppComposites siddhiApp = SiddhiAppGenerator
                 .generateSiddhiApp(
                         "SiddhiAppName-dev-custom-app-name",
                         sqlStatement,
