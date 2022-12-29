@@ -6,7 +6,7 @@
 
     <groupId>org.mahesh</groupId>
     <artifactId>sqltosiddhiql</artifactId>
-    <version>0.8.5-SNAPSHOT</version>
+    <version>0.8.6-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
