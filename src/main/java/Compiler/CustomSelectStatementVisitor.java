@@ -7,6 +7,7 @@ import net.sf.jsqlparser.statement.alter.AlterSession;
 import net.sf.jsqlparser.statement.alter.AlterSystemStatement;
 import net.sf.jsqlparser.statement.alter.RenameTableStatement;
 import net.sf.jsqlparser.statement.alter.sequence.AlterSequence;
+import net.sf.jsqlparser.statement.analyze.Analyze;
 import net.sf.jsqlparser.statement.comment.Comment;
 import net.sf.jsqlparser.statement.create.index.CreateIndex;
 import net.sf.jsqlparser.statement.create.schema.CreateSchema;
@@ -38,6 +39,10 @@ public class CustomSelectStatementVisitor implements StatementVisitor {
     }
 
 
+    @Override
+    public void visit(Analyze analyze) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public void visit(SavepointStatement savepointStatement) {
@@ -288,6 +293,11 @@ public class CustomSelectStatementVisitor implements StatementVisitor {
     @Override
     public void visit(AlterSystemStatement alterSystemStatement) {
         throw new UnsupportedOperationException();
+
+    }
+
+    @Override
+    public void visit(UnsupportedStatement unsupportedStatement) {
 
     }
 }

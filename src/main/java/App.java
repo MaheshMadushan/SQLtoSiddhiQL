@@ -9,7 +9,7 @@ import net.sf.jsqlparser.JSQLParserException;
 import Compiler.*;
 
 public class App {
-    public static void main(String[] args) throws JSQLParserException {
+    public static void main(String[] args) {
         Runtime runtime = Runtime.getRuntime();
         System.out.println("Java Version      : " + runtime.version().toString());
         System.out.println("Total Mem         : " + runtime.totalMemory() / (1024 * 1024 * 1024) + " GB");
@@ -18,13 +18,12 @@ public class App {
         System.out.println("Num of Processors : " + runtime.availableProcessors() + "\n");
 
         String sqlStatement = "SELECT ip@string,browser@string,date@string as custom_alias_for_date, count(traffic@int) as sum_traffic, " +
-                "eventtimestamp@long, initial_data@string FROM NetworkTrafficTable WHERE traffic@int = 884800000 LIMIT 50";
+                "eventtimestamp@long, initial_data@string FROM NetworkTrafficTable WHERE traffic@int = 884800000";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator
-                .generateSiddhiApp(
-                        "SiddhiAppName-dev-custom-app-name",
+                .generateSiddhiApp("SiddhiAppName-dev-custom-app-name",
                         sqlStatement,
-                        new LiveSource().addSourceComposite(new KeyValue<>("newFieldToSourceAnnotation", "FieldValue")),
+                        new LiveSource(),
                         new JsonMap().addMapComposite(new KeyValue<>("enclosing.element", "$.properties")),
                         new JsonMapAttributes(),
                         new LogSink().addMapComposite(new JsonMap()),
