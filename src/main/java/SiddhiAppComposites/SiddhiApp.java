@@ -40,17 +40,24 @@ public class SiddhiApp {
     public void addSymbolToFilterExpression(String symbol){
         ((FilterExpression) this.filterExpression).addSymbol(symbol);
     }
+
     public void addSelectItem(ISiddhiAppComposite selectItem){
         selectStatement.addSelectItem(selectItem);
     }
+
+    private void addToSourceAnnotationAttributes(ISiddhiAppComposite columnWithDataType){
+        String columnName = ((ColumnWithDataType) columnWithDataType).getColumnName();
+        annotationAttributes.addAttributeComposite(new KeyValue<>(columnName,columnName)); // add to attribute annotation
+    }
+
     public void addColumnWithDataTypeToOutputStreamDefinition(ISiddhiAppComposite columnWithDataType){
         defineOutputStreamStatement.addAttributeWithDataType(columnWithDataType);
+        addToSourceAnnotationAttributes(columnWithDataType);
     }
 
     public void addColumnWithDataTypeToInputStreamDefinition(ISiddhiAppComposite columnWithDataType){
         defineInputStreamStatement.addAttributeWithDataType(columnWithDataType);
-        String columnName = ((ColumnWithDataType) columnWithDataType).getColumnName();
-        annotationAttributes.addAttributeComposite(new KeyValue<>(columnName,columnName)); // add to attribute annotation
+        addToSourceAnnotationAttributes(columnWithDataType);
     }
 
     public void setStreamNamePrefix(String inputOutputStreamNamePrefix) {
