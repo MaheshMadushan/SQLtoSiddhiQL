@@ -324,6 +324,11 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
             // you are here means this handled just a column as select item
             // this is done at last because alias handled last. we need to add that to the siddhiColumn too.
             siddhiApp.addColumnWithDataTypeToInputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType()));
+            if(siddhiColumn.getAlias() == null){
+
+            }else{
+                siddhiColumn = new SiddhiAppComposites.Column(siddhiColumn.getAlias(),null);
+            }
             siddhiApp.addColumnWithDataTypeToOutputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType()));
         }
         siddhiApp.addSelectItem(selectItem); // add column with data type to select statement
