@@ -22,6 +22,8 @@ public class AggregateFunction implements IFunction,IAttribute{
         }
     }
 
+    public String getFunctionName() { return this.functionName;}
+
     public ISiddhiAppComposite getAlias() {
         return this.alias;
     }

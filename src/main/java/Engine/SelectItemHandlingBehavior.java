@@ -297,12 +297,21 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
         // TODO : add feature to combine alias with the select item (eg - aggregateFunction has a alias)
         SiddhiAppComposites.Alias siddhiAlias = new SiddhiAppComposites.Alias(alias.getName());
         if(isHandledFunction){
+            siddhiColumn = new SiddhiAppComposites.Column(siddhiAlias.getAlias(),null);
             // what are the data types of the attributes of function
             dataType = dataTypesOfAttributesOfFunction
                     .stream().distinct().max(Comparator.comparing(Enum::ordinal));
             // what types of data is able to return by the function
             if(dataType.isPresent()){
-                siddhiColumn = new SiddhiAppComposites.Column(siddhiAlias.getAlias(),null);
+                if(SupportedAggregationFunctions
+                        .valueOf(aggregateFunction.getFunctionName().toUpperCase(Locale.ROOT))
+                        .getDefaultDataType()
+                        .ordinal() >= dataType.get().ordinal()){
+                    dataType = Optional.of(SupportedAggregationFunctions
+                            .valueOf(aggregateFunction.getFunctionName().toUpperCase(Locale.ROOT))
+                            .getDefaultDataType());
+                }
+
             }
             selectItem.setSelectItemAlias(siddhiAlias);
             // are data types of attributes and data types able to return by the function, equal?

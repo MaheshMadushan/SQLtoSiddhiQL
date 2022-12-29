@@ -2,11 +2,11 @@ package SiddhiAppComposites;
 
 public enum SupportedDataTypes {
     STRING("string"),
+    BOOL("bool"),
     INT("int"),
     LONG("long"),
     FLOAT("float"),
-    DOUBLE("double"),
-    BOOL("bool");
+    DOUBLE("double");
 
     private final String dataTypeSignature;
 
