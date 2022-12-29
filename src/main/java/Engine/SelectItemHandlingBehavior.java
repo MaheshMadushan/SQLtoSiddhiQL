@@ -58,12 +58,13 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
         if(aggregateFunctionsStack.empty()) {
             // processing just a column
             selectItem.addSelectItemComposite(siddhiColumn); // add to select statement
+
         }else{
             // if still processing on function attributes add to function attribute list
             aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function attribute list (still processing a function)
             SupportedDataTypes dataType = SupportedDataTypes.valueOf(getDataType().toUpperCase(Locale.ROOT));
             dataTypesOfAttributesOfFunction.add(dataType);
-            siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, dataType.getDataTypeSignature()));
+            siddhiApp.addColumnWithDataTypeToInputStreamDefinition(new ColumnWithDataType(siddhiColumn, dataType.getDataTypeSignature()));
         }
     }
 
@@ -296,15 +297,14 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
         // TODO : add feature to combine alias with the select item (eg - aggregateFunction has a alias)
         SiddhiAppComposites.Alias siddhiAlias = new SiddhiAppComposites.Alias(alias.getName());
         if(isHandledFunction){
-//            selectItem.setSelectItemAlias(siddhiAlias);
             // what are the data types of the attributes of function
-            Optional<SupportedDataTypes> dataType = dataTypesOfAttributesOfFunction
-                    .stream().distinct().max(Comparator.comparing(item -> item.ordinal()));
+            dataType = dataTypesOfAttributesOfFunction
+                    .stream().distinct().max(Comparator.comparing(Enum::ordinal));
             // what types of data is able to return by the function
             if(dataType.isPresent()){
                 siddhiColumn = new SiddhiAppComposites.Column(siddhiAlias.getAlias(),null);
-                siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, dataType.get().getDataTypeSignature()));
             }
+            selectItem.setSelectItemAlias(siddhiAlias);
             // are data types of attributes and data types able to return by the function, equal?
                 // if so use that data type as alias column data type
                 // else throw an exception?
@@ -312,18 +312,19 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
             // add alias to column ( if function add alias to column name inside function )
             siddhiColumn.setAlias(siddhiAlias.getAlias());
         }
-    }
 
+    }
+    Optional<SupportedDataTypes> dataType;
     @Override
     public void addToSiddhiApp() {
         // add column with data type for stream definition
-        if(isHandledFunction){
-            // you are here means this handled a function as a select item
-            // so data types of function prms(column) added to stream defn while handling that column
+        if(isHandledFunction && dataType.isPresent()){
+            siddhiApp.addColumnWithDataTypeToOutputStreamDefinition(new ColumnWithDataType(siddhiColumn, dataType.get().getDataTypeSignature()));
         }else {
             // you are here means this handled just a column as select item
             // this is done at last because alias handled last. we need to add that to the siddhiColumn too.
-            siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, getDataType()));
+            siddhiApp.addColumnWithDataTypeToInputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType()));
+            siddhiApp.addColumnWithDataTypeToOutputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType()));
         }
         siddhiApp.addSelectItem(selectItem); // add column with data type to select statement
     }

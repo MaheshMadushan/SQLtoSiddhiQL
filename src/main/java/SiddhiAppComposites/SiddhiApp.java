@@ -14,9 +14,8 @@ import SiddhiAppComposites.Statement.From.IFromStatement;
 import SiddhiAppComposites.Statement.Insert.IInsertStatement;
 import SiddhiAppComposites.Statement.Insert.InsertStatement;
 import SiddhiAppComposites.Statement.Select.SelectStatement;
-
 public class SiddhiApp {
-    private final DefineStreamStatement defineStreamStatement = new DefineStreamStatement(); // create define input stream
+    private final DefineStreamStatement defineInputStreamStatement = new DefineStreamStatement(); // create define input stream
     private final DefineStreamStatement defineOutputStreamStatement = new DefineStreamStatement(); // create define output stream
     private final SelectStatement selectStatement = new SelectStatement(); // select statement
     private final IFromStatement fromStatement = new FromStatement(); // from statement
@@ -30,7 +29,6 @@ public class SiddhiApp {
     private final IInfo annotationInfo; // Annotation @info
     private String inputOutputStreamNamePrefix = null;
     private final StringBuilder stringSiddhiApp = new StringBuilder("");
-
     private SiddhiApp(SiddhiAppBuilder siddhiAppBuilder) {
         this.annotationSource = siddhiAppBuilder.annotationSource;
         this.annotationAttributes = siddhiAppBuilder.annotationAttributes;
@@ -39,30 +37,19 @@ public class SiddhiApp {
         this.annotationInfo = siddhiAppBuilder.annotationInfo;
         this.annotationApp = siddhiAppBuilder.annotationApp;
     }
-
     public void addSymbolToFilterExpression(String symbol){
         ((FilterExpression) this.filterExpression).addSymbol(symbol);
     }
-
     public void addSelectItem(ISiddhiAppComposite selectItem){
         selectStatement.addSelectItem(selectItem);
     }
-
     public void addColumnWithDataTypeToOutputStreamDefinition(ISiddhiAppComposite columnWithDataType){
+        defineOutputStreamStatement.addAttributeWithDataType(columnWithDataType);
     }
 
-    public void addColumnWithDataType(ISiddhiAppComposite columnWithDataType){
-        defineStreamStatement.addAttributeWithDataType(columnWithDataType);
+    public void addColumnWithDataTypeToInputStreamDefinition(ISiddhiAppComposite columnWithDataType){
+        defineInputStreamStatement.addAttributeWithDataType(columnWithDataType);
         String columnName = ((ColumnWithDataType) columnWithDataType).getColumnName();
-        String columnAlias = ((ColumnWithDataType) columnWithDataType).getAlias();
-        if(columnAlias == null) {
-            defineOutputStreamStatement.addAttributeWithDataType(columnWithDataType);
-        }else{
-            ColumnWithDataType columnWithDataTypeWithAlias = new ColumnWithDataType(
-                    new Column(columnAlias,null),((ColumnWithDataType) columnWithDataType).getDataType()
-            ); // set column name as alias
-            defineOutputStreamStatement.addAttributeWithDataType(columnWithDataTypeWithAlias);
-        }
         annotationAttributes.addAttributeComposite(new KeyValue<>(columnName,columnName)); // add to attribute annotation
     }
 
@@ -78,8 +65,8 @@ public class SiddhiApp {
          annotationMap.addMapComposite(annotationAttributes);
         annotationSource.addSourceComposite(annotationMap);
         stringSiddhiApp.append(annotationSource.getSiddhiAppCompositeAsString());
-        defineStreamStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // IPStream set I/P Stream Name
-        stringSiddhiApp.append(defineStreamStatement.getSiddhiAppCompositeAsString());
+        defineInputStreamStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // IPStream set I/P Stream Name
+        stringSiddhiApp.append(defineInputStreamStatement.getSiddhiAppCompositeAsString());
 
         // Annotations
             // sink

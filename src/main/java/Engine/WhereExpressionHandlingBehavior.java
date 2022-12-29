@@ -48,14 +48,12 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
         tokenizeColumnName(sqlColumnWithDataType.getColumnName()); // eg - this tokenize "ColumnName@DataType" to ["ColumnName", "DataType"]
         SiddhiAppComposites.Column siddhiColumn = new SiddhiAppComposites.Column();
         siddhiColumn.setName(getColumnName());
-        siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
+        siddhiApp.addColumnWithDataTypeToInputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
         // if still processing on function attributes add to function attribute list
         if(aggregateFunctionsStack.empty()) {
             siddhiApp.addSymbolToFilterExpression(siddhiColumn.getName());
         }else{
             aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function (this is a function inside function) attribute
-            siddhiApp.addColumnWithDataType(
-                    new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
         }
     }
 
