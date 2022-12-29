@@ -1,6 +1,6 @@
 package Engine;
 
-import SiddhiApp.SiddhiApp;
+import SiddhiAppComposites.SiddhiApp;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.*;

@@ -1,10 +1,8 @@
 package Engine;
 
-import SiddhiApp.AggregateFunction;
-import SiddhiApp.ColumnWithDataType;
-import SiddhiApp.SelectItem;
-import SiddhiApp.Symbol;
+import SiddhiAppComposites.*;
 import net.sf.jsqlparser.expression.*;
+import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
@@ -13,17 +11,18 @@ import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 
-import java.util.Stack;
+import java.util.*;
 
 public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     private final int COLUMN_NAME_INDEX = 0;
     private final int DATA_TYPE_INDEX = 1;
     private String[] ColumnNameAndDataTypeArr;
-
+    private boolean isHandledFunction;
+    private List<SupportedDataTypes> dataTypesOfAttributesOfFunction; // for function handling
+    private SiddhiAppComposites.Column siddhiColumn;
     private final SelectItem selectItem;
     private final Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
     private AggregateFunction aggregateFunction;
-
 
     public SelectItemHandlingBehavior() {
         selectItem  = new SelectItem();
@@ -45,21 +44,27 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
         ColumnNameAndDataTypeArr = sqlColumnWithDataType.split("[@]", 0);
         if(ColumnNameAndDataTypeArr.length != 2){
             throw new IllegalArgumentException("provided column and data type format is " +
-                    "should be \"ColumnName@DataType\". but provided : " + "[" + sqlColumnWithDataType + "] in Select items");
+                    "should be \"ColumnName@DataType\". but provided : " +
+                    "[" + sqlColumnWithDataType + "] in Select items");
         }
     }
 
     @Override
     public void handleColumn(Column sqlColumnWithDataType) {
-        tokenizeColumnName(sqlColumnWithDataType.getColumnName()); // eg - this tokenize "ColumnName@DataType" to ["ColumnName", "DataType"]
-        SiddhiApp.Column siddhiColumn = new SiddhiApp.Column();
-        siddhiColumn.setName(getColumnName());
-        siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
-        // if still processing on function attributes add to function attribute list
+
+        // eg - this tokenize "ColumnName@DataType" to ["ColumnName", "DataType"]
+        tokenizeColumnName(sqlColumnWithDataType.getColumnName());
+        siddhiColumn = new SiddhiAppComposites.Column(getColumnName(),null);
         if(aggregateFunctionsStack.empty()) {
+            // processing just a column
             selectItem.addSelectItemComposite(siddhiColumn); // add to select statement
+
         }else{
-            aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to select statement
+            // if still processing on function attributes add to function attribute list
+            aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function attribute list (still processing a function)
+            SupportedDataTypes dataType = SupportedDataTypes.valueOf(getDataType().toUpperCase(Locale.ROOT));
+            dataTypesOfAttributesOfFunction.add(dataType);
+            siddhiApp.addColumnWithDataTypeToInputStreamDefinition(new ColumnWithDataType(siddhiColumn, dataType.getDataTypeSignature()));
         }
     }
 
@@ -76,6 +81,8 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleFunctionBegin(Function function) {
+        isHandledFunction = true;
+        dataTypesOfAttributesOfFunction = new ArrayList<>();
         aggregateFunction = new AggregateFunction(function.getName());
         aggregateFunctionsStack.push(aggregateFunction);
     }
@@ -112,12 +119,7 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
 
     @Override
     public void handleParenthesis(Parenthesis parenthesis) {
-//        Symbol siddhiNotEqualsTo = new Symbol(notEqualsTo.getStringExpression());
-//        if(aggregateFunctionsStack.empty()) {
-//            selectItem.addSelectItemComposite(siddhiNotEqualsTo);
-//        }else{
-//            aggregateFunctionsStack.peek().addAttribute(siddhiNotEqualsTo);
-//        }
+
     }
 
     @Override
@@ -293,12 +295,51 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     @Override
     public void handleAlias(Alias alias) {
         // TODO : add feature to combine alias with the select item (eg - aggregateFunction has a alias)
-        SiddhiApp.Alias siddhiAlias = new SiddhiApp.Alias(alias.getName());
-        selectItem.setSelectItemAlias(siddhiAlias);
-    }
+        SiddhiAppComposites.Alias siddhiAlias = new SiddhiAppComposites.Alias(alias.getName());
+        if(isHandledFunction){
+            siddhiColumn = new SiddhiAppComposites.Column(siddhiAlias.getAlias(),null);
+            // what are the data types of the attributes of function
+            dataType = dataTypesOfAttributesOfFunction
+                    .stream().distinct().max(Comparator.comparing(Enum::ordinal));
+            // what types of data is able to return by the function
+            if(dataType.isPresent()){
+                if(SupportedAggregationFunctions
+                        .valueOf(aggregateFunction.getFunctionName().toUpperCase(Locale.ROOT))
+                        .getDefaultDataType()
+                        .ordinal() >= dataType.get().ordinal()){
+                    dataType = Optional.of(SupportedAggregationFunctions
+                            .valueOf(aggregateFunction.getFunctionName().toUpperCase(Locale.ROOT))
+                            .getDefaultDataType());
+                }
 
+            }
+            selectItem.setSelectItemAlias(siddhiAlias);
+            // are data types of attributes and data types able to return by the function, equal?
+                // if so use that data type as alias column data type
+                // else throw an exception?
+        }else {
+            // add alias to column ( if function add alias to column name inside function )
+            siddhiColumn.setAlias(siddhiAlias.getAlias());
+        }
+
+    }
+    Optional<SupportedDataTypes> dataType;
     @Override
     public void addToSiddhiApp() {
-        siddhiApp.addSelectItem(selectItem);
+        // add column with data type for stream definition
+        if(isHandledFunction && dataType.isPresent()){
+            siddhiApp.addColumnWithDataTypeToOutputStreamDefinition(new ColumnWithDataType(siddhiColumn, dataType.get().getDataTypeSignature()));
+        }else {
+            // you are here means this handled just a column as select item
+            // this is done at last because alias handled last. we need to add that to the siddhiColumn too.
+            siddhiApp.addColumnWithDataTypeToInputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType()));
+            if(siddhiColumn.getAlias() == null){
+
+            }else{
+                siddhiColumn = new SiddhiAppComposites.Column(siddhiColumn.getAlias(),null);
+            }
+            siddhiApp.addColumnWithDataTypeToOutputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType()));
+        }
+        siddhiApp.addSelectItem(selectItem); // add column with data type to select statement
     }
 }

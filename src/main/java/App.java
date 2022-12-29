@@ -1,15 +1,15 @@
-import SiddhiApp.Annotation.Attributes.JsonMapAttributes;
-import SiddhiApp.Annotation.Common.KeyValue;
-import SiddhiApp.Annotation.Info.QueryInfo;
-import SiddhiApp.Annotation.Map.JsonMap;
-import SiddhiApp.Annotation.Sink.LogSink;
-import SiddhiApp.Annotation.Source.LiveSource;
-import SiddhiApp.SiddhiApp;
+import SiddhiAppComposites.Annotation.Attributes.JsonMapAttributes;
+import SiddhiAppComposites.Annotation.Common.KeyValue;
+import SiddhiAppComposites.Annotation.Info.QueryInfo;
+import SiddhiAppComposites.Annotation.Map.JsonMap;
+import SiddhiAppComposites.Annotation.Sink.LogSink;
+import SiddhiAppComposites.Annotation.Source.LiveSource;
+import SiddhiAppComposites.SiddhiApp;
 import net.sf.jsqlparser.JSQLParserException;
 import Compiler.*;
 
 public class App {
-    public static void main(String[] args) throws JSQLParserException {
+    public static void main(String[] args) {
         Runtime runtime = Runtime.getRuntime();
         System.out.println("Java Version      : " + runtime.version().toString());
         System.out.println("Total Mem         : " + runtime.totalMemory() / (1024 * 1024 * 1024) + " GB");
@@ -17,14 +17,13 @@ public class App {
         System.out.println("Max Mem           : " + runtime.maxMemory() / (1024 * 1024 * 1024) + " GB");
         System.out.println("Num of Processors : " + runtime.availableProcessors() + "\n");
 
-        String sqlStatement = "SELECT  ip@string,  timestamp@string, SUM(traffic@int)  " +
-                " FROM networkTrafficTable WHERE (traffic@int = 1000 AND traffic@int > 2000)";
+        String sqlStatement = "SELECT ip@string,browser@string,date@string as custom_alias_for_date, count(traffic@String) as sum_traffic, " +
+                "eventtimestamp@long, initial_data@string FROM NetworkTrafficTable WHERE traffic@int = 884800000";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator
-                .generateSiddhiApp(
-                        "SiddhiAppName-dev-custom-app-name",
+                .generateSiddhiApp("SiddhiAppName-dev-custom-app-name",
                         sqlStatement,
-                        new LiveSource().addSourceComposite(new KeyValue<>("newFieldToSourceAnnotation", "FieldValue")),
+                        new LiveSource(),
                         new JsonMap().addMapComposite(new KeyValue<>("enclosing.element", "$.properties")),
                         new JsonMapAttributes(),
                         new LogSink().addMapComposite(new JsonMap()),

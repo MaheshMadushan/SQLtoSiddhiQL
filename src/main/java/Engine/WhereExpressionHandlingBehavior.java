@@ -1,7 +1,7 @@
 package Engine;
 
-import SiddhiApp.AggregateFunction;
-import SiddhiApp.ColumnWithDataType;
+import SiddhiAppComposites.AggregateFunction;
+import SiddhiAppComposites.ColumnWithDataType;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
@@ -18,7 +18,7 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
     private final int DATA_TYPE_INDEX = 1;
     private String[] ColumnNameAndDataTypeArr; // length is 2 ["columnName","dataType"]
 
-    private SiddhiApp.Column siddhiColumn;
+    private SiddhiAppComposites.Column siddhiColumn;
     private AggregateFunction aggregateFunction;
     private final Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
 
@@ -46,16 +46,14 @@ public class WhereExpressionHandlingBehavior extends IExpressionHandleBehavior{
     @Override
     public void handleColumn(Column sqlColumnWithDataType) {
         tokenizeColumnName(sqlColumnWithDataType.getColumnName()); // eg - this tokenize "ColumnName@DataType" to ["ColumnName", "DataType"]
-        SiddhiApp.Column siddhiColumn = new SiddhiApp.Column();
+        SiddhiAppComposites.Column siddhiColumn = new SiddhiAppComposites.Column();
         siddhiColumn.setName(getColumnName());
-        siddhiApp.addColumnWithDataType(new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
+        siddhiApp.addColumnWithDataTypeToInputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
         // if still processing on function attributes add to function attribute list
         if(aggregateFunctionsStack.empty()) {
             siddhiApp.addSymbolToFilterExpression(siddhiColumn.getName());
         }else{
             aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function (this is a function inside function) attribute
-            siddhiApp.addColumnWithDataType(
-                    new ColumnWithDataType(siddhiColumn, getDataType())); // add to stream definition
         }
     }
 

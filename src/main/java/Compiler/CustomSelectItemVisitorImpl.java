@@ -36,7 +36,7 @@ public class CustomSelectItemVisitorImpl implements SelectItemVisitor {
         if(aliasOfSelectExpressionItem == null){
 
         }else {
-            middleEngine.handleAlias(selectExpressionItem.getAlias());
+            middleEngine.handleAlias(aliasOfSelectExpressionItem);
         }
     }
 }
