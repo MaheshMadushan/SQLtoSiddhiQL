@@ -9,13 +9,13 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 
 public abstract class IEngine {
-    protected IExpressionHandleBehavior engineBehavior;
+    protected IEngineExpressionHandleBehavior engineBehavior;
     protected SiddhiApp siddhiApp;
 
     public IEngine(){
     }
 
-    public void setExpressionHandlingBehavior(IExpressionHandleBehavior engineBehavior){
+    public void setExpressionHandlingBehavior(IEngineExpressionHandleBehavior engineBehavior){
         engineBehavior.setSiddhiApp(this.siddhiApp);
         this.engineBehavior = engineBehavior; }
 

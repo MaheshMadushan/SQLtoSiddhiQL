@@ -1,4 +1,3 @@
-import Compiler.SiddhiAppGenerator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import SiddhiAppComposites.SiddhiApp;

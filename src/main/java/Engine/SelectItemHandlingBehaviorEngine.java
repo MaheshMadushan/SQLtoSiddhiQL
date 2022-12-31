@@ -13,7 +13,7 @@ import net.sf.jsqlparser.schema.Table;
 
 import java.util.*;
 
-public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
+public class SelectItemHandlingBehaviorEngine extends IEngineExpressionHandleBehavior {
     private final int COLUMN_NAME_INDEX = 0;
     private final int DATA_TYPE_INDEX = 1;
     private String[] ColumnNameAndDataTypeArr;
@@ -24,7 +24,7 @@ public class SelectItemHandlingBehavior extends IExpressionHandleBehavior{
     private final Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
     private AggregateFunction aggregateFunction;
 
-    public SelectItemHandlingBehavior() {
+    public SelectItemHandlingBehaviorEngine() {
         selectItem  = new SelectItem();
     }
 
