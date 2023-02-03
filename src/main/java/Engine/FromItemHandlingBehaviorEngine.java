@@ -15,7 +15,7 @@ public class FromItemHandlingBehaviorEngine extends IEngineExpressionHandleBehav
 
     @Override
     public void handleTable(Table table) {
-        siddhiApp.setStreamNamePrefix(table.getName());
+        siddhiApp.setStreamNamePrefix(table.getName()); // set table name as stream name prefix
     }
 
     @Override
