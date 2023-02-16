@@ -5,8 +5,6 @@ import SiddhiAppComposites.Annotation.Map.JsonMap;
 import SiddhiAppComposites.Annotation.Sink.LogSink;
 import SiddhiAppComposites.Annotation.Source.LiveSource;
 import SiddhiAppComposites.SiddhiApp;
-import net.sf.jsqlparser.JSQLParserException;
-import Compiler.*;
 
 public class App {
     public static void main(String[] args) {

@@ -22,7 +22,7 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
         this.middleEngine = middleEngine;
     }
 
-    // siddhi not supports this
+    // siddhi do not support these
     @Override
     public void visit(BitwiseRightShift bitwiseRightShift) {
         throw new UnsupportedOperationException();

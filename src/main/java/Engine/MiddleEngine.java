@@ -9,6 +9,7 @@ import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 
+// Middle engine is the one has coupling with Compiler.
 public class MiddleEngine extends IEngine {
 
     public MiddleEngine(){super();}

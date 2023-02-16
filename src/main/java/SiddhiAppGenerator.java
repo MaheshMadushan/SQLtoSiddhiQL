@@ -1,5 +1,3 @@
-package Compiler;
-
 import Engine.IEngine;
 import Engine.MiddleEngine;
 import SiddhiAppComposites.Annotation.Attributes.IAttributes;
@@ -14,6 +12,7 @@ import SiddhiAppComposites.Annotation.Sink.LogSink;
 import SiddhiAppComposites.Annotation.Source.ISource;
 import SiddhiAppComposites.Annotation.Source.LiveSource;
 import SiddhiAppComposites.SiddhiApp;
+import Compiler.CustomSelectStatementVisitor;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.parser.Node;
