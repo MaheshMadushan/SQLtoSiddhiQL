@@ -1,6 +1,7 @@
 
 ## Demo
 
+![plot](./src/main/java/Blank%20diagram%20-%20Page%201.png)
 ```java
 String sqlStatement = "SELECT  ip@string,  timestamp@string, SUM(traffic@int) as sum_traffic " +
                 " FROM networkTrafficTable WHERE (traffic@int = 1000 AND traffic@int > 2000)";
