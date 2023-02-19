@@ -2,7 +2,7 @@ package Compiler;
 
 import Engine.*;
 import Engine.FromItemHandlingBehaviorEngine;
-import Engine.WhereEngineExpressionHandlingBehavior;
+import Engine.WhereExpressionHandlingBehaviorEngine;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
@@ -38,7 +38,7 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
 
         Expression whereExpression = plainSelect.getWhere();
         if(whereExpression != null) {
-            middleEngine.setExpressionHandlingBehavior(new WhereEngineExpressionHandlingBehavior());
+            middleEngine.setExpressionHandlingBehavior(new WhereExpressionHandlingBehaviorEngine());
             whereExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
         }
 
