@@ -194,11 +194,11 @@ public class SelectItemHandlingBehaviorEngine extends IEngineExpressionHandleBeh
 
     @Override
     public void handleOrExpression(OrExpression orExpression) {
-        Symbol siddhiNOrExpression = new Symbol(orExpression.getStringExpression());
+        Symbol siddhiOrExpression = new Symbol(orExpression.getStringExpression());
         if(aggregateFunctionsStack.empty()) {
-            selectItem.addSelectItemComposite(siddhiNOrExpression);
+            selectItem.addSelectItemComposite(siddhiOrExpression);
         }else{
-            aggregateFunctionsStack.peek().addAttribute(siddhiNOrExpression);
+            aggregateFunctionsStack.peek().addAttribute(siddhiOrExpression);
         }
     }
 

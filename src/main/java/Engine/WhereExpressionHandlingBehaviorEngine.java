@@ -13,7 +13,7 @@ import net.sf.jsqlparser.schema.Table;
 
 import java.util.Stack;
 
-public class WhereEngineExpressionHandlingBehavior extends IEngineExpressionHandleBehavior {
+public class WhereExpressionHandlingBehaviorEngine extends IEngineExpressionHandleBehavior {
     private final int COLUMN_NAME_INDEX = 0;
     private final int DATA_TYPE_INDEX = 1;
     private String[] ColumnNameAndDataTypeArr; // length is 2 ["columnName","dataType"]
@@ -22,7 +22,7 @@ public class WhereEngineExpressionHandlingBehavior extends IEngineExpressionHand
     private AggregateFunction aggregateFunction;
     private final Stack<AggregateFunction> aggregateFunctionsStack = new Stack<>();
 
-    public WhereEngineExpressionHandlingBehavior() {
+    public WhereExpressionHandlingBehaviorEngine() {
     }
 
     @Override
