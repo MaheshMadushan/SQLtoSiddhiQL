@@ -1,3 +1,5 @@
+package SiddhiAppComposites;
+
 import Engine.IEngine;
 import Engine.MiddleEngine;
 import SiddhiAppComposites.Annotation.Attributes.IAttributes;

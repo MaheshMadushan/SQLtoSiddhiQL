@@ -9,7 +9,7 @@
 String sqlStatement = "SELECT  ip@string,  timestamp@string, SUM(traffic@int) as sum_traffic " +
                 " FROM networkTrafficTable WHERE (traffic@int = 1000 AND traffic@int > 2000)";
 
-        SiddhiAppComposites siddhiApp = SiddhiAppGenerator
+        SiddhiAppComposites siddhiApp = SiddhiAppComposites.SiddhiAppGenerator
                 .generateSiddhiApp(
                         "SiddhiAppName-dev-custom-app-name",
                         sqlStatement,
