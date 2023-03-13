@@ -14,7 +14,9 @@ import SiddhiAppComposites.Statement.From.IFromStatement;
 import SiddhiAppComposites.Statement.Insert.IInsertStatement;
 import SiddhiAppComposites.Statement.Insert.InsertStatement;
 import SiddhiAppComposites.Statement.Select.SelectStatement;
+
 public class SiddhiApp {
+
     private final DefineStreamStatement defineInputStreamStatement = new DefineStreamStatement(); // create define input stream
     private final DefineStreamStatement defineOutputStreamStatement = new DefineStreamStatement(); // create define output stream
     private final SelectStatement selectStatement = new SelectStatement(); // select statement
@@ -27,9 +29,12 @@ public class SiddhiApp {
     private final IMap annotationMap; // Annotation @map
     private final ISink annotationSink; // Annotation @sink
     private final IInfo annotationInfo; // Annotation @info
-    private String inputOutputStreamNamePrefix = null;
+
+    private String inputOutputStreamNamePrefix = null; // this is the table name (full qualified or just table name)
     private final StringBuilder stringSiddhiApp = new StringBuilder("");
+
     private SiddhiApp(SiddhiAppBuilder siddhiAppBuilder) {
+
         this.annotationSource = siddhiAppBuilder.annotationSource;
         this.annotationAttributes = siddhiAppBuilder.annotationAttributes;
         this.annotationMap = siddhiAppBuilder.annotationMap;
@@ -37,6 +42,7 @@ public class SiddhiApp {
         this.annotationInfo = siddhiAppBuilder.annotationInfo;
         this.annotationApp = siddhiAppBuilder.annotationApp;
     }
+
     public void addSymbolToFilterExpression(String symbol){
         ((FilterExpression) this.filterExpression).addSymbol(symbol);
     }
@@ -62,6 +68,10 @@ public class SiddhiApp {
 
     public void setStreamNamePrefix(String inputOutputStreamNamePrefix) {
         this.inputOutputStreamNamePrefix = inputOutputStreamNamePrefix;
+    }
+
+    public String getTableName() {
+        return inputOutputStreamNamePrefix;
     }
 
     public String getSiddhiAppStringRepresentation(){

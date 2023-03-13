@@ -43,7 +43,7 @@ public class SQLtoSiddhiQLCompilerTest {
 
         String generalProjectionSQL = "SELECT col1@int AS A, col2@int AS B, col3@int AS C , col4@int as D, " +
                 "col5@long  as E, col99@string as F " +
-                "FROM table";
+                "FROM a.b.table";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         siddhiAppDefinition = "@app:name('SiddhiAppName-dev')\n" +
