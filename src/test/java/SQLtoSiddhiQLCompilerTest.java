@@ -47,7 +47,7 @@ public class SQLtoSiddhiQLCompilerTest {
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         siddhiAppDefinition = "@app:name('SiddhiAppName-dev')\n" +
-                "@source(type = 'live',sql.query = 'SELECT col1 AS A, col2 AS B, col3 AS C , col4 as D, col5  as E, col99 as F FROM table',@map(type = 'json',@attributes(A = 'A',B = 'B',C = 'C',D = 'D',E = 'E',F = 'F',col1 = 'col1',col2 = 'col2',col3 = 'col3',col4 = 'col4',col5 = 'col5',col99 = 'col99')))\n" +
+                "@source(type = 'live',sql.query = 'SELECT col1 AS A, col2 AS B, col3 AS C , col4 as D, col5  as E, col99 as F FROM a.b.table',@map(type = 'json',@attributes(A = 'A',B = 'B',C = 'C',D = 'D',E = 'E',F = 'F',col1 = 'col1',col2 = 'col2',col3 = 'col3',col4 = 'col4',col5 = 'col5',col99 = 'col99')))\n" +
                 "define stream tableInputStream(col1 int,col2 int,col3 int,col4 int,col5 long,col99 string);\n" +
                 "@sink(type = 'log')\n" +
                 "define stream tableOutputStream(A int,B int,C int,D int,E long,F string);\n" +
