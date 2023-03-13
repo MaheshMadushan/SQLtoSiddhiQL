@@ -5,6 +5,7 @@ import SiddhiAppComposites.Annotation.Map.JsonMap;
 import SiddhiAppComposites.Annotation.Sink.LogSink;
 import SiddhiAppComposites.Annotation.Source.LiveSource;
 import SiddhiAppComposites.SiddhiApp;
+import SiddhiAppComposites.SiddhiAppGenerator;
 
 public class App {
     public static void main(String[] args) {
