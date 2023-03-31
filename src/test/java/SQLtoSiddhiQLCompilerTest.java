@@ -108,7 +108,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 "@source(type = 'live',sql.query = 'SELECT SUM(col1) AS sum, STDDEV(col2) AS stddev, MAX(col3) AS max, MIN(col4) AS min ,COUNT(col5) AS count , col99 FROM table',@map(type = 'json',@attributes(col1 = 'col1',col2 = 'col2',col3 = 'col3',col4 = 'col4',col5 = 'col5',col99 = 'col99',max = 'max',min = 'min',sum = 'sum',count = 'count',stddev = 'stddev')))\n" +
                 "define stream tableInputStream(col1 int,col2 int,col3 int,col4 int,col5 int,col99 string);\n" +
                 "@sink(type = 'log')\n" +
-                "define stream tableOutputStream(sum double,stddev double,max double,min double,count long,col99 string);\n" +
+                "define stream tableOutputStream(sum long,stddev double,max long,min long,count long,col99 string);\n" +
                 "@info(name = 'null')\n" +
                 "from tableInputStream\n" +
                 "select SUM( col1 )  as sum ,STDDEV( col2 )  as stddev ,MAX( col3 )  as max ,MIN( col4 )  as min ,COUNT( col5 )  as count , col99  \n" +
