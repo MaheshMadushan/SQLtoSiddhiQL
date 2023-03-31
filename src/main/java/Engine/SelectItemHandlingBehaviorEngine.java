@@ -298,7 +298,7 @@ public class SelectItemHandlingBehaviorEngine extends IEngineExpressionHandleBeh
         SiddhiAppComposites.Alias siddhiAlias = new SiddhiAppComposites.Alias(alias.getName());
         if(isHandledFunction){
             siddhiColumn = new SiddhiAppComposites.Column(siddhiAlias.getAlias(),null);
-            // what are the data types of the attributes of function
+            // what is the dominating data type of the attributes in the function
             dataType = dataTypesOfAttributesOfFunction
                     .stream().distinct().max(Comparator.comparing(Enum::ordinal));
             // what types of data is able to return by the function
@@ -313,12 +313,12 @@ public class SelectItemHandlingBehaviorEngine extends IEngineExpressionHandleBeh
                 }
 
             }
-            selectItem.setSelectItemAlias(siddhiAlias);
+            selectItem.setSelectItemAlias(siddhiAlias); // {sum(columnName)}:SelectItem AS {aliasName}:SiddhiAppComposites.Alias
             // are data types of attributes and data types able to return by the function, equal?
                 // if so use that data type as alias column data type
                 // else throw an exception?
         }else {
-            // add alias to column ( if function add alias to column name inside function )
+            // add alias to column ( if this is not a function add alias to column name inside function )
             siddhiColumn.setAlias(siddhiAlias.getAlias());
         }
 
@@ -330,8 +330,8 @@ public class SelectItemHandlingBehaviorEngine extends IEngineExpressionHandleBeh
         if(isHandledFunction && dataType.isPresent()){
             siddhiApp.addColumnWithDataTypeToOutputStreamDefinition(new ColumnWithDataType(siddhiColumn, dataType.get().getDataTypeSignature()));
         }else {
-            // you are here means this handled just a column as select item
-            // this is done at last because alias handled last. we need to add that to the siddhiColumn too.
+            // you are here means this handled just a column (not a column name inside function) as select item
+            // this is done at last because aliases handled last. we need to add that to the siddhiColumn too.
             siddhiApp.addColumnWithDataTypeToInputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType()));
             if(siddhiColumn.getAlias() == null){
 
