@@ -16,7 +16,7 @@ public class App implements IApp {
         annotationAppString.append(annotationType.getAnnotationTypeSignature())
                 .append(":")
                 .append("name")
-                .append("('").append(siddhiApplicationName).append("')\n");
+                .append("(\"").append(siddhiApplicationName).append("\")\n");
         return annotationAppString.toString();
     }
 }

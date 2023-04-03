@@ -19,8 +19,8 @@ public class LogSink extends ISink {
         sinkAnnotation
                 .append(sinkSignature.getAnnotationTypeSignature())
                 .append("(")
-                .append("type = '")
-                .append(logSink.getSinkTypeSignature() + "'"); // @sink(type = "log",
+                .append("type = \"")
+                .append(logSink.getSinkTypeSignature() + "\""); // @sink(type = "log",
 
         for (ISiddhiAppComposite annotationComposite : annotationComposites) {
             sinkAnnotation

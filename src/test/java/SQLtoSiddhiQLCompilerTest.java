@@ -11,11 +11,13 @@ public class SQLtoSiddhiQLCompilerTest {
     @Test
     void generateSiddhiAppForSimpleSQLSelectStatementTest() throws JSQLParserException {
         String generalProjectionSQL = "SELECT a@int, b@int, c@float, d@string, e@bool FROM table WHERE a@int = 90 AND b@int > 98 OR (a@int > b@int XOR e@bool) XOR (a@int + b@int > b@int)";
-        siddhiAppDefinition = "@app:name('SiddhiAppName-dev')\n" +
-                "@source(type = 'live',sql.query = 'SELECT a, b, c, d, e FROM table WHERE a = 90 AND b > 98 OR (a > b XOR e) XOR (a + b > b)',@map(type = 'json',@attributes(a = 'a',b = 'b',c = 'c',d = 'd',e = 'e')))\n" +
-                "define stream tableInputStream(a int,b int,c float,d string,e bool);\n@sink(type = 'log')\n" +
-                "define stream tableOutputStream(a int,b int,c float,d string,e bool);\n@info(name = 'null')\n" +
-                "from tableInputStream[a == 90 AND b > 98 OR ( a > b XOR e ) XOR ( a + b > b ) ]\nselect  a  , b  , c  , d  , e  \ninsert into tableOutputStream;\n";
+        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
+                "@source(type = \"live\",sql.query = \"SELECT a, b, c, d, e FROM table WHERE a = 90 AND b > 98 OR (a > b XOR e) XOR (a + b > b)\",@map(type = \"json\",@attributes(a = \"a\",b = \"b\",c = \"c\",d = \"d\",e = \"e\")))\n" +
+                "define stream tableInputStream(a int,b int,c float,d string,e bool);\n" +
+                "@sink(type = \"log\")\ndefine stream tableOutputStream(a int,b int,c float,d string,e bool);\n" +
+                "@info(name = \"default-name\")\nfrom tableInputStream[a == 90 AND b > 98 OR ( a > b XOR e ) XOR ( a + b > b ) ]\n" +
+                "select  a  , b  , c  , d  , e  \n" +
+                "insert into tableOutputStream;\n";
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp.getSiddhiAppStringRepresentation());
     }
@@ -27,12 +29,12 @@ public class SQLtoSiddhiQLCompilerTest {
                 "FROM table WHERE col1@int = 10 AND col2@int = 20 XOR col3@int + col4@int = 30 AND col5@int = 98;";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
-        siddhiAppDefinition = "@app:name('SiddhiAppName-dev')\n" +
-                "@source(type = 'live',sql.query = 'SELECT col1, col2, col3, col4, col5 , col99 FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 + col4 = 30 AND col5 = 98;',@map(type = 'json',@attributes(col1 = 'col1',col2 = 'col2',col3 = 'col3',col4 = 'col4',col5 = 'col5',col99 = 'col99')))\n" +
+        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
+                "@source(type = \"live\",sql.query = \"SELECT col1, col2, col3, col4, col5 , col99 FROM table WHERE col1 = 10 AND col2 = 20 XOR col3 + col4 = 30 AND col5 = 98;\",@map(type = \"json\",@attributes(col1 = \"col1\",col2 = \"col2\",col3 = \"col3\",col4 = \"col4\",col5 = \"col5\",col99 = \"col99\")))\n" +
                 "define stream tableInputStream(col1 int,col2 int,col3 int,col4 int,col5 int,col99 int);\n" +
-                "@sink(type = 'log')\n" +
+                "@sink(type = \"log\")\n" +
                 "define stream tableOutputStream(col1 int,col2 int,col3 int,col4 int,col5 int,col99 int);\n" +
-                "@info(name = 'null')\n" +
+                "@info(name = \"default-name\")\n" +
                 "from tableInputStream[col1 == 10 AND col2 == 20 XOR col3 + col4 == 30 AND col5 == 98 ]\n" +
                 "select  col1  , col2  , col3  , col4  , col5  , col99  \n" +
                 "insert into tableOutputStream;\n";
@@ -47,12 +49,12 @@ public class SQLtoSiddhiQLCompilerTest {
                 "FROM a.b.table";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
-        siddhiAppDefinition = "@app:name('SiddhiAppName-dev')\n" +
-                "@source(type = 'live',sql.query = 'SELECT col1 AS A, col2 AS B, col3 AS C , col4 as D, col5  as E, col99 as F FROM a.b.table',@map(type = 'json',@attributes(A = 'A',B = 'B',C = 'C',D = 'D',E = 'E',F = 'F',col1 = 'col1',col2 = 'col2',col3 = 'col3',col4 = 'col4',col5 = 'col5',col99 = 'col99')))\n" +
+        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
+                "@source(type = \"live\",sql.query = \"SELECT col1 AS A, col2 AS B, col3 AS C , col4 as D, col5  as E, col99 as F FROM a.b.table\",@map(type = \"json\",@attributes(A = \"A\",B = \"B\",C = \"C\",D = \"D\",E = \"E\",F = \"F\",col1 = \"col1\",col2 = \"col2\",col3 = \"col3\",col4 = \"col4\",col5 = \"col5\",col99 = \"col99\")))\n" +
                 "define stream tableInputStream(col1 int,col2 int,col3 int,col4 int,col5 long,col99 string);\n" +
-                "@sink(type = 'log')\n" +
+                "@sink(type = \"log\")\n" +
                 "define stream tableOutputStream(A int,B int,C int,D int,E long,F string);\n" +
-                "@info(name = 'null')\n" +
+                "@info(name = \"default-name\")\n" +
                 "from tableInputStream\n" +
                 "select  col1 as A  , col2 as B  , col3 as C  , col4 as D  , col5 as E  , col99 as F  \n" +
                 "insert into tableOutputStream;\n";
@@ -74,16 +76,17 @@ public class SQLtoSiddhiQLCompilerTest {
                 " WHERE " +
                         "a@int = 90 AND b@int > 98 OR " +
                         "(a@int > b@int XOR e@bool) XOR " +
-                        "(a@int + b@int > b@int) ";
+                        "(a@int + b@int > b@int) AND " +
+                        "(d@string = 'some_string')";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
-        siddhiAppDefinition = "@app:name('SiddhiAppName-dev')\n" +
-                "@source(type = 'live',sql.query = 'SELECT a AS A, b AS B, c AS C, d AS D, e AS E FROM table WHERE a = 90 AND b > 98 OR (a > b XOR e) XOR (a + b > b) ',@map(type = 'json',@attributes(b = 'b',B = 'B',d = 'd',D = 'D',a = 'a',A = 'A',c = 'c',C = 'C',e = 'e',E = 'E')))\n" +
+        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
+                "@source(type = \"live\",sql.query = \"SELECT a AS A, b AS B, c AS C, d AS D, e AS E FROM table WHERE a = 90 AND b > 98 OR (a > b XOR e) XOR (a + b > b) AND (d = 'some_string')\",@map(type = \"json\",@attributes(b = \"b\",B = \"B\",d = \"d\",D = \"D\",a = \"a\",A = \"A\",c = \"c\",C = \"C\",e = \"e\",E = \"E\")))\n" +
                 "define stream tableInputStream(a int,b int,c float,d string,e bool);\n" +
-                "@sink(type = 'log')\n" +
+                "@sink(type = \"log\")\n" +
                 "define stream tableOutputStream(A int,B int,C float,D string,E bool);\n" +
-                "@info(name = 'null')\n" +
-                "from tableInputStream[a == 90 AND b > 98 OR ( a > b XOR e ) XOR ( a + b > b ) ]\n" +
+                "@info(name = \"default-name\")\n" +
+                "from tableInputStream[a == 90 AND b > 98 OR ( a > b XOR e ) XOR ( a + b > b ) AND ( d == 'some_string' ) ]\n" +
                 "select  a as A  , b as B  , c as C  , d as D  , e as E  \n" +
                 "insert into tableOutputStream;\n";
         assertEquals(siddhiAppDefinition,siddhiApp.getSiddhiAppStringRepresentation());
@@ -104,12 +107,12 @@ public class SQLtoSiddhiQLCompilerTest {
                         "table";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
-        siddhiAppDefinition = "@app:name('SiddhiAppName-dev')\n" +
-                "@source(type = 'live',sql.query = 'SELECT SUM(col1) AS sum, STDDEV(col2) AS stddev, MAX(col3) AS max, MIN(col4) AS min ,COUNT(col5) AS count , col99 FROM table',@map(type = 'json',@attributes(col1 = 'col1',col2 = 'col2',col3 = 'col3',col4 = 'col4',col5 = 'col5',col99 = 'col99',max = 'max',min = 'min',sum = 'sum',count = 'count',stddev = 'stddev')))\n" +
+        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
+                "@source(type = \"live\",sql.query = \"SELECT SUM(col1) AS sum, STDDEV(col2) AS stddev, MAX(col3) AS max, MIN(col4) AS min ,COUNT(col5) AS count , col99 FROM table\",@map(type = \"json\",@attributes(col1 = \"col1\",col2 = \"col2\",col3 = \"col3\",col4 = \"col4\",col5 = \"col5\",col99 = \"col99\",max = \"max\",min = \"min\",sum = \"sum\",count = \"count\",stddev = \"stddev\")))\n" +
                 "define stream tableInputStream(col1 int,col2 int,col3 int,col4 int,col5 int,col99 string);\n" +
-                "@sink(type = 'log')\n" +
+                "@sink(type = \"log\")\n" +
                 "define stream tableOutputStream(sum long,stddev double,max long,min long,count long,col99 string);\n" +
-                "@info(name = 'null')\n" +
+                "@info(name = \"default-name\")\n" +
                 "from tableInputStream\n" +
                 "select SUM( col1 )  as sum ,STDDEV( col2 )  as stddev ,MAX( col3 )  as max ,MIN( col4 )  as min ,COUNT( col5 )  as count , col99  \n" +
                 "insert into tableOutputStream;\n";

@@ -15,8 +15,8 @@ public class LiveSink extends ISink{
         sinkAnnotation
                 .append(sinkSignature.getAnnotationTypeSignature())
                 .append("(")
-                .append("type = '")
-                .append(logSink.getSinkTypeSignature() + "'"); // @sink(type = "live",
+                .append("type = \"")
+                .append(logSink.getSinkTypeSignature() + "\""); // @sink(type = "live",
 
         for (ISiddhiAppComposite annotationComposite : annotationComposites) {
             sinkAnnotation
