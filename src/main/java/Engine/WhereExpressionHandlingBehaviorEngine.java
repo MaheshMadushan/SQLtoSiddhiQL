@@ -96,7 +96,7 @@ public class WhereExpressionHandlingBehaviorEngine extends IEngineExpressionHand
 
     @Override
     public void handleStringValue(StringValue stringValue) {
-        siddhiApp.addSymbolToFilterExpression(stringValue.getValue());
+        siddhiApp.addSymbolToFilterExpression(stringValue.toString());
     }
 
     @Override

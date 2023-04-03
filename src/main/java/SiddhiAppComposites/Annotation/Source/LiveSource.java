@@ -18,7 +18,7 @@ public class LiveSource extends ISource {
     public String getSiddhiAppCompositeAsString() {
         sourceAnnotation
                 .append(sourceSignature.getAnnotationTypeSignature())
-                .append("(").append("type = '").append(liveSource.getSourceTypeSignature()).append("',"); // @source(type = "live",
+                .append("(").append("type = \"").append(liveSource.getSourceTypeSignature()).append("\","); // @source(type = "live",
         Iterator<ISiddhiAppComposite> sourceAnnotationCompositesIterator = annotationComposites.iterator();
 
        while(sourceAnnotationCompositesIterator.hasNext()){

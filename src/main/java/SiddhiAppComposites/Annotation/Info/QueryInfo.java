@@ -4,7 +4,7 @@ import SiddhiAppComposites.Annotation.AnnotationType;
 
 public class QueryInfo extends IInfo {
     private final AnnotationType queryInfo = AnnotationType.INFO;
-    private String queryName;
+    private String queryName = "default-name";
     private final StringBuilder infoAnnotation = new StringBuilder("");
 
     public QueryInfo setQueryName(String queryName){
@@ -14,7 +14,7 @@ public class QueryInfo extends IInfo {
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        infoAnnotation.append(queryInfo.getAnnotationTypeSignature()).append("(name = '").append(queryName).append("')\n");
+        infoAnnotation.append(queryInfo.getAnnotationTypeSignature()).append("(name = \"").append(queryName).append("\")\n");
         return infoAnnotation.toString();
     }
 }
