@@ -1,5 +1,7 @@
 package SiddhiAppComposites;
 
+import SiddhiAppComposites.visitors.IAttributeVisitor;
+
 public class Column implements IAttribute{
 
     private String name;
@@ -40,5 +42,10 @@ public class Column implements IAttribute{
     @Override
     public String getSiddhiAppCompositeAsString() {
         return getAttributeWithAlias();
+    }
+
+    @Override
+    public void accept(IAttributeVisitor iAttributeVisitor) {
+        iAttributeVisitor.visit(this);
     }
 }

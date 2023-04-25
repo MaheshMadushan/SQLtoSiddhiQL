@@ -1,5 +1,7 @@
 package SiddhiAppComposites;
 
+import SiddhiAppComposites.visitors.IAttributeVisitor;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +11,6 @@ public class AggregateFunction implements IFunction,IAttribute{
     private final String functionName;
     private final List<ISiddhiAppComposite> attributeList;
     private ISiddhiAppComposite alias;
-    private Iterator<ISiddhiAppComposite> attributeIterator;
 
     public AggregateFunction(String functionName) {
         this.attributeList = new ArrayList<>(10);
@@ -38,7 +39,7 @@ public class AggregateFunction implements IFunction,IAttribute{
 
     @Override
     public String getSiddhiAppCompositeAsString() {
-        attributeIterator = attributeList.iterator();
+        Iterator<ISiddhiAppComposite> attributeIterator = attributeList.iterator();
         if(functionName == null){
             throw new UnsupportedOperationException("Function name is null.");
         }
@@ -78,5 +79,14 @@ public class AggregateFunction implements IFunction,IAttribute{
 
         return functionDeclaration
                 .toString(); // SUM (col + col) AS alias
+    }
+
+    public List<ISiddhiAppComposite> getAttributeList() {
+        return attributeList;
+    }
+
+    @Override
+    public void accept(IAttributeVisitor iAttributeVisitor) {
+        iAttributeVisitor.visit(this);
     }
 }
