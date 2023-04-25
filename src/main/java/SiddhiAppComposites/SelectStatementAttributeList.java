@@ -5,7 +5,6 @@ import java.util.List;
 public class SelectStatementAttributeList implements IAttributeList{
 
     private final List<ISiddhiAppComposite> attributesWithOrWithoutAliasesList;
-    private Iterator<ISiddhiAppComposite> attributesWithOrWithoutAliasesIterator;
 
     public SelectStatementAttributeList() {
         this.attributesWithOrWithoutAliasesList = new ArrayList<>(10);
@@ -21,8 +20,8 @@ public class SelectStatementAttributeList implements IAttributeList{
 
     @Override
     public String toString() {
-        StringBuilder attributeSetWithAliasesWithOutDataType = new StringBuilder(""); // eg. - SUM( -->
-        attributesWithOrWithoutAliasesIterator = attributesWithOrWithoutAliasesList.iterator();
+        StringBuilder attributeSetWithAliasesWithOutDataType = new StringBuilder(); // eg. - SUM( -->
+        Iterator<ISiddhiAppComposite> attributesWithOrWithoutAliasesIterator = attributesWithOrWithoutAliasesList.iterator();
 
         boolean thereIsNextComponent = attributesWithOrWithoutAliasesIterator.hasNext();
 

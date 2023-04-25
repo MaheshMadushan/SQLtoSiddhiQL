@@ -1,5 +1,7 @@
 package SiddhiAppComposites;
 
+import SiddhiAppComposites.visitors.IAttributeVisitor;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +13,10 @@ public class SelectItem implements IAttribute{
     public SelectItem(){
         selectItemComposites = new ArrayList<>();
         selectItemAlias = new Alias();
+    }
+
+    public List<ISiddhiAppComposite> getSelectItemComposites() {
+        return selectItemComposites;
     }
 
     public void setSelectItemAlias(ISiddhiAppComposite selectItemAlias){
@@ -43,5 +49,10 @@ public class SelectItem implements IAttribute{
             }
         }
         return selectItem.toString();
+    }
+
+    @Override
+    public void accept(IAttributeVisitor iAttributeVisitor) {
+        iAttributeVisitor.visit(this);
     }
 }
