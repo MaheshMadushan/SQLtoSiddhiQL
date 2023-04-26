@@ -1,15 +1,14 @@
-package SiddhiAppComposites.visitors;
+package SiddhiAppComposites.utilities.visitors.ColumnNameExtractor;
 
 import SiddhiAppComposites.*;
+import SiddhiAppComposites.utilities.visitors.IAttributeVisitor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
-public class ColumnNameExtractorVisitor implements IAttributeVisitor{
+public class ColumnNameExtractorVisitor implements IAttributeVisitor {
 
-    private final List<String> columnNames = new ArrayList<>();
+    private final HashSet<String> columnNames = new HashSet<>();
     private final Consumer<ISiddhiAppComposite> iSiddhiAppCompositeConsumer = siddhiAppComposite -> {
                 Class<? extends ISiddhiAppComposite> siddhiAppCompositeClass = siddhiAppComposite.getClass();
                 if(siddhiAppCompositeClass.equals(SelectItem.class)){
@@ -47,7 +46,7 @@ public class ColumnNameExtractorVisitor implements IAttributeVisitor{
         iSiddhiAppCompositeConsumer.accept(iSiddhiAppComposite);
     }
 
-    public List<String> getColumnNames() {
+    public HashSet<String> getColumnNames() {
         return columnNames;
     }
 }

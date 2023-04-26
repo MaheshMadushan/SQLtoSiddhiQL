@@ -1,6 +1,6 @@
 package SiddhiAppComposites;
 
-import SiddhiAppComposites.visitors.IAttributeVisitor;
+import SiddhiAppComposites.utilities.visitors.IAttributeVisitor;
 
 import java.util.Objects;
 

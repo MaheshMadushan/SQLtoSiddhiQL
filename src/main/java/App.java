@@ -7,6 +7,8 @@ import SiddhiAppComposites.Annotation.Source.LiveSource;
 import SiddhiAppComposites.SiddhiApp;
 import SiddhiAppComposites.SiddhiAppGenerator;
 
+import java.util.Arrays;
+
 public class App {
     public static void main(String[] args) {
         Runtime runtime = Runtime.getRuntime();
@@ -29,7 +31,7 @@ public class App {
                         new QueryInfo().setQueryName("SQL-SiddhiQL-dev")
                 );
 
-        System.out.println(siddhiApp.getSiddhiAppStringRepresentation());
+        System.out.println(Arrays.toString(siddhiApp.getColumnNames().toArray()));
 
     }
 

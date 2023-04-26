@@ -14,6 +14,9 @@ import SiddhiAppComposites.Statement.From.IFromStatement;
 import SiddhiAppComposites.Statement.Insert.IInsertStatement;
 import SiddhiAppComposites.Statement.Insert.InsertStatement;
 import SiddhiAppComposites.Statement.Select.SelectStatement;
+import SiddhiAppComposites.utilities.visitors.ColumnNameExtractor.ColumnNameExtractorVisitor;
+
+import java.util.HashSet;
 
 public class SiddhiApp {
 
@@ -31,7 +34,7 @@ public class SiddhiApp {
     private final IInfo annotationInfo; // Annotation @info
 
     private String inputOutputStreamNamePrefix = null; // this is the table name (full qualified or just table name)
-    private final StringBuilder stringSiddhiApp = new StringBuilder("");
+    private final StringBuilder stringSiddhiApp = new StringBuilder();
 
     private SiddhiApp(SiddhiAppBuilder siddhiAppBuilder) {
 
@@ -72,6 +75,11 @@ public class SiddhiApp {
 
     public String getTableName() {
         return inputOutputStreamNamePrefix;
+    }
+    public HashSet<String> getColumnNames() {
+        ColumnNameExtractorVisitor iAttributeVisitor = new ColumnNameExtractorVisitor();
+        defineInputStreamStatement.extractColumnNames(iAttributeVisitor); // has all column names in select statement including where clause
+        return iAttributeVisitor.getColumnNames();
     }
 
     public String getSiddhiAppStringRepresentation(){

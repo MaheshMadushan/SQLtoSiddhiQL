@@ -1,21 +1,18 @@
 package SiddhiAppComposites.Statement.Select;
 
 import SiddhiAppComposites.*;
-import SiddhiAppComposites.visitors.ColumnNameExtractorVisitor;
+import SiddhiAppComposites.utilities.visitors.IAttributeVisitor;
 
-import java.util.List;
 
 public class SelectStatement implements ISelectStatement {
 
     private final IAttributeList selectItemsList;
 
-    public List<String> extractColumnNames(){
-        ColumnNameExtractorVisitor columnNameExtractorVisitor = new ColumnNameExtractorVisitor();
+    public void extractColumnNames(IAttributeVisitor iAttributeVisitor){
         ((SelectStatementAttributeList) selectItemsList)
                 .getAttributesWithOrWithoutAliases().forEach(
-                        columnNameExtractorVisitor::visit
+                        iAttributeVisitor::visit
                 );
-        return columnNameExtractorVisitor.getColumnNames();
     }
 
     public SelectStatement() {

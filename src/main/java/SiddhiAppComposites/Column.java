@@ -1,6 +1,6 @@
 package SiddhiAppComposites;
 
-import SiddhiAppComposites.visitors.IAttributeVisitor;
+import SiddhiAppComposites.utilities.visitors.IAttributeVisitor;
 
 public class Column implements IAttribute{
 
