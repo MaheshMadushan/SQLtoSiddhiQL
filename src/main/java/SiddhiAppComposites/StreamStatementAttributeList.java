@@ -6,11 +6,14 @@ import java.util.List;
 
 public class StreamStatementAttributeList implements IAttributeList{
 
-    private List<ISiddhiAppComposite> attributeListWithoutAliasesWithDataType;
-    private Iterator<ISiddhiAppComposite> attributeListWithoutAliasesWithDataTypeIterator;
+    private final List<ISiddhiAppComposite> attributeListWithoutAliasesWithDataType;
 
     public StreamStatementAttributeList() {
         this.attributeListWithoutAliasesWithDataType = new ArrayList<>(10);
+    }
+
+    public List<ISiddhiAppComposite> getAttributeListWithoutAliasesWithDataType() {
+        return attributeListWithoutAliasesWithDataType;
     }
 
     public void addAttribute(ISiddhiAppComposite attributeWithDataType){
@@ -41,14 +44,14 @@ public class StreamStatementAttributeList implements IAttributeList{
     public String getSiddhiAppCompositeAsString() {
 
         StringBuilder attributeSetWithoutAliasesWithDataType = new StringBuilder(""); // eg. "" -->
-        this.attributeListWithoutAliasesWithDataTypeIterator = this.attributeListWithoutAliasesWithDataType.iterator();
+        Iterator<ISiddhiAppComposite> attributeListWithoutAliasesWithDataTypeIterator = this.attributeListWithoutAliasesWithDataType.iterator();
 
-        boolean thereIsNextComponent = this.attributeListWithoutAliasesWithDataTypeIterator.hasNext();
+        boolean thereIsNextComponent = attributeListWithoutAliasesWithDataTypeIterator.hasNext();
 
         while(thereIsNextComponent){
 
-            ISiddhiAppComposite selectItemComposite = this.attributeListWithoutAliasesWithDataTypeIterator.next();
-            thereIsNextComponent = this.attributeListWithoutAliasesWithDataTypeIterator.hasNext();
+            ISiddhiAppComposite selectItemComposite = attributeListWithoutAliasesWithDataTypeIterator.next();
+            thereIsNextComponent = attributeListWithoutAliasesWithDataTypeIterator.hasNext();
 
             if(thereIsNextComponent){
                 attributeSetWithoutAliasesWithDataType

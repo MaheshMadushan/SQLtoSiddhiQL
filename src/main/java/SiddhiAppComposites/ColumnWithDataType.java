@@ -1,5 +1,7 @@
 package SiddhiAppComposites;
 
+import SiddhiAppComposites.utilities.visitors.IAttributeVisitor;
+
 import java.util.Objects;
 
 public class ColumnWithDataType implements IAttribute{
@@ -59,5 +61,10 @@ public class ColumnWithDataType implements IAttribute{
 
     public void setColumn(Column column){
         this.column = column;
+    }
+
+    @Override
+    public void accept(IAttributeVisitor iAttributeVisitor) {
+        iAttributeVisitor.visit(this);
     }
 }
