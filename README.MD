@@ -35,3 +35,5 @@ from networkTrafficTableInputStream[( traffic == 1000 AND traffic > 2000 ) ]
 select  ip  , timestamp  ,SUM( traffic )  as sum_traffic 
 insert into networkTrafficTableOutputStream;
 ```
+## get column names
+```HashSet<String> columnNames = siddhiApp.getColumnNames();```
