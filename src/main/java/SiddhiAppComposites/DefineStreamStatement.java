@@ -3,6 +3,8 @@ package SiddhiAppComposites;
 
 import SiddhiAppComposites.utilities.visitors.IAttributeVisitor;
 
+import java.util.ArrayList;
+
 
 public class DefineStreamStatement implements IStream{
     private String streamName;
@@ -25,6 +27,16 @@ public class DefineStreamStatement implements IStream{
     public void addAttributeWithDataType(ISiddhiAppComposite attributeWithDatatype) {
         this.attributeListWithoutAliasesWithDataType.addAttribute(attributeWithDatatype);
     }
+
+    public IAttributeList getAttributes() {
+        return attributeListWithoutAliasesWithDataType;
+    }
+
+//    public ArrayList<String> getColumnNames() {
+//        ArrayList<String> columns = new ArrayList<>();
+//        attributeListWithoutAliasesWithDataType
+//                .getSiddhiAppCompositeAsString().replaceAll("\\s+", "")
+//    }
 
     @Override
     public String getSiddhiAppCompositeAsString() {
