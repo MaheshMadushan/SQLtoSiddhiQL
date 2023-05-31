@@ -7,6 +7,7 @@ import net.sf.jsqlparser.expression.operators.conditional.*;
 import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.select.SubJoin;
 
 public abstract class IEngine {
     protected IEngineExpressionHandleBehavior engineBehavior;
@@ -25,6 +26,8 @@ public abstract class IEngine {
     }
 
     public abstract void handleTable(Table table);
+
+    public abstract void handleJoin(SubJoin subJoin);
 
     public abstract void handleColumn(Column columnName);
 
@@ -77,5 +80,5 @@ public abstract class IEngine {
 
     public abstract void handleAlias(Alias alias);
 
-    public abstract void addToSiddhiApp();
+    public abstract void addToSiddhiApp(String streamName);
 }
