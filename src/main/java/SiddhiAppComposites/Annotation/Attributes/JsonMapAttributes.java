@@ -16,6 +16,7 @@ public class JsonMapAttributes extends IAttributes {
 
     @Override
     public String getSiddhiAppCompositeAsString() {
+        JsonMapAttributesAnnotation.delete(0, JsonMapAttributesAnnotation.length());
         JsonMapAttributesAnnotation
                 .append(JsonMapAttributesSignature.getAnnotationTypeSignature()).append("(");// @attributes(
         Iterator<ISiddhiAppComposite> JsonMapAttributesAnnotationCompositesIterator = annotationComposites.iterator();

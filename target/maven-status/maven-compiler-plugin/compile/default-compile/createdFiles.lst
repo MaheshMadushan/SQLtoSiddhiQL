@@ -19,6 +19,7 @@ SiddhiAppComposites\Annotation\Attributes\IAttributes.class
 SiddhiAppComposites\Annotation\Sink\LogSink.class
 SiddhiAppComposites\Statement\Select\ISelectStatement.class
 Compiler\CustomSelectStatementVisitor.class
+Compiler\CustomJoinItemVisitorImpl.class
 SiddhiAppComposites\Annotation\Map\MapType.class
 Compiler\CustomSelectItemVisitorImpl.class
 SiddhiAppComposites\IAttribute.class
@@ -41,6 +42,7 @@ SiddhiAppComposites\Annotation\Info\IInfo.class
 Engine\IEngineExpressionHandleBehavior.class
 SiddhiAppComposites\Statement\Insert\InsertStatement.class
 SiddhiAppComposites\Statement\FilterExpressionStatement\FilterExpression.class
+SiddhiAppComposites\Statement\JoinStatement\IJoinStatement.class
 Compiler\CustomGroupByElementVisitor.class
 SiddhiAppComposites\Annotation\Sink\LiveSink.class
 SiddhiAppComposites\Annotation\Sink\SinkType.class
@@ -62,6 +64,7 @@ SiddhiAppComposites\SiddhiAppGenerator.class
 SiddhiAppComposites\Annotation\Info\QueryInfo.class
 SiddhiAppComposites\IFunction.class
 SiddhiAppComposites\SelectItem.class
+SiddhiAppComposites\Statement\JoinStatement\JoinStatement.class
 SiddhiAppComposites\StreamStatementAttributeList.class
 SiddhiAppComposites\DefineStreamStatement.class
 Compiler\CustomSelectColumnsVisitor.class

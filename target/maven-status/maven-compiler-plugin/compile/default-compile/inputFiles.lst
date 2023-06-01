@@ -27,6 +27,7 @@ C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\Engine\FromItemHandlingB
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\Compiler\CustomItemListVisitor.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Alias.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Annotation\Source\LiveSource.java
+C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Statement\JoinStatement\JoinStatement.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Annotation\App\IApp.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\IAttribute.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\Compiler\CustomOrderByElementVisitor.java
@@ -59,11 +60,13 @@ C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Attr
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Annotation\IAnnotation.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\ColumnWithDataType.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\ISiddhiAppComposite.java
+C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\Compiler\CustomJoinItemVisitorImpl.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\Compiler\CustomSelectStatementVisitor.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Annotation\Sink\SinkType.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\SupportedAggregationFunctions.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Annotation\Map\IMapComposite.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\SiddhiApp.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Annotation\Source\ISource.java
+C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Statement\JoinStatement\IJoinStatement.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\SiddhiAppComposites\Annotation\AnnotationType.java
 C:\Users\Mahesh\Desktop\fyp\SQLtoSiddhiQL\src\main\java\Compiler\CustomFromItemVisitorImpl.java
