@@ -6,7 +6,7 @@
 
     <groupId>org.mahesh</groupId>
     <artifactId>sqltosiddhiql</artifactId>
-    <version>0.9.10-SNAPSHOT</version>
+    <version>0.10.10-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
