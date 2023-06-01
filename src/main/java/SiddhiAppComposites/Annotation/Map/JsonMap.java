@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class JsonMap extends IMap {
     private final MapType jsonMap = MapType.JSON;
-    private final StringBuilder jsonMapAnnotation = new StringBuilder("");
+    private final StringBuilder jsonMapAnnotation = new StringBuilder();
     private final AnnotationType jsonMapSignature = AnnotationType.MAP;
 
     public JsonMap() {
@@ -16,6 +16,7 @@ public class JsonMap extends IMap {
 
     @Override
     public String getSiddhiAppCompositeAsString() {
+        jsonMapAnnotation.delete(0, jsonMapAnnotation.length());
         jsonMapAnnotation
                 .append(jsonMapSignature.getAnnotationTypeSignature())
                 .append("(").append("type = \"").append(jsonMap.getMapTypeSignature()).append("\""); // @map(type = "json",
