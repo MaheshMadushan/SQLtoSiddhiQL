@@ -1,12 +1,13 @@
-package SiddhiAppComposites;
+package SiddhiAppComposites.Statement.Define;
 
 
+import SiddhiAppComposites.IAttributeList;
+import SiddhiAppComposites.ISiddhiAppComposite;
+import SiddhiAppComposites.StreamStatementAttributeList;
 import SiddhiAppComposites.utilities.visitors.IAttributeVisitor;
 
-import java.util.ArrayList;
 
-
-public class DefineStreamStatement implements IStream{
+public class DefineStreamStatement implements IDefineStreamStatement {
     private String streamName;
     private final IAttributeList attributeListWithoutAliasesWithDataType;
 

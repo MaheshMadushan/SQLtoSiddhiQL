@@ -1,4 +1,4 @@
-package SiddhiAppComposites.Statement.FilterExpressionStatement;
+package SiddhiAppComposites.Statement.From.FilterExpression;
 
 public class FilterExpression implements IFilterExpression {
 

@@ -1,4 +1,4 @@
-package SiddhiAppComposites.Statement.Select;
+package SiddhiAppComposites.Statement.From.Select;
 
 import SiddhiAppComposites.*;
 import SiddhiAppComposites.utilities.visitors.IAttributeVisitor;

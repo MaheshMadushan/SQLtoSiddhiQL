@@ -1,4 +1,4 @@
-package SiddhiAppComposites.Statement.Insert;
+package SiddhiAppComposites.Statement.From.Select.Insert;
 
 import SiddhiAppComposites.ISiddhiAppComposite;
 public interface IInsertStatement extends ISiddhiAppComposite {

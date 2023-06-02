@@ -4,10 +4,9 @@ import Engine.*;
 import Engine.FromItemHandlingBehaviorEngine;
 import Engine.WhereExpressionHandlingBehaviorEngine;
 import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
-import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
+
 import java.util.List;
 
 public class CustomSelectBodyVisitor implements SelectVisitor {
@@ -20,53 +19,52 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
 
     @Override
     public void visit(PlainSelect plainSelect) {
-        FromItem fromItem = plainSelect.getFromItem();
-        if(fromItem != null) {
-            middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehaviorEngine());
-            fromItem.accept(new CustomFromItemVisitorImpl(middleEngine));
-        }
-
         List<SelectItem> selectItemList = plainSelect.getSelectItems();
+        int defineStatementId = 0;
         for(SelectItem selectItem : selectItemList){
-            middleEngine.setExpressionHandlingBehavior(new SelectItemHandlingBehaviorEngine());
+            middleEngine.setExpressionHandlingBehavior(new SelectItemHandlingBehaviorEngine(defineStatementId));
             selectItem.accept(new CustomSelectItemVisitorImpl(middleEngine));
-            if (selectItem.toString().split("\\.").length == 2) {
-                middleEngine.addToSiddhiApp(selectItem.toString().split("\\.")[0]);
-            } else {
-                assert fromItem != null;
-                middleEngine.addToSiddhiApp(((Table) fromItem).getName());
-            }
-
+            middleEngine.finalizeAddingThisComponentAsRequested();
         }
-
         // seem like distinct not supported by siddhiQL
         Distinct distinct = plainSelect.getDistinct();
         if(distinct != null) {
             distinct.getOnSelectItems();
         }
 
-        if (plainSelect.getJoins() != null && plainSelect.getJoins().size() != 0) {
-            SubJoin rightJoin = new SubJoin();
-            rightJoin.setLeft(plainSelect.getJoins().get(0).getRightItem());
-            middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehaviorEngine());
-            rightJoin.accept(new CustomFromItemVisitorImpl(middleEngine));
+        FromItem fromItem = plainSelect.getFromItem(); // should be a table name
+        int id = 0;
+        if(fromItem != null) {
+            middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehaviorEngine(defineStatementId,id));
+            fromItem.accept(new CustomFromItemVisitorImpl(middleEngine));
         }
 
         Expression whereExpression = plainSelect.getWhere();
+        int filterExpressionId = 0;
         if(whereExpression != null) {
-            middleEngine.setExpressionHandlingBehavior(new WhereExpressionHandlingBehaviorEngine());
+            middleEngine.setExpressionHandlingBehavior(new WhereExpressionHandlingBehaviorEngine(id,filterExpressionId));
             whereExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
+            middleEngine.finalizeAddingThisComponentAsRequested();
         }
 
-        List<Join> joins = plainSelect.getJoins(); // not handled yet
+        List<Join> joins = plainSelect.getJoins();
         if(joins != null){
+            int joinStreamStatementId = 0;
             for ( Join join : joins){
+                middleEngine.setExpressionHandlingBehavior(new JoinFromItemHandlingBehaviorEngine(++defineStatementId, joinStreamStatementId));
+                FromItem rightJoinItem = join.getRightItem();
+                rightJoinItem.accept(new CustomJoinFromItemVisitor(middleEngine));
                 List<Expression> onExpressions = (List<Expression>) join.getOnExpressions();
                 if(onExpressions != null){
+                    int onExpressionId = 0;
                     for(Expression onExpression : onExpressions){
-                        onExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
+                        middleEngine
+                                .setExpressionHandlingBehavior(new JoinOnExpressionsHandlingBehaviorEngine(defineStatementId,joinStreamStatementId, onExpressionId));
+                        onExpression.accept(new CustomOnExpressionVisitor(middleEngine));
+                        onExpressionId++;
                     }
                 }
+                joinStreamStatementId++;
             }
         }
 

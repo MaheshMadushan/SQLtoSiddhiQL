@@ -7,45 +7,29 @@ import SiddhiAppComposites.Annotation.Info.IInfo;
 import SiddhiAppComposites.Annotation.Map.IMap;
 import SiddhiAppComposites.Annotation.Sink.ISink;
 import SiddhiAppComposites.Annotation.Source.ISource;
-import SiddhiAppComposites.Statement.FilterExpressionStatement.FilterExpression;
-import SiddhiAppComposites.Statement.FilterExpressionStatement.IFilterExpression;
+import SiddhiAppComposites.Statement.Define.DefineStreamStatement;
+import SiddhiAppComposites.Statement.From.FilterExpression.FilterExpression;
 import SiddhiAppComposites.Statement.From.FromStatement;
-import SiddhiAppComposites.Statement.From.IFromStatement;
-import SiddhiAppComposites.Statement.Insert.IInsertStatement;
-import SiddhiAppComposites.Statement.Insert.InsertStatement;
-import SiddhiAppComposites.Statement.JoinStatement.IJoinStatement;
-import SiddhiAppComposites.Statement.JoinStatement.JoinStatement;
-import SiddhiAppComposites.Statement.Select.SelectStatement;
-import SiddhiAppComposites.utilities.visitors.ColumnNameExtractor.ColumnNameExtractorVisitor;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.statement.select.FromItem;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
+import SiddhiAppComposites.Statement.From.Join.JoinStatement;
+import SiddhiAppComposites.Statement.From.Join.OnExpression.OnExpression;
+import SiddhiAppComposites.Statement.From.Select.Insert.IInsertStatement;
+import SiddhiAppComposites.Statement.From.Select.SelectStatement;
+import java.util.HashMap;
 public class SiddhiApp {
-
-    private final DefineStreamStatement defineInputStreamStatement = new DefineStreamStatement(); // create define input stream
-    private final DefineStreamStatement defineOutputStreamStatement = new DefineStreamStatement(); // create define output stream
-
-    private final DefineStreamStatement defineJoinStreamStatement = new DefineStreamStatement(); // create define input stream
-    private final SelectStatement selectStatement = new SelectStatement(); // select statement
-    private final IFromStatement fromStatement = new FromStatement(); // from statement
-
-    private final IFromStatement joinStatement = new FromStatement(); // from statement
-
-    private final IFilterExpression filterExpression = new FilterExpression(); // filter statement
-    private final IInsertStatement insertStatement = new InsertStatement(); // insert into statement
+    private final HashMap<Integer, DefineStreamStatement> DefineInputStreamStatementsHashMap = new HashMap<>(10);
+    private final HashMap<Integer, DefineStreamStatement> DefineOutputStreamStatementHashMap = new HashMap<>(10);
+    private final HashMap<Integer, OnExpression> onExpressionHashMap = new HashMap<>(10);
+    private final HashMap<Integer, FilterExpression> filterExpressionHashMap = new HashMap<>(10);
+    private final HashMap<Integer, JoinStatement> JoinStatementHashMap = new HashMap<>(10);
+    private final HashMap<Integer, SelectStatement> selectStatementHashMap = new HashMap<>(10);
+    private final HashMap<Integer, FromStatement> fromStatementHashMap = new HashMap<>(10);
+    private final HashMap<Integer, IInsertStatement> insertStatementHashMap = new HashMap<>(10);
     private final App annotationApp; // Annotation @app
     private final ISource annotationSource; // Annotation @source
     private final IAttributes annotationAttributes; // Annotation @attributes
     private final IMap annotationMap; // Annotation @map
     private final ISink annotationSink; // Annotation @sink
     private final IInfo annotationInfo; // Annotation @info
-    private String inputOutputStreamNamePrefix = null; // this is the table name (full qualified or just table name)
-    private String rightJoinTable = null;
-    private ArrayList<String> onExpressions = new ArrayList<String>();
     private final StringBuilder stringSiddhiApp = new StringBuilder();
 
     private SiddhiApp(SiddhiAppBuilder siddhiAppBuilder) {
@@ -56,14 +40,52 @@ public class SiddhiApp {
         this.annotationSink = siddhiAppBuilder.annotationSink;
         this.annotationInfo = siddhiAppBuilder.annotationInfo;
         this.annotationApp = siddhiAppBuilder.annotationApp;
+        fromStatementHashMap.put(0, new FromStatement());
+    }
+    public void addJoinStatement(int defineStreamId, int joinStatementId, Table table){
+        if (JoinStatementHashMap.get(joinStatementId) == null){
+            JoinStatement joinStatement = new JoinStatement();
+            joinStatement.setStreamName(table.getTableName());
+            joinStatement.setAlias(table.getAlias());
+            JoinStatementHashMap.put(joinStatementId, joinStatement);
+        }
+        if(DefineInputStreamStatementsHashMap.get(defineStreamId) == null){
+            DefineStreamStatement defineStreamStatementForJoin = new DefineStreamStatement();
+            defineStreamStatementForJoin.setStreamName(table.getTableName() + "InputStream");
+            DefineInputStreamStatementsHashMap.put(defineStreamId, defineStreamStatementForJoin);
+        }
+        fromStatementHashMap.get(0).setFromStatementComposites(JoinStatementHashMap.get(joinStatementId));
     }
 
-    public void addSymbolToFilterExpression(String symbol){
-        ((FilterExpression) this.filterExpression).addSymbol(symbol);
+    public void addOnExpressionComposites(final int joinStreamId, final int onExpressionId, ISiddhiAppComposite onExpressionComposite){
+        if (onExpressionHashMap.get(onExpressionId) == null){
+            OnExpression onExpression = new OnExpression();
+            onExpressionHashMap.put(onExpressionId, onExpression);
+            JoinStatementHashMap.get(joinStreamId).addJoinStatementComposite(onExpression);
+        }
+        onExpressionHashMap.get(onExpressionId).addOnExpressionComposite(onExpressionComposite);
     }
 
-    public void addSelectItem(ISiddhiAppComposite selectItem){
-        selectStatement.addSelectItem(selectItem);
+    public void addSymbolToFilterExpression(int filterExpressionId, String symbol){
+        if (filterExpressionHashMap.get(filterExpressionId) == null){
+            filterExpressionHashMap.put(filterExpressionId, new FilterExpression());
+        }
+        filterExpressionHashMap.get(filterExpressionId).addSymbol(symbol);
+    }
+    public void addFromStatementComposite(int defineStatementId, int fromStatementId, Table table){
+        if (fromStatementHashMap.get(fromStatementId) == null){
+            fromStatementHashMap.put(fromStatementId, new FromStatement());
+        }
+
+        DefineInputStreamStatementsHashMap.get(defineStatementId).setStreamName(table.getTableName() + "InputStream");
+        fromStatementHashMap.get(fromStatementId).setFromStatementComposites(table);
+    }
+
+    public void addSelectItem(int selectStatementId, ISiddhiAppComposite selectItem){
+        if (selectStatementHashMap.get(selectStatementId) == null){
+            selectStatementHashMap.put(selectStatementId, new SelectStatement());
+        }
+        selectStatementHashMap.get(selectStatementId).addSelectItem(selectItem);
     }
 
     private void addToSourceAnnotationAttributes(ISiddhiAppComposite columnWithDataType){
@@ -71,136 +93,157 @@ public class SiddhiApp {
         annotationAttributes.addAttributeComposite(new KeyValue<>(columnName,columnName)); // add to attribute annotation
     }
 
-    public void addColumnWithDataTypeToOutputStreamDefinition(ISiddhiAppComposite columnWithDataType){
-        defineOutputStreamStatement.addAttributeWithDataType(columnWithDataType);
+    public void addColumnWithDataTypeToOutputStreamDefinition(int inputStreamStatementId, ISiddhiAppComposite columnWithDataType){
+        if (DefineOutputStreamStatementHashMap.get(inputStreamStatementId) == null){
+            DefineOutputStreamStatementHashMap.put(inputStreamStatementId, new DefineStreamStatement());
+        }
+        DefineOutputStreamStatementHashMap.get(inputStreamStatementId).addAttributeWithDataType(columnWithDataType);
         addToSourceAnnotationAttributes(columnWithDataType);
     }
 
-    public void addColumnWithDataTypeToInputStreamDefinition(ISiddhiAppComposite columnWithDataType){
-        defineInputStreamStatement.addAttributeWithDataType(columnWithDataType);
+    public void addFilterExpressionToFromStatement(int fromId, int filterId) {
+        fromStatementHashMap.get(0).setFromStatementComposites(filterExpressionHashMap.get(0));
+    }
+    public void addFromStatementComposite(int defineStatementId, int fromStatementId, ISiddhiAppComposite fromStatementComposite){
+        if (fromStatementHashMap.get(fromStatementId) == null){
+            fromStatementHashMap.put(fromStatementId, new FromStatement());
+        }
+        fromStatementHashMap.get(fromStatementId).setFromStatementComposites(fromStatementComposite);
+    }
+
+    public void addColumnWithDataTypeToInputStreamDefinition(int outputStreamStatementId, ISiddhiAppComposite columnWithDataType){
+        if (DefineInputStreamStatementsHashMap.get(outputStreamStatementId) == null){
+            DefineInputStreamStatementsHashMap.put(outputStreamStatementId, new DefineStreamStatement());
+        }
+        DefineInputStreamStatementsHashMap.get(outputStreamStatementId).addAttributeWithDataType(columnWithDataType);
         addToSourceAnnotationAttributes(columnWithDataType);
     }
 
-    public void addColumnWithDataTypeToJoinStreamDefinition(ISiddhiAppComposite columnWithDataType){
-        defineJoinStreamStatement.addAttributeWithDataType(columnWithDataType);
-        addToSourceAnnotationAttributes(columnWithDataType);
-    }
+//    public void addColumnWithDataTypeToJoinStreamDefinition(ISiddhiAppComposite columnWithDataType){
+////        defineJoinStreamStatement.addAttributeWithDataType(columnWithDataType);
+////        addToSourceAnnotationAttributes(columnWithDataType);
+//    }
 
-    public void setStreamNamePrefix(String inputOutputStreamNamePrefix) {
-        this.inputOutputStreamNamePrefix = inputOutputStreamNamePrefix;
-    }
+//    public void setStreamNamePrefix(String inputOutputStreamNamePrefix) {
+//        this.inputOutputStreamNamePrefix = inputOutputStreamNamePrefix;
+//    }
 
-    public void setRightJoin(String rightJoinTable) {
-        this.rightJoinTable = rightJoinTable;
-    }
+//    public void setRightJoinTable(String rightJoinTable) {
+//        this.rightJoinTable = rightJoinTable;
+//    }
 
-    public void addOnExpressions(String column) {
-        this.onExpressions.add(column);
-    }
-    public String getTableName() {
-        return inputOutputStreamNamePrefix;
-    }
+//    public void addOnExpressions(String column) {
+//        this.onExpressions.add(column);
+//    }
+//    public String getTableName() {
+//        return inputOutputStreamNamePrefix;
+//    }
 
-    public String getRightJoinTable() { return rightJoinTable; }
-    public HashSet<String> getColumnNames() {
-        ColumnNameExtractorVisitor iAttributeVisitor = new ColumnNameExtractorVisitor();
-        defineInputStreamStatement.extractColumnNames(iAttributeVisitor); // has all column names in select statement including where clause
-        return iAttributeVisitor.getColumnNames();
-    }
+//    public String getRightJoinTable() { return rightJoinTable; }
+//    public HashSet<String> getColumnNames() {
+//        ColumnNameExtractorVisitor iAttributeVisitor = new ColumnNameExtractorVisitor();
+//        defineInputStreamStatement.extractColumnNames(iAttributeVisitor); // has all column names in select statement including where clause
+//        return iAttributeVisitor.getColumnNames();
+//    }
 
     public String getSiddhiAppStringRepresentation(){
+        return "";
         // Annotations
             // app name
-        stringSiddhiApp.append(annotationApp.getSiddhiAppCompositeAsString());
-            // source
-         annotationMap.addMapComposite(annotationAttributes);
-        KeyValue<String, String> tableNameSourceComposite = new KeyValue<>("table.name", getTableName());
-        annotationSource.addSourceComposite(tableNameSourceComposite);
-        annotationSource.addSourceComposite(annotationMap);
-        stringSiddhiApp.append(annotationSource.getSiddhiAppCompositeAsString());
-        annotationSource.deleteSourceComposite(tableNameSourceComposite);
-        annotationSource.deleteSourceComposite(annotationMap);
-        defineInputStreamStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // IPStream set I/P Stream Name
-        stringSiddhiApp.append(defineInputStreamStatement.getSiddhiAppCompositeAsString());
-        if (rightJoinTable != null) {
-            KeyValue<String, String> rightJointableNameSourceComposite = new KeyValue<>("table.name", getRightJoinTable());
-            annotationSource.addSourceComposite(rightJointableNameSourceComposite);
-            annotationSource.addSourceComposite(annotationMap);
-            stringSiddhiApp.append(annotationSource.getSiddhiAppCompositeAsString());
-
-            defineJoinStreamStatement.setStreamName(rightJoinTable + "InputStream");
-            stringSiddhiApp.append(defineJoinStreamStatement.getSiddhiAppCompositeAsString());
-        }
-
-        // Annotations
-            // sink
-        stringSiddhiApp.append(annotationSink.getSiddhiAppCompositeAsString());
-
-        defineOutputStreamStatement.setStreamName(inputOutputStreamNamePrefix + "OutputStream"); // OPStream set O/P Stream Name
-        stringSiddhiApp.append(defineOutputStreamStatement.getSiddhiAppCompositeAsString());
-        // Annotations
-            // info
-        stringSiddhiApp.append(annotationInfo.getSiddhiAppCompositeAsString());
-
-        if (rightJoinTable != null) {
-            fromStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream#window.length(3) as " + inputOutputStreamNamePrefix );
-            fromStatement.setFromStatementComposite(filterExpression); // From statement filter expression
-
-            joinStatement.setStreamName(rightJoinTable + "InputStream#window.length(3) as " + rightJoinTable );
-            joinStatement.setFromStatementComposite(filterExpression);
-
-            stringSiddhiApp.append(fromStatement.getSiddhiAppCompositeAsString());
-            String joinInputStream = joinStatement.getSiddhiAppCompositeAsString().replaceAll("from", "join");
-            stringSiddhiApp.append(joinInputStream);
-            stringSiddhiApp.append("on ").append(onExpressions.get(0)).append(" == ").append(onExpressions.get(1)).append("\n");
-
-
-            List<ISiddhiAppComposite> selectFields = ((SelectStatementAttributeList) selectStatement.getSelectItems())
-                    .getAttributesWithOrWithoutAliases();
-            ArrayList<String> fieldsInColumns = new ArrayList<>();
-
-            for (ISiddhiAppComposite selectField : selectFields) {
-                String select = selectField
-                        .getSiddhiAppCompositeAsString().replaceAll("\\s+", "");
-
-                List<ISiddhiAppComposite> columnsInInputStream = ((StreamStatementAttributeList) defineInputStreamStatement
-                        .getAttributes()).getAttributeListWithoutAliasesWithDataType();
-                for (ISiddhiAppComposite iSiddhiAppComposite : columnsInInputStream) {
-                    String column = ((ColumnWithDataType) iSiddhiAppComposite).getColumnName();
-                    if (select.equals(column)) {
-                        fieldsInColumns.add(inputOutputStreamNamePrefix + "." + select);
-                    }
-                }
-
-                List<ISiddhiAppComposite> columnsInJoinStream = ((StreamStatementAttributeList) defineJoinStreamStatement
-                        .getAttributes()).getAttributeListWithoutAliasesWithDataType();
-                for (ISiddhiAppComposite iSiddhiAppComposite : columnsInJoinStream) {
-                    String column = ((ColumnWithDataType) iSiddhiAppComposite).getColumnName();
-                    if (select.equals(column)) {
-                        fieldsInColumns.add(rightJoinTable + "." + select);
-                    }
-                }
-            }
-            StringBuilder allFields = new StringBuilder("select ");
-
-            for (String str : fieldsInColumns) {
-                allFields.append(str).append(", ");
-            }
-            allFields.delete(allFields.length() - 2, allFields.length());
-            allFields.append("\n");
-            stringSiddhiApp.append(allFields);
-
-        } else {
-            fromStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // From Statement set I/P Stream Name
-            fromStatement.setFromStatementComposite(filterExpression); // From statement filter expression
-            stringSiddhiApp.append(fromStatement.getSiddhiAppCompositeAsString());
-            stringSiddhiApp.append(selectStatement.getSiddhiAppCompositeAsString());
-        }
-
-        insertStatement.setOutputStreamName(inputOutputStreamNamePrefix + "OutputStream"); // insert statement set O/P Stream name
-        stringSiddhiApp.append(insertStatement.getSiddhiAppCompositeAsString());
-        return stringSiddhiApp.toString();
+//        stringSiddhiApp.append(annotationApp.getSiddhiAppCompositeAsString());
+//            // source
+//         annotationMap.addMapComposite(annotationAttributes);
+//        KeyValue<String, String> tableNameSourceComposite = new KeyValue<>("table.name", getTableName());
+//        annotationSource.addSourceComposite(tableNameSourceComposite);
+//        annotationSource.addSourceComposite(annotationMap);
+//        stringSiddhiApp.append(annotationSource.getSiddhiAppCompositeAsString());
+//        annotationSource.deleteSourceComposite(tableNameSourceComposite);
+//        annotationSource.deleteSourceComposite(annotationMap);
+//        defineInputStreamStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // IPStream set I/P Stream Name
+//        stringSiddhiApp.append(defineInputStreamStatement.getSiddhiAppCompositeAsString());
+//        if (rightJoinTable != null) {
+//            KeyValue<String, String> rightJointableNameSourceComposite = new KeyValue<>("table.name", getRightJoinTable());
+//            annotationSource.addSourceComposite(rightJointableNameSourceComposite);
+//            annotationSource.addSourceComposite(annotationMap);
+//            stringSiddhiApp.append(annotationSource.getSiddhiAppCompositeAsString());
+//
+//            defineJoinStreamStatement.setStreamName(rightJoinTable + "InputStream");
+//            stringSiddhiApp.append(defineJoinStreamStatement.getSiddhiAppCompositeAsString());
+//        }
+//
+//        // Annotations
+//            // sink
+//        stringSiddhiApp.append(annotationSink.getSiddhiAppCompositeAsString());
+//
+//        defineOutputStreamStatement.setStreamName(inputOutputStreamNamePrefix + "OutputStream"); // OPStream set O/P Stream Name
+//        stringSiddhiApp.append(defineOutputStreamStatement.getSiddhiAppCompositeAsString());
+//        // Annotations
+//            // info
+//        stringSiddhiApp.append(annotationInfo.getSiddhiAppCompositeAsString());
+//
+//        if (rightJoinTable != null) {
+//            fromStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream#window.length(3) as " + inputOutputStreamNamePrefix );
+//            fromStatement.setFromStatementComposites(filterExpression); // From statement filter expression
+//
+//            joinStatement.setStreamName(rightJoinTable + "InputStream#window.length(3) as " + rightJoinTable );
+//            joinStatement.setFromStatementComposites(filterExpression);
+//
+//            stringSiddhiApp.append(fromStatement.getSiddhiAppCompositeAsString());
+//            String joinInputStream = joinStatement.getSiddhiAppCompositeAsString().replaceAll("from", "join");
+//            stringSiddhiApp.append(joinInputStream);
+//            stringSiddhiApp.append("on ").append(onExpressions.get(0)).append(" == ").append(onExpressions.get(1)).append("\n");
+//
+//
+//            List<ISiddhiAppComposite> selectFields = ((SelectStatementAttributeList) selectStatement.getSelectItems())
+//                    .getAttributesWithOrWithoutAliases();
+//            ArrayList<String> fieldsInColumns = new ArrayList<>();
+//
+//            for (ISiddhiAppComposite selectField : selectFields) {
+//                String select = selectField
+//                        .getSiddhiAppCompositeAsString().replaceAll("\\s+", "");
+//
+//                List<ISiddhiAppComposite> columnsInInputStream = ((StreamStatementAttributeList) defineInputStreamStatement
+//                        .getAttributes()).getAttributeListWithoutAliasesWithDataType();
+//                for (ISiddhiAppComposite iSiddhiAppComposite : columnsInInputStream) {
+//                    String column = ((ColumnWithDataType) iSiddhiAppComposite).getColumnName();
+//                    if (select.equals(column)) {
+//                        fieldsInColumns.add(inputOutputStreamNamePrefix + "." + select);
+//                    }
+//                }
+//
+//                List<ISiddhiAppComposite> columnsInJoinStream = ((StreamStatementAttributeList) defineJoinStreamStatement
+//                        .getAttributes()).getAttributeListWithoutAliasesWithDataType();
+//                for (ISiddhiAppComposite iSiddhiAppComposite : columnsInJoinStream) {
+//                    String column = ((ColumnWithDataType) iSiddhiAppComposite).getColumnName();
+//                    if (select.equals(column)) {
+//                        fieldsInColumns.add(rightJoinTable + "." + select);
+//                    }
+//                }
+//            }
+//            StringBuilder allFields = new StringBuilder("select ");
+//
+//            for (String str : fieldsInColumns) {
+//                allFields.append(str).append(", ");
+//            }
+//            allFields.delete(allFields.length() - 2, allFields.length());
+//            allFields.append("\n");
+//            stringSiddhiApp.append(allFields);
+//
+//        } else {
+//            fromStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // From Statement set I/P Stream Name
+//            fromStatement.setFromStatementComposites(filterExpression); // From statement filter expression
+//            stringSiddhiApp.append(fromStatement.getSiddhiAppCompositeAsString());
+//            stringSiddhiApp.append(selectStatement.getSiddhiAppCompositeAsString());
+//        }
+//
+//        insertStatement.setOutputStreamName(inputOutputStreamNamePrefix + "OutputStream"); // insert statement set O/P Stream name
+//        stringSiddhiApp.append(insertStatement.getSiddhiAppCompositeAsString());
+//        return stringSiddhiApp.toString();
     }
+
+//    public void initiateDefineStatementForJoin(SiddhiAppComposites.Table table) {
+//    }
+
 
     // Bloch’s Builder pattern
     public static class SiddhiAppBuilder{

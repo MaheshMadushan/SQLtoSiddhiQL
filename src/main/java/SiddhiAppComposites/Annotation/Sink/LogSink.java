@@ -16,6 +16,7 @@ public class LogSink extends ISink {
     @Override
     public String getSiddhiAppCompositeAsString() {
 
+        sinkAnnotation.delete(0, sinkAnnotation.length());
         sinkAnnotation
                 .append(sinkSignature.getAnnotationTypeSignature())
                 .append("(")

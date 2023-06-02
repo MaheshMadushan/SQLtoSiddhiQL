@@ -5,16 +5,15 @@ import Engine.IEngine;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.*;
 
-public class CustomJoinItemVisitorImpl implements FromItemVisitor{
-    private IEngine middleEngine;
+public class CustomJoinFromItemVisitor implements FromItemVisitor {
+    private final IEngine middleEngine;
 
-    public CustomJoinItemVisitorImpl(IEngine middleEngine) {
+    public CustomJoinFromItemVisitor(IEngine middleEngine) {
         this.middleEngine = middleEngine;
     }
 
     @Override
     public void visit(Table table) {
-        middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehaviorEngine());
         middleEngine.handleTable(table);
     }
 

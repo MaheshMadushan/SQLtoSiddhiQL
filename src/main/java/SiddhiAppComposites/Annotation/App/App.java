@@ -4,7 +4,7 @@ import SiddhiAppComposites.Annotation.AnnotationType;
 
 public class App implements IApp {
     private final AnnotationType annotationType = AnnotationType.APP;
-    private final StringBuilder annotationAppString =  new StringBuilder("");
+    private final StringBuilder annotationAppString =  new StringBuilder();
     private String siddhiApplicationName = "defaultSiddhiApp";
 
     public void setSiddhiApplicationName(String siddhiApplicationName){
@@ -13,6 +13,7 @@ public class App implements IApp {
 
     @Override
     public String getSiddhiAppCompositeAsString() {
+        annotationAppString.delete(0, annotationAppString.length());
         annotationAppString.append(annotationType.getAnnotationTypeSignature())
                 .append(":")
                 .append("name")

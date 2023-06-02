@@ -20,13 +20,10 @@ public class JsonMap extends IMap {
         jsonMapAnnotation
                 .append(jsonMapSignature.getAnnotationTypeSignature())
                 .append("(").append("type = \"").append(jsonMap.getMapTypeSignature()).append("\""); // @map(type = "json",
-        Iterator<ISiddhiAppComposite> sourceAnnotationCompositesIterator = annotationComposites.iterator();
 
-        while(sourceAnnotationCompositesIterator.hasNext()){
-            if(sourceAnnotationCompositesIterator.hasNext()){
-                jsonMapAnnotation.append(",");
-            }
-            jsonMapAnnotation.append(sourceAnnotationCompositesIterator.next().getSiddhiAppCompositeAsString());
+        for (ISiddhiAppComposite annotationComposite : annotationComposites) {
+            jsonMapAnnotation.append(",");
+            jsonMapAnnotation.append(annotationComposite.getSiddhiAppCompositeAsString());
         }
 
         jsonMapAnnotation

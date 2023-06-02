@@ -16,6 +16,7 @@ public class Symbol implements ISiddhiAppComposite{
     public enum Symbols{
         ADDITION("+"),
         SUBTRACTION("-"),
+        EQUALS_TO("=="),
         DIVISION("/"),
         MULTIPLICATION("*"),
         AND("AND"),

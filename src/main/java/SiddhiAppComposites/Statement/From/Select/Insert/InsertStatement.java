@@ -1,4 +1,4 @@
-package SiddhiAppComposites.Statement.Insert;
+package SiddhiAppComposites.Statement.From.Select.Insert;
 
 public class InsertStatement implements IInsertStatement {
 

@@ -31,7 +31,7 @@ public class App {
                         new QueryInfo().setQueryName("SQL-SiddhiQL-dev")
                 );
 
-        System.out.println(Arrays.toString(siddhiApp.getColumnNames().toArray()));
+//        System.out.println(Arrays.toString(siddhiApp.getColumnNames().toArray()));
 
     }
 

@@ -136,8 +136,13 @@ public class SQLtoSiddhiQLCompilerTest {
 
     @Test
     void generateSiddhiAppForSQLSelectStatementWithJoin() throws JSQLParserException {
-        String generalProjectionSQL = "SELECT customers.first_name@string , addresses.city@string FROM customers JOIN addresses ON customers.id@int = addresses.customer_id@int";
-
+        String generalProjectionSQL = "SELECT \n" +
+                "\tPerson.FirstName, Person.LastName, \tEmployee.BirthDate, Employee.HireDate, \tEmailAddress.EmailAddress\n" +
+                "FROM HumanResources.Employee\n" +
+                "JOIN Person.Person\n" +
+                "ON Employee.BusinessEntityID = Person.BusinessEntityID\n" +
+                "JOIN Person.EmailAddress\n" +
+                "ON Person.BusinessEntityID = EmailAddress.BusinessEntityID";
         siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
                 "@source(type = \"live\",sql.query = \"SELECT customers.first_name , addresses.city FROM customers JOIN addresses ON customers.id = addresses.customer_id\",table.name = \"customers\",@map(type = \"json\",@attributes(first_name = \"first_name\",id = \"id\",city = \"city\",customer_id = \"customer_id\")))\n" +
                 "define stream customersInputStream(first_name string,id int);\n" +
@@ -181,8 +186,8 @@ public class SQLtoSiddhiQLCompilerTest {
     @Disabled
     void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndOrderByClauseWithASCAndDescTest() throws JSQLParserException {
 
-        String generalProjectionSQL = "SELECT * FROM Customers " +
-                "ORDER BY Country ASC, CustomerName DESC;";
+        String generalProjectionSQL = "SELECT Customers.Country@string, Customers.id@int, Country.Name@int FROM Customers " +
+                "JOIN Country ON Customers.Country@string = Country.Name@string;";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
         assertEquals(siddhiAppDefinition,siddhiApp);

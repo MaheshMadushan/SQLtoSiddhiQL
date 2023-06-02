@@ -14,7 +14,6 @@ public class CustomFromItemVisitorImpl implements FromItemVisitor {
 
     @Override
     public void visit(Table table) {
-        middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehaviorEngine());
         middleEngine.handleTable(table);
     }
 
@@ -25,8 +24,7 @@ public class CustomFromItemVisitorImpl implements FromItemVisitor {
 
     @Override
     public void visit(SubJoin subJoin) {
-        middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehaviorEngine());
-        middleEngine.handleJoin(subJoin);
+//        middleEngine.setExpressionHandlingBehavior(new FromItemHandlingBehaviorEngine());
     }
 
     @Override
