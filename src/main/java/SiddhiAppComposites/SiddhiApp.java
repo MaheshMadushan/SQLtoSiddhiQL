@@ -118,9 +118,9 @@ public class SiddhiApp {
         stringSiddhiApp.append(annotationApp.getSiddhiAppCompositeAsString());
             // source
          annotationMap.addMapComposite(annotationAttributes);
-         if(rightJoinTable != null) {
+//         if(rightJoinTable != null) {
              annotationSource.setTableName(inputOutputStreamNamePrefix);
-         }
+//         }
 //        annotationSource.addSourceComposite(new KeyValue<>("table.name", inputOutputStreamNamePrefix));
         annotationSource.addSourceComposite(annotationMap);
          String sourceString = annotationSource.getSiddhiAppCompositeAsString();
