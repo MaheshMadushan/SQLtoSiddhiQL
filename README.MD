@@ -1,6 +1,7 @@
 
 
 
+[![Java CI with Maven](https://github.com/MaheshMadushan/SQLtoSiddhiQL/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/MaheshMadushan/SQLtoSiddhiQL/actions/workflows/maven.yml)
 ## High Level Architecture
 
 ![plot](./src/main/java/Blank%20diagram%20-%20Page%201.png)
