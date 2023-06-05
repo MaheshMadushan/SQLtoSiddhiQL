@@ -69,6 +69,10 @@ public class SiddhiApp {
         selectStatement.addSelectItem(selectItem);
     }
 
+    public void addSelectItem(String streamName, ISiddhiAppComposite selectItem){
+        selectStatement.addSelectItem(streamName, selectItem);
+    }
+
     private void addToSourceAnnotationAttributes(ISiddhiAppComposite columnWithDataType){
         String columnName = ((ColumnWithDataType) columnWithDataType).getColumnName();
         annotationAttributes.addAttributeComposite(new KeyValue<>(columnName,columnName)); // add to attribute annotation
@@ -161,40 +165,41 @@ public class SiddhiApp {
             stringSiddhiApp.append("on ").append(onExpressions.get(0)).append(" == ").append(onExpressions.get(1)).append("\n");
 
 
-            List<ISiddhiAppComposite> selectFields = ((SelectStatementAttributeList) selectStatement.getSelectItems())
-                    .getAttributesWithOrWithoutAliases();
-            ArrayList<String> fieldsInColumns = new ArrayList<>();
+//            List<ISiddhiAppComposite> selectFields = ((SelectStatementAttributeList) selectStatement.getSelectItems())
+//                    .getAttributesWithOrWithoutAliases();
+//            ArrayList<String> fieldsInColumns = new ArrayList<>();
+//
+//            for (int j = 0; j < selectFields.size(); j++) {
+//                String select = selectFields.get(j)
+//                        .getSiddhiAppCompositeAsString().replaceAll("\\s+", "");
+//
+//                List<ISiddhiAppComposite> columnsInInputStream = ((StreamStatementAttributeList) defineInputStreamStatement
+//                        .getAttributes()).getAttributeListWithoutAliasesWithDataType();
+//                for (int i = 0; i < columnsInInputStream.size(); i++) {
+//                    String column = ((ColumnWithDataType) columnsInInputStream.get(i)).getColumnName();
+//                    if (select.equals(column)) {
+//                        fieldsInColumns.add(inputOutputStreamNamePrefix + "." + select);
+//                    }
+//                }
+//
+//                List<ISiddhiAppComposite> columnsInJoinStream = ((StreamStatementAttributeList) defineJoinStreamStatement
+//                        .getAttributes()).getAttributeListWithoutAliasesWithDataType();
+//                for (int i = 0; i < columnsInJoinStream.size(); i++) {
+//                    String column = ((ColumnWithDataType) columnsInJoinStream.get(i)).getColumnName();
+//                    if (select.equals(column)) {
+//                        fieldsInColumns.add(rightJoinTable + "." + select);
+//                    }
+//                }
+//            }
+//            StringBuilder allFields = new StringBuilder("select ");
 
-            for (int j = 0; j < selectFields.size(); j++) {
-                String select = selectFields.get(j)
-                        .getSiddhiAppCompositeAsString().replaceAll("\\s+", "");
-
-                List<ISiddhiAppComposite> columnsInInputStream = ((StreamStatementAttributeList) defineInputStreamStatement
-                        .getAttributes()).getAttributeListWithoutAliasesWithDataType();
-                for (int i = 0; i < columnsInInputStream.size(); i++) {
-                    String column = ((ColumnWithDataType) columnsInInputStream.get(i)).getColumnName();
-                    if (select.equals(column)) {
-                        fieldsInColumns.add(inputOutputStreamNamePrefix + "." + select);
-                    }
-                }
-
-                List<ISiddhiAppComposite> columnsInJoinStream = ((StreamStatementAttributeList) defineJoinStreamStatement
-                        .getAttributes()).getAttributeListWithoutAliasesWithDataType();
-                for (int i = 0; i < columnsInJoinStream.size(); i++) {
-                    String column = ((ColumnWithDataType) columnsInJoinStream.get(i)).getColumnName();
-                    if (select.equals(column)) {
-                        fieldsInColumns.add(rightJoinTable + "." + select);
-                    }
-                }
-            }
-            StringBuilder allFields = new StringBuilder("select ");
-
-            for (String str : fieldsInColumns) {
-                allFields.append(str).append(", ");
-            }
-            allFields.delete(allFields.length() - 2, allFields.length());
-            allFields.append("\n");
-            stringSiddhiApp.append(allFields);
+//            for (String str : fieldsInColumns) {
+//                allFields.append(str).append(", ");
+//            }
+//            allFields.delete(allFields.length() - 2, allFields.length());
+//            allFields.append("\n");
+//            stringSiddhiApp.append(allFields);
+            stringSiddhiApp.append(selectStatement.getSiddhiAppCompositeAsStringInJoins());
 
         } else {
             fromStatement.setStreamName(inputOutputStreamNamePrefix + "InputStream"); // From Statement set I/P Stream Name
