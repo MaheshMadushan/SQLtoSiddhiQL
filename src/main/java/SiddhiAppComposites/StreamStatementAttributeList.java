@@ -16,6 +16,11 @@ public class StreamStatementAttributeList implements IAttributeList{
         return attributeListWithoutAliasesWithDataType;
     }
 
+    @Override
+    public String generateString() {
+        return null;
+    }
+
     public void addAttribute(ISiddhiAppComposite attributeWithDataType){
         // TODO : create a hashmap and avoid O(n) comparisons
         for(int indexOfAttributeWithDataType = 0; indexOfAttributeWithDataType < attributeListWithoutAliasesWithDataType.size() ; indexOfAttributeWithDataType++){
@@ -38,6 +43,11 @@ public class StreamStatementAttributeList implements IAttributeList{
         }
         this.attributeListWithoutAliasesWithDataType
                 .add(attributeWithDataType);
+    }
+
+    @Override
+    public void addAttribute(String streamName, ISiddhiAppComposite attribute) {
+        //...
     }
 
     @Override
