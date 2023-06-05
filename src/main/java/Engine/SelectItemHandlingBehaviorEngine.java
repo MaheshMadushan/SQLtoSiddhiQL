@@ -356,7 +356,8 @@ public class SelectItemHandlingBehaviorEngine extends IEngineExpressionHandleBeh
             }
             siddhiApp.addColumnWithDataTypeToOutputStreamDefinition(new ColumnWithDataType(siddhiColumn, getDataType()));
         }
-        siddhiApp.addSelectItem(selectItem); // add column with data type to select statement
+        siddhiApp.addSelectItem(selectItem);
+        siddhiApp.addSelectItem(streamName, selectItem);
     }
 
     public void addToSiddhiApp(Boolean joinStream) {
