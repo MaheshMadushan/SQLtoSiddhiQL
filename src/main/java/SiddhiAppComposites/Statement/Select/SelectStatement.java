@@ -23,6 +23,10 @@ public class SelectStatement implements ISelectStatement {
         selectItemsList.addAttribute(selectItem);
     }
 
+    public void addSelectItem(String streamName, ISiddhiAppComposite selectItem){
+        selectItemsList.addAttribute(streamName, selectItem);
+    }
+
     public IAttributeList getSelectItems(){
         return selectItemsList;
     }
@@ -30,5 +34,9 @@ public class SelectStatement implements ISelectStatement {
     @Override
     public String getSiddhiAppCompositeAsString() {
         return "select " + selectItemsList.getSiddhiAppCompositeAsString() + "\n";
+    }
+
+    public String getSiddhiAppCompositeAsStringInJoins() {
+        return "select " + selectItemsList.generateString() + "\n";
     }
 }
