@@ -11,6 +11,8 @@ import SiddhiAppComposites.Statement.FilterExpressionStatement.FilterExpression;
 import SiddhiAppComposites.Statement.FilterExpressionStatement.IFilterExpression;
 import SiddhiAppComposites.Statement.From.FromStatement;
 import SiddhiAppComposites.Statement.From.IFromStatement;
+import SiddhiAppComposites.Statement.GroupBy.GroupByStatement;
+import SiddhiAppComposites.Statement.GroupBy.IGroupByStatement;
 import SiddhiAppComposites.Statement.Insert.IInsertStatement;
 import SiddhiAppComposites.Statement.Insert.InsertStatement;
 import SiddhiAppComposites.Statement.JoinStatement.IJoinStatement;
@@ -23,6 +25,7 @@ import net.sf.jsqlparser.statement.select.FromItem;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 public class SiddhiApp {
 
@@ -32,6 +35,8 @@ public class SiddhiApp {
     private final DefineStreamStatement defineJoinStreamStatement = new DefineStreamStatement(); // create define input stream
     private final SelectStatement selectStatement = new SelectStatement(); // select statement
     private final IFromStatement fromStatement = new FromStatement(); // from statement
+
+    private final IGroupByStatement groupByStatement = new GroupByStatement();
 
     private final IFromStatement joinStatement = new FromStatement(); // from statement
 
@@ -91,6 +96,10 @@ public class SiddhiApp {
     public void addColumnWithDataTypeToJoinStreamDefinition(ISiddhiAppComposite columnWithDataType){
         defineJoinStreamStatement.addAttributeWithDataType(columnWithDataType);
         addToSourceAnnotationAttributes(columnWithDataType);
+    }
+
+    public void addGroupByExpression(String column){
+        groupByStatement.addAttribute(column);
     }
 
     public void setStreamNamePrefix(String inputOutputStreamNamePrefix) {
@@ -212,6 +221,10 @@ public class SiddhiApp {
 
 
         insertStatement.setOutputStreamName(inputOutputStreamNamePrefix + "OutputStream"); // insert statement set O/P Stream name
+        if (groupByStatement.containsAttributes()) {
+            groupByStatement.setColumnWithStreamMap(selectStatement.getAttributesListWithStreamName());
+            stringSiddhiApp.append(groupByStatement.getSiddhiAppCompositeAsString());
+        }
         stringSiddhiApp.append(insertStatement.getSiddhiAppCompositeAsString());
         return stringSiddhiApp.toString();
     }
