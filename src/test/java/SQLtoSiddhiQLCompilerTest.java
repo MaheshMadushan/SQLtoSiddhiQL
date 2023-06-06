@@ -137,22 +137,9 @@ public class SQLtoSiddhiQLCompilerTest {
 
     @Test
     void generateSiddhiAppForSQLSelectStatementWithJoin() throws JSQLParserException {
-//        select  customers.first_name, addresses.city on customers.id = addresses.customer_id;
         String generalProjectionSQL = "SELECT order.orderId@string, item.itemType@string, item.unitPrice@float, " +
                 "order.totalRevenue@float, order.totalCost@float, order.totalProfit@float FROM item JOIN order " +
                 "ON item.itemType@string=order.itemType@string;";
-//        String generalProjectionSQL = "SELECT customers.first_name@string , addresses.city@string FROM customers JOIN addresses ON customers.id@int = addresses.customer_id@int";
-//        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
-//                "@source(type = \"live\",sql.query = \"SELECT a FROM table JOIN table90 ON table.id = table90.id\",@map(type = \"json\",@attributes(a = \"a\")))\n" +
-//                "define stream tableInputStream(a string);\n" +
-//                "@sink(type = \"log\")\n" +
-//                "define stream tableOutputStream(a string);\n" +
-//                "@info(name = \"default-name\")\n" +
-//                "from tableInputStream join table90\n" +
-//                "on table.id == table90.id\n" +
-//                "select  a  \n" +
-//                "insert into tableOutputStream;\n";
-
         siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
                 "@source(type = \"live\",table.name = \"item\", sql.query = \"SELECT order.orderId, item.itemType, item.unitPrice, order.totalRevenue, order.totalCost, order.totalProfit FROM item JOIN order ON item.itemType=order.itemType;\",@map(type = \"json\",@attributes(totalRevenue = \"totalRevenue\",totalProfit = \"totalProfit\",itemType = \"itemType\",unitPrice = \"unitPrice\",totalCost = \"totalCost\",orderId = \"orderId\")))\n" +
                 "define stream itemInputStream(itemType string,unitPrice float);\n" +
@@ -216,6 +203,7 @@ public class SQLtoSiddhiQLCompilerTest {
                 "ORDER BY COUNT(CustomerID@string) DESC;";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        System.out.println(siddhiApp.getSiddhiAppStringRepresentation());
         assertEquals(siddhiAppDefinition,siddhiApp);
     }
 
@@ -223,10 +211,90 @@ public class SQLtoSiddhiQLCompilerTest {
     @Disabled
     void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndGroupByClauseWithASCAndDescTest() throws JSQLParserException {
 
-        String generalProjectionSQL = "SELECT COUNT(CustomerID), Country FROM Customers GROUP BY Country ORDER BY COUNT(CustomerID) DESC ";
+        String generalProjectionSQL = "SELECT COUNT(CustomerID@string), Country@string FROM Customers GROUP BY Country ORDER BY COUNT(CustomerID) DESC ";
+
+//        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
+//                "@source(type = \"live\",table.name = \"table\", sql.query = \"SELECT a, b, c, d, e FROM table WHERE a = 90 AND b > 98 OR (a > b XOR e) XOR (a + b > b)\",@map(type = \"json\",@attributes(a = \"a\",b = \"b\",c = \"c\",d = \"d\",e = \"e\")))\n" +
+//                "define stream tableInputStream(a int,b int,c float,d string,e bool);\n" +
+//                "@sink(type = \"log\")\ndefine stream tableOutputStream(a int,b int,c float,d string,e bool);\n" +
+//                "@info(name = \"default-name\")\nfrom tableInputStream[a == 90 AND b > 98 OR ( a > b XOR e ) XOR ( a + b > b ) ]\n" +
+//                "select  a  , b  , c  , d  , e  \n" +
+//                "insert into tableOutputStream;\n";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        System.out.println(siddhiApp.getSiddhiAppStringRepresentation());
         assertEquals(siddhiAppDefinition,siddhiApp);
+    }
+
+    @Test
+    @Disabled
+    void generateSiddhiAppForSimpleSQLSelectStatementWithGroupBy() throws JSQLParserException {
+
+        String generalProjectionSQL = "SELECT CustomerID@string, Country@string FROM Customers GROUP BY Country@string, CustomerID@string";
+
+        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
+                "@source(type = \"live\",table.name = \"Customers\", sql.query = \"SELECT CustomerID, Country FROM Customers GROUP BY Country, CustomerID\",@map(type = \"json\",@attributes(Country = \"Country\",CustomerID = \"CustomerID\")))\n" +
+                "define stream CustomersInputStream(CustomerID string,Country string);\n" +
+                "@sink(type = \"log\")\n" +
+                "define stream CustomersOutputStream(CustomerID string,Country string);\n" +
+                "@info(name = \"default-name\")\n" +
+                "from CustomersInputStream\n" +
+                "select  CustomerID  , Country  \n" +
+                "group by Customers.Country, Customers.CustomerID\n" +
+                "insert into CustomersOutputStream;\n";
+
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+//        System.out.println(siddhiApp.getSiddhiAppStringRepresentation());
+        assertEquals(siddhiAppDefinition,siddhiApp.getSiddhiAppStringRepresentation());
+    }
+
+    @Test
+    void generateSiddhiAppForSQLSelectStatementWithJoinAndGroupBy() throws JSQLParserException {
+        String generalProjectionSQL = "SELECT order.orderId@string, item.itemType@string, item.unitPrice@float, " +
+                "order.totalRevenue@float, order.totalCost@float, order.totalProfit@float FROM item JOIN order " +
+                "ON item.itemType@string=order.itemType@string GROUP BY item.itemType@string;";
+
+        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
+                "@source(type = \"live\",table.name = \"item\", sql.query = \"SELECT order.orderId, item.itemType, item.unitPrice, order.totalRevenue, order.totalCost, order.totalProfit FROM item JOIN order ON item.itemType=order.itemType GROUP BY item.itemType;\",@map(type = \"json\",@attributes(totalRevenue = \"totalRevenue\",totalProfit = \"totalProfit\",itemType = \"itemType\",unitPrice = \"unitPrice\",totalCost = \"totalCost\",orderId = \"orderId\")))\n" +
+                "define stream itemInputStream(itemType string,unitPrice float);\n" +
+                "@source(type = \"live\",table.name = \"order\", sql.query = \"SELECT order.orderId, item.itemType, item.unitPrice, order.totalRevenue, order.totalCost, order.totalProfit FROM item JOIN order ON item.itemType=order.itemType GROUP BY item.itemType;\",@map(type = \"json\",@attributes(totalRevenue = \"totalRevenue\",totalProfit = \"totalProfit\",itemType = \"itemType\",unitPrice = \"unitPrice\",totalCost = \"totalCost\",orderId = \"orderId\")))\n" +
+                "define stream orderInputStream(orderId string,totalRevenue float,totalCost float,totalProfit float,itemType string);\n" +
+                "@sink(type = \"log\")\n" +
+                "define stream itemOutputStream(orderId string,itemType string,unitPrice float,totalRevenue float,totalCost float,totalProfit float);\n" +
+                "@info(name = \"default-name\")\n" +
+                "from itemInputStream#window.length(3) as item\n" +
+                "join orderInputStream#window.length(3) as order\n" +
+                "on item.itemType == order.itemType\n" +
+                "select order.orderId, item.itemType, item.unitPrice, order.totalRevenue, order.totalCost, order.totalProfit\n" +
+                "group by item.itemType\n" +
+                "insert into itemOutputStream;\n";
+
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+//        System.out.println(siddhiAppDefinition);
+//        System.out.println(siddhiApp.getSiddhiAppStringRepresentation());
+        assertEquals(siddhiAppDefinition, siddhiApp.getSiddhiAppStringRepresentation());
+    }
+
+    @Test
+    @Disabled
+    void generateSiddhiAppForSQLSelectStatementWithGroupByAndHaving() throws JSQLParserException {
+        String generalProjectionSQL = "SELECT CustomerID@string, Country@string FROM Customers GROUP BY Country@string, CustomerID@string HAVING COUNT(CustomerID@string) > 5 ";
+
+        siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
+                "@source(type = \"live\",table.name = \"Customers\", sql.query = \"SELECT CustomerID, Country FROM Customers GROUP BY Country, CustomerID\",@map(type = \"json\",@attributes(Country = \"Country\",CustomerID = \"CustomerID\")))\n" +
+                "define stream CustomersInputStream(CustomerID string,Country string);\n" +
+                "@sink(type = \"log\")\n" +
+                "define stream CustomersOutputStream(CustomerID string,Country string);\n" +
+                "@info(name = \"default-name\")\n" +
+                "from CustomersInputStream\n" +
+                "select  CustomerID  , Country  \n" +
+                "group by Customers.Country, Customers.CustomerID\n" +
+                "having Country = \"Sri Lanka\"\n"+
+                "insert into CustomersOutputStream;\n";
+
+        SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
+        System.out.println(siddhiApp.getSiddhiAppStringRepresentation());
+        assertEquals(siddhiAppDefinition,siddhiApp.getSiddhiAppStringRepresentation());
     }
 
 }
