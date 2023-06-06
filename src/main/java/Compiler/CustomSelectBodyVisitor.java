@@ -72,7 +72,7 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
 
         GroupByElement groupByElement = plainSelect.getGroupBy(); // not handled yet
         if(groupByElement != null) {
-            groupByElement.accept(new CustomGroupByElementVisitor());
+            groupByElement.accept(new CustomGroupByElementVisitor(middleEngine));
         }
 
         List<OrderByElement> orderByElements = plainSelect.getOrderByElements(); // not handled yet
