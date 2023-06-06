@@ -330,6 +330,11 @@ public class SelectItemHandlingBehaviorEngine extends IEngineExpressionHandleBeh
 
     }
 
+    @Override
+    public void handleGroupByExpressions(Column column) {
+        siddhiApp.addGroupByExpression(column.getColumnName().split("@")[0]);
+    }
+
 
     Optional<SupportedDataTypes> dataType;
     @Override

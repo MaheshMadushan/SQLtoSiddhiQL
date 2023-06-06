@@ -143,6 +143,11 @@ public class MiddleEngine extends IEngine {
     }
 
     @Override
+    public void handleGroupByExpressions(Column column) {
+        engineBehavior.handleGroupByExpressions(column);
+    }
+
+    @Override
     public void addToSiddhiApp(String streamName) {
         engineBehavior.addToSiddhiApp(streamName);
     }

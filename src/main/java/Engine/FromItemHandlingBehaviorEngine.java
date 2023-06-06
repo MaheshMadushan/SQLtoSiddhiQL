@@ -193,6 +193,11 @@ public class FromItemHandlingBehaviorEngine extends IEngineExpressionHandleBehav
     }
 
     @Override
+    public void handleGroupByExpressions(Column column) {
+        siddhiApp.addGroupByExpression(column.getColumnName().split("@")[0]);
+    }
+
+    @Override
     public void addToSiddhiApp(String streamName) {
 
     }

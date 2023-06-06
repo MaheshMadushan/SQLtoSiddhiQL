@@ -80,5 +80,7 @@ public abstract class IEngine {
 
     public abstract void handleAlias(Alias alias);
 
+    public abstract void handleGroupByExpressions(Column column);
+
     public abstract void addToSiddhiApp(String streamName);
 }
