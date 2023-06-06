@@ -1,10 +1,14 @@
 package SiddhiAppComposites;
 import java.util.*;
 
-public class SelectStatementAttributeList implements IAttributeList{
+public class SelectStatementAttributeList implements IAttributeList {
 
     private final List<ISiddhiAppComposite> attributesWithOrWithoutAliasesList;
     private final Map<String, List<ISiddhiAppComposite>> attributesListWithStreamName = new HashMap<>();
+
+    public Map<String, List<ISiddhiAppComposite>> getAttributesListWithStreamName() {
+        return attributesListWithStreamName;
+    }
 
     public SelectStatementAttributeList() {
         this.attributesWithOrWithoutAliasesList = new ArrayList<>(10);

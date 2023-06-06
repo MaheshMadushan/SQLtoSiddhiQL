@@ -3,6 +3,9 @@ package SiddhiAppComposites.Statement.Select;
 import SiddhiAppComposites.*;
 import SiddhiAppComposites.utilities.visitors.IAttributeVisitor;
 
+import java.util.List;
+import java.util.Map;
+
 
 public class SelectStatement implements ISelectStatement {
 
@@ -29,6 +32,10 @@ public class SelectStatement implements ISelectStatement {
 
     public IAttributeList getSelectItems(){
         return selectItemsList;
+    }
+
+    public Map<String, List<ISiddhiAppComposite>> getAttributesListWithStreamName() {
+        return selectItemsList.getAttributesListWithStreamName();
     }
 
     @Override

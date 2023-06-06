@@ -3,6 +3,7 @@ package SiddhiAppComposites;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class StreamStatementAttributeList implements IAttributeList{
 
@@ -48,6 +49,11 @@ public class StreamStatementAttributeList implements IAttributeList{
     @Override
     public void addAttribute(String streamName, ISiddhiAppComposite attribute) {
         //...
+    }
+
+    @Override
+    public Map<String, List<ISiddhiAppComposite>> getAttributesListWithStreamName() {
+        return null;
     }
 
     @Override
