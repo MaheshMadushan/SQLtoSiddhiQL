@@ -13,6 +13,8 @@ import SiddhiAppComposites.Statement.From.FromStatement;
 import SiddhiAppComposites.Statement.From.IFromStatement;
 import SiddhiAppComposites.Statement.GroupBy.GroupByStatement;
 import SiddhiAppComposites.Statement.GroupBy.IGroupByStatement;
+import SiddhiAppComposites.Statement.Having.HavingExpression;
+import SiddhiAppComposites.Statement.Having.IHavingExpression;
 import SiddhiAppComposites.Statement.Insert.IInsertStatement;
 import SiddhiAppComposites.Statement.Insert.InsertStatement;
 import SiddhiAppComposites.Statement.JoinStatement.IJoinStatement;
@@ -41,6 +43,7 @@ public class SiddhiApp {
     private final IFromStatement joinStatement = new FromStatement(); // from statement
 
     private final IFilterExpression filterExpression = new FilterExpression(); // filter statement
+    private final IHavingExpression havingExpression = new HavingExpression(); // filter statement
     private final IInsertStatement insertStatement = new InsertStatement(); // insert into statement
     private final App annotationApp; // Annotation @app
     private final ISource annotationSource; // Annotation @source
@@ -100,6 +103,10 @@ public class SiddhiApp {
 
     public void addGroupByExpression(String column){
         groupByStatement.addAttribute(column);
+    }
+
+    public void addHavingExpression(String symbol){
+        ((HavingExpression) this.havingExpression).addSymbol(symbol);
     }
 
     public void setStreamNamePrefix(String inputOutputStreamNamePrefix) {
@@ -224,6 +231,9 @@ public class SiddhiApp {
         if (groupByStatement.containsAttributes()) {
             groupByStatement.setColumnWithStreamMap(selectStatement.getAttributesListWithStreamName());
             stringSiddhiApp.append(groupByStatement.getSiddhiAppCompositeAsString());
+        }
+        if (havingExpression.containsExpressions()) {
+            stringSiddhiApp.append(havingExpression.getSiddhiAppCompositeAsString());
         }
         stringSiddhiApp.append(insertStatement.getSiddhiAppCompositeAsString());
         return stringSiddhiApp.toString();
