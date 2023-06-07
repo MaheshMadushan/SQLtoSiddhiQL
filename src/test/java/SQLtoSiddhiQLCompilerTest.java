@@ -278,10 +278,10 @@ public class SQLtoSiddhiQLCompilerTest {
     @Test
     @Disabled
     void generateSiddhiAppForSQLSelectStatementWithGroupByAndHaving() throws JSQLParserException {
-        String generalProjectionSQL = "SELECT CustomerID@string, Country@string FROM Customers GROUP BY Country@string, CustomerID@string HAVING COUNT(CustomerID@string) > 5 ";
+        String generalProjectionSQL = "SELECT CustomerID@string, Country@string FROM Customers GROUP BY Country@string, CustomerID@string HAVING COUNT(CustomerID@string) < 5 ";
 
         siddhiAppDefinition = "@app:name(\"SiddhiAppName-dev\")\n" +
-                "@source(type = \"live\",table.name = \"Customers\", sql.query = \"SELECT CustomerID, Country FROM Customers GROUP BY Country, CustomerID\",@map(type = \"json\",@attributes(Country = \"Country\",CustomerID = \"CustomerID\")))\n" +
+                "@source(type = \"live\",table.name = \"Customers\", sql.query = \"SELECT CustomerID, Country FROM Customers GROUP BY Country, CustomerID HAVING COUNT(CustomerID) < 5 \",@map(type = \"json\",@attributes(Country = \"Country\",CustomerID = \"CustomerID\")))\n" +
                 "define stream CustomersInputStream(CustomerID string,Country string);\n" +
                 "@sink(type = \"log\")\n" +
                 "define stream CustomersOutputStream(CustomerID string,Country string);\n" +
@@ -289,11 +289,11 @@ public class SQLtoSiddhiQLCompilerTest {
                 "from CustomersInputStream\n" +
                 "select  CustomerID  , Country  \n" +
                 "group by Customers.Country, Customers.CustomerID\n" +
-                "having Country = \"Sri Lanka\"\n"+
+                "having COUNT( CustomerID ) < 5 \n" +
                 "insert into CustomersOutputStream;\n";
 
         SiddhiApp siddhiApp = SiddhiAppGenerator.generateSiddhiApp(generalProjectionSQL);
-        System.out.println(siddhiApp.getSiddhiAppStringRepresentation());
+//        System.out.println(siddhiApp.getSiddhiAppStringRepresentation());
         assertEquals(siddhiAppDefinition,siddhiApp.getSiddhiAppStringRepresentation());
     }
 
