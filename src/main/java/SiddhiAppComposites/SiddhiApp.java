@@ -12,10 +12,13 @@ import SiddhiAppComposites.Statement.From.FilterExpression.FilterExpression;
 import SiddhiAppComposites.Statement.From.FromStatement;
 import SiddhiAppComposites.Statement.From.Join.JoinStatement;
 import SiddhiAppComposites.Statement.From.Join.OnExpression.OnExpression;
-import SiddhiAppComposites.Statement.From.Select.Insert.IInsertStatement;
+import SiddhiAppComposites.Statement.From.Select.Insert.InsertStatement;
 import SiddhiAppComposites.Statement.From.Select.SelectStatement;
+
 import java.util.HashMap;
+
 public class SiddhiApp {
+
     private final HashMap<Integer, DefineStreamStatement> DefineInputStreamStatementsHashMap = new HashMap<>(10);
     private final HashMap<Integer, DefineStreamStatement> DefineOutputStreamStatementHashMap = new HashMap<>(10);
     private final HashMap<Integer, OnExpression> onExpressionHashMap = new HashMap<>(10);
@@ -23,7 +26,8 @@ public class SiddhiApp {
     private final HashMap<Integer, JoinStatement> JoinStatementHashMap = new HashMap<>(10);
     private final HashMap<Integer, SelectStatement> selectStatementHashMap = new HashMap<>(10);
     private final HashMap<Integer, FromStatement> fromStatementHashMap = new HashMap<>(10);
-    private final HashMap<Integer, IInsertStatement> insertStatementHashMap = new HashMap<>(10);
+    private final HashMap<Integer, InsertStatement> insertStatementHashMap = new HashMap<>(10);
+
     private final App annotationApp; // Annotation @app
     private final ISource annotationSource; // Annotation @source
     private final IAttributes annotationAttributes; // Annotation @attributes
@@ -40,24 +44,10 @@ public class SiddhiApp {
         this.annotationSink = siddhiAppBuilder.annotationSink;
         this.annotationInfo = siddhiAppBuilder.annotationInfo;
         this.annotationApp = siddhiAppBuilder.annotationApp;
-        fromStatementHashMap.put(0, new FromStatement());
-    }
-    public void addJoinStatement(int defineStreamId, int joinStatementId, Table table){
-        if (JoinStatementHashMap.get(joinStatementId) == null){
-            JoinStatement joinStatement = new JoinStatement();
-            joinStatement.setStreamName(table.getTableName());
-            joinStatement.setAlias(table.getAlias());
-            JoinStatementHashMap.put(joinStatementId, joinStatement);
-        }
-        if(DefineInputStreamStatementsHashMap.get(defineStreamId) == null){
-            DefineStreamStatement defineStreamStatementForJoin = new DefineStreamStatement();
-            defineStreamStatementForJoin.setStreamName(table.getTableName() + "InputStream");
-            DefineInputStreamStatementsHashMap.put(defineStreamId, defineStreamStatementForJoin);
-        }
-        fromStatementHashMap.get(0).setFromStatementComposites(JoinStatementHashMap.get(joinStatementId));
+        fromStatementHashMap.put(0, new FromStatement()); // hack - should avoid
     }
 
-    public void addOnExpressionComposites(final int joinStreamId, final int onExpressionId, ISiddhiAppComposite onExpressionComposite){
+    public void addOnExpressionComposites(final int joinStreamId, final int onExpressionId, ISiddhiAppComposite onExpressionComposite) {
         if (onExpressionHashMap.get(onExpressionId) == null){
             OnExpression onExpression = new OnExpression();
             onExpressionHashMap.put(onExpressionId, onExpression);
@@ -72,46 +62,69 @@ public class SiddhiApp {
         }
         filterExpressionHashMap.get(filterExpressionId).addSymbol(symbol);
     }
-    public void addFromStatementComposite(int defineStatementId, int fromStatementId, Table table){
+
+    public void addFromStatementComposite(int outputStreamStatementId, int inputStreamStatementId, int fromStatementId, Table table) {
+        String outputStreamName = String.format("%s", table.getTableName() + "%sOutputStream");
+        String inputStreamName = table.getTableName() + "InputStream";
+
         if (fromStatementHashMap.get(fromStatementId) == null){
             fromStatementHashMap.put(fromStatementId, new FromStatement());
         }
-
-        DefineInputStreamStatementsHashMap.get(defineStatementId).setStreamName(table.getTableName() + "InputStream");
-        fromStatementHashMap.get(fromStatementId).setFromStatementComposites(table);
+        if (insertStatementHashMap.get(fromStatementId) == null){
+            InsertStatement insertStatement = new InsertStatement();
+            insertStatement.setOutputStreamName(outputStreamName);
+            insertStatementHashMap.put(fromStatementId, insertStatement); // since "from" has an "insert"
+        }
+        DefineInputStreamStatementsHashMap.get(inputStreamStatementId).setStreamName(inputStreamName); // since from should have ip stream
+        DefineOutputStreamStatementHashMap.get(outputStreamStatementId).setStreamName(outputStreamName); // since "from" should have op stream
+        fromStatementHashMap.get(fromStatementId).setTableName(table.getTableName());
+        fromStatementHashMap.get(fromStatementId).setStreamName(inputStreamName);
     }
 
-    public void addSelectItem(int selectStatementId, ISiddhiAppComposite selectItem){
-        if (selectStatementHashMap.get(selectStatementId) == null){
+    public void addJoinStatement(int fromStatementId, int inputStreamStatementId, int outputStreamStatementId, int joinStatementId, Table table) {
+        if (JoinStatementHashMap.get(joinStatementId) == null){
+            JoinStatement joinStatement = new JoinStatement();
+            joinStatement.setStreamName(table.getTableName() + "InputStream");
+            joinStatement.setAlias(table.getTableName());
+            JoinStatementHashMap.put(joinStatementId, joinStatement);
+        }
+        if(DefineInputStreamStatementsHashMap.get(inputStreamStatementId) == null){
+            DefineStreamStatement defineStreamStatementForJoin = new DefineStreamStatement();
+            defineStreamStatementForJoin.setStreamName(table.getTableName() + "InputStream");
+            DefineInputStreamStatementsHashMap.put(inputStreamStatementId, defineStreamStatementForJoin);
+        }
+        String existingOutputStreamName = insertStatementHashMap.get(fromStatementId).getOutputStream();
+        String newOutputStreamName = String.format(existingOutputStreamName, "Joins" + table.getTableName());
+        DefineOutputStreamStatementHashMap.get(outputStreamStatementId).setStreamName(newOutputStreamName); // since "from" should have op stream
+        insertStatementHashMap.get(fromStatementId).setOutputStreamName(newOutputStreamName);
+        fromStatementHashMap.get(fromStatementId).setFromStatementComposites(JoinStatementHashMap.get(joinStatementId));
+        fromStatementHashMap.get(fromStatementId).setAlias(fromStatementHashMap.get(fromStatementId).getTableName());
+    }
+    public void addSelectItem(int selectStatementId, ISiddhiAppComposite selectItem) {
+        if (selectStatementHashMap.get(selectStatementId) == null) {
             selectStatementHashMap.put(selectStatementId, new SelectStatement());
         }
         selectStatementHashMap.get(selectStatementId).addSelectItem(selectItem);
     }
 
-    private void addToSourceAnnotationAttributes(ISiddhiAppComposite columnWithDataType){
+    private void addToSourceAnnotationAttributes(ISiddhiAppComposite columnWithDataType) {
         String columnName = ((ColumnWithDataType) columnWithDataType).getColumnName();
         annotationAttributes.addAttributeComposite(new KeyValue<>(columnName,columnName)); // add to attribute annotation
     }
 
-    public void addColumnWithDataTypeToOutputStreamDefinition(int inputStreamStatementId, ISiddhiAppComposite columnWithDataType){
-        if (DefineOutputStreamStatementHashMap.get(inputStreamStatementId) == null){
-            DefineOutputStreamStatementHashMap.put(inputStreamStatementId, new DefineStreamStatement());
+    public void addColumnWithDataTypeToOutputStreamDefinition(int outputStreamStatementId, ISiddhiAppComposite columnWithDataType) {
+        if (DefineOutputStreamStatementHashMap.get(outputStreamStatementId) == null){
+            DefineOutputStreamStatementHashMap.put(outputStreamStatementId, new DefineStreamStatement());
         }
-        DefineOutputStreamStatementHashMap.get(inputStreamStatementId).addAttributeWithDataType(columnWithDataType);
+        DefineOutputStreamStatementHashMap.get(outputStreamStatementId).addAttributeWithDataType(columnWithDataType);
         addToSourceAnnotationAttributes(columnWithDataType);
     }
 
     public void addFilterExpressionToFromStatement(int fromId, int filterId) {
-        fromStatementHashMap.get(0).setFromStatementComposites(filterExpressionHashMap.get(0));
-    }
-    public void addFromStatementComposite(int defineStatementId, int fromStatementId, ISiddhiAppComposite fromStatementComposite){
-        if (fromStatementHashMap.get(fromStatementId) == null){
-            fromStatementHashMap.put(fromStatementId, new FromStatement());
-        }
-        fromStatementHashMap.get(fromStatementId).setFromStatementComposites(fromStatementComposite);
+        fromStatementHashMap.get(fromId).setFromStatementComposites(filterExpressionHashMap.get(filterId));
     }
 
-    public void addColumnWithDataTypeToInputStreamDefinition(int outputStreamStatementId, ISiddhiAppComposite columnWithDataType){
+    public void addColumnWithDataTypeToInputStreamDefinition(int outputStreamStatementId, ISiddhiAppComposite columnWithDataType) {
         if (DefineInputStreamStatementsHashMap.get(outputStreamStatementId) == null){
             DefineInputStreamStatementsHashMap.put(outputStreamStatementId, new DefineStreamStatement());
         }

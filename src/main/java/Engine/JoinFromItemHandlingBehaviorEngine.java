@@ -8,29 +8,21 @@ import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 
-
 public class JoinFromItemHandlingBehaviorEngine extends IEngineExpressionHandleBehavior {
     private final int joinStreamStatementId;
     private final int defineStreamId;
-    public JoinFromItemHandlingBehaviorEngine(int defineStreamId, int joinStreamStatementId) {
+    private final int id;
+    public JoinFromItemHandlingBehaviorEngine(int id, int defineStreamId, int joinStreamStatementId) {
         this.joinStreamStatementId = joinStreamStatementId;
         this.defineStreamId = defineStreamId;
+        this.id = id;
     }
 
     @Override
     public void handleTable(net.sf.jsqlparser.schema.Table table) {
         SiddhiAppComposites.Table siddhiAppTable = new SiddhiAppComposites.Table(table.getName());
-//        siddhiAppTable.setAlias(table.getAlias().toString());
-        siddhiApp.addJoinStatement(defineStreamId, joinStreamStatementId, siddhiAppTable);
-        // should get column names corresponding to this table (since select items are already handled) and add to define statement
-        // should add to from statement
-
-        // siddhiApp should start handling join
-        // should start define statement for this specific statement
-        // should get column names corresponding to this table (since select items are already handled) and add to define statement
-        // also should add items in on statement
+        siddhiApp.addJoinStatement(id, defineStreamId, 0,joinStreamStatementId, siddhiAppTable);
     }
-
 
     @Override
     public void handleColumn(Column column) {
@@ -47,7 +39,6 @@ public class JoinFromItemHandlingBehaviorEngine extends IEngineExpressionHandleB
     public void handleFunctionBegin(Function function) {
 
     }
-
 
     @Override
     public void handleSignedExpression(SignedExpression signedExpression) {

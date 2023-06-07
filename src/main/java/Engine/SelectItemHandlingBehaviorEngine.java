@@ -61,7 +61,6 @@ public class SelectItemHandlingBehaviorEngine extends IEngineExpressionHandleBeh
         if(aggregateFunctionsStack.empty()) {
             // processing just a column
             selectItem.addSelectItemComposite(siddhiColumn); // add to select statement
-
         }else{
             // if still processing on function attributes add to function attribute list
             aggregateFunctionsStack.peek().addAttribute(siddhiColumn); // add to function attribute list (still processing a function)

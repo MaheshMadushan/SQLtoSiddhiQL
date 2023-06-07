@@ -21,7 +21,7 @@ public class FromItemHandlingBehaviorEngine extends IEngineExpressionHandleBehav
     public void handleTable(Table table) {
         SiddhiAppComposites.Table siddhiAppTable = new SiddhiAppComposites.Table(table.getName());
 //        siddhiAppTable.setAlias(table.getAlias().toString());
-        siddhiApp.addFromStatementComposite(defineStatementId, id, siddhiAppTable); // set table name as stream name prefix
+        siddhiApp.addFromStatementComposite(0,defineStatementId, id, siddhiAppTable); // set table name as stream name prefix
     }
 
     @Override

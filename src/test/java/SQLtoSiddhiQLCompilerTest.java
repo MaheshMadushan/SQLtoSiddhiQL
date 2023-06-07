@@ -184,7 +184,7 @@ public class SQLtoSiddhiQLCompilerTest {
 
     @Test
     @Disabled
-    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndOrderByClauseWithASCAndDescTest() throws JSQLParserException {
+    void generateSiddhiAppForSimpleSQLSelectStatementWithAllColumnsAndWHereClauseAndOrderByClauseWithASCAndAscTest() throws JSQLParserException {
 
         String generalProjectionSQL = "SELECT Customers.Country@string, Customers.id@int, Country.Name@int FROM Customers " +
                 "JOIN Country ON Customers.Country@string = Country.Name@string;";

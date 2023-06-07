@@ -2,6 +2,10 @@ package SiddhiAppComposites.Statement.From.Select.Insert;
 
 public class InsertStatement implements IInsertStatement {
 
+    public String getOutputStream() {
+        return outputStream;
+    }
+
     private String outputStream;
 
     public InsertStatement(){

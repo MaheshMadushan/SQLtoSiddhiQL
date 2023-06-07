@@ -47,11 +47,10 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
             middleEngine.finalizeAddingThisComponentAsRequested();
         }
 
-        List<Join> joins = plainSelect.getJoins();
+        List<Join> joins = plainSelect.getJoins(); int joinStreamStatementId = 0;
         if(joins != null){
-            int joinStreamStatementId = 0;
             for ( Join join : joins){
-                middleEngine.setExpressionHandlingBehavior(new JoinFromItemHandlingBehaviorEngine(++defineStatementId, joinStreamStatementId));
+                middleEngine.setExpressionHandlingBehavior(new JoinFromItemHandlingBehaviorEngine(id, ++defineStatementId, joinStreamStatementId));
                 FromItem rightJoinItem = join.getRightItem();
                 rightJoinItem.accept(new CustomJoinFromItemVisitor(middleEngine));
                 List<Expression> onExpressions = (List<Expression>) join.getOnExpressions();
