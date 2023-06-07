@@ -367,22 +367,50 @@ public class CustomExpressionVisitorAdaptor implements ExpressionVisitor {
     @Override
     public void visit(MinorThan minorThan) {
 
+        Expression rightExpression = minorThan.getRightExpression();
+        Expression leftExpression = minorThan.getLeftExpression();
+
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleMinorThan(minorThan);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(MinorThanEquals minorThanEquals) {
+        Expression rightExpression = minorThanEquals.getRightExpression();
+        Expression leftExpression = minorThanEquals.getLeftExpression();
 
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleMinorThanEquals(minorThanEquals);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
     }
 
     @Override
     public void visit(NotEqualsTo notEqualsTo) {
+        Expression rightExpression = notEqualsTo.getRightExpression();
+        Expression leftExpression = notEqualsTo.getLeftExpression();
 
+        if(leftExpression != null){
+            leftExpression.accept(this);
+        }
 
         middleEngine.handleNotEqualsTo(notEqualsTo);
+
+        if(rightExpression != null){
+            rightExpression.accept(this);
+        }
     }
 
     @Override

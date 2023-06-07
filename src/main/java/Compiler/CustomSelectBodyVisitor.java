@@ -84,6 +84,7 @@ public class CustomSelectBodyVisitor implements SelectVisitor {
 
         Expression havingExpression = plainSelect.getHaving(); // not handled yet
         if(havingExpression != null) {
+            middleEngine.setExpressionHandlingBehavior(new HavingExpressionHandlingBehaviorEngine());
             havingExpression.accept(new CustomExpressionVisitorAdaptor(middleEngine));
         }
     }
