@@ -6,7 +6,7 @@
 
     <groupId>org.mahesh</groupId>
     <artifactId>sqltosiddhiql</artifactId>
-    <version>0.9.10-SNAPSHOT</version>
+    <version>0.9.11-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -44,7 +44,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Mahesh Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/MaheshMadushan/SQLtiSiddhiQL</url>
+            <url>https://maven.pkg.github.com/MaheshMadushan/SQLtoSiddhiQL</url>
         </repository>
     </distributionManagement>
 
