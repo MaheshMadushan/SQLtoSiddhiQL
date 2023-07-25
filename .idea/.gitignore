@@ -2,3 +2,5 @@
 /shelf/
 /workspace.xml
 /.idea/
+.mvn/local-settings.xml
+*.lst

@@ -3,7 +3,7 @@
 
 ## High Level Architecture
 
-![plot](./src/main/java/Blank%20diagram%20-%20Page%201.png)
+![plot](./src/main/java/Diagram.png)
 ## Usage
 ```java
 String sqlStatement = "SELECT  ip@string,  timestamp@string, SUM(traffic@int) as sum_traffic " +
